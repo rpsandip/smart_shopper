@@ -1,0 +1,35 @@
+<configuration>
+
+	<logger name="ch.qos.logback" level="OFF" additivity="false" />
+
+<springProperty scope="context" name="css.app" source="css.app"/>
+
+	<appender name="FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${SMART_SHOPPER_HOME}/logs/${css.app}/app.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${SMART_SHOPPER_HOME}/logs/${css.app}/%d{yyyy/MMM/dd}/app.%d{dd}.log
+			</fileNamePattern>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{HH:mm:ss.SSS} [%-5level] %logger{50} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{HH:mm:ss.SSS} [%-5level] %logger{50} - %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="ch.mindmaze" level="debug" additivity="false">
+		<appender-ref ref="STDOUT" />
+		<appender-ref ref="FILE" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="FILE" />
+		<appender-ref ref="STDOUT" />
+	</root>
+
+</configuration>

@@ -1,0 +1,7 @@
+apply plugin: 'spring-boot'
+
+dependencies {
+	compile project(':common')
+	compile project(':service')
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
+}

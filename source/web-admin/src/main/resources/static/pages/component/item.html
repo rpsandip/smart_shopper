@@ -1,0 +1,59 @@
+<div class="sub-content">
+	<form ng-cloak ng-model="item" name="itemForm" layout="column"
+		layout-padding class="add-item">
+		<div>
+			<md-input-container class="md-block"> <label>{{labels.COMMON.CODE}}</label>
+			<i class="fa fa-key icon-size" aria-label="fa fa-trash"></i> <input
+				type="text" name="itemCode" ng-model="item.code" ng-minlength="5"
+				required ng-disabled="item.isEdit" md-autofocus />
+			<div class="hint">{{labels.ITEM.PREFIX}}- {{item.code}}</div>
+			<div ng-messages="itemForm.itemCode.$error">
+				<div ng-message="required">{{labels.ITEM.ITEM}}
+					{{labels.COMMON.CODE}} {{labels.ERROR.REQUIRED}}</div>
+				<div ng-message="minlength">{{labels.COMMON.CODE}}
+					{{labels.ERROR.CODE_MIN_LENGTH}}</div>
+			</div>
+			</md-input-container>
+		</div>
+		<div>
+			<md-input-container class="md-block"> <label>{{labels.COMMON.NAME}}</label>
+			<i class="fa fa-tag icon-size" aria-label="fa fa-tag"></i> <input
+				name="itemName" ng-model="item.name" required>
+			<div ng-messages="itemForm.itemName.$error">
+				<div ng-message="required">{{labels.ITEM.ITEM}}
+					{{labels.COMMON.NAME}} {{labels.ERROR.REQUIRED}}</div>
+			</div>
+			</md-input-container>
+		</div>
+		<div>
+			<md-input-container class="md-block"> <label>{{labels.ITEM.PRICE}}</label>
+			<i class="fa fa-money icon-size" aria-label="fa fa-money"></i> <input
+				name="itemPrice" ng-model="item.price" type="number" required>
+			<div ng-messages="itemForm.itemPrice.$error">
+				<div ng-message="required">{{labels.ITEM.ITEM}}
+					{{labels.ITEM.PRICE}} {{labels.ERROR.REQUIRED}}</div>
+			</div>
+			</md-input-container>
+		</div>
+		<div>
+			<md-input-container class="md-block"> <label>{{labels.COMMON.DESCRIPTION}}</label>
+			<i class="fa fa-info-circle icon-size" aria-label="fa fa-info-circle"></i>
+			<textarea name="itemDesc" ng-model="item.desc" ng-minlength="30"
+				required></textarea>
+			<div ng-messages="itemForm.itemDesc.$error">
+				<div ng-message="required">{{labels.ITEM.ITEM}}
+					{{labels.COMMON.DESCRIPTION}} {{labels.ERROR.REQUIRED}}</div>
+				<div ng-message="minlength">{{labels.COMMON.DESCRIPTION}}
+					{{labels.ERROR.DESC_MIN_LENGTH}}</div>
+			</div>
+			</md-input-container>
+		</div>
+
+		<div lang="row">
+			<label>{{labels.ITEM.IMAGE}}</label> <input type="file"
+				name="pic" accept="image/*"
+				onchange="angular.element(this).scope().uploadFile(this.files[0])"
+				class="choose-bottom">
+		</div>
+	</form>
+</div>

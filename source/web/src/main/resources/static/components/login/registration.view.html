@@ -1,0 +1,126 @@
+<div>
+	<form name="form" ng-submit="login(username,password)" role="form"
+		layout-padding>
+		<div layout="row">
+			<div class="form-group"
+				ng-class="{ 'has-error': form.firstname.$dirty && form.firstname.$error.required }">
+				<md-input-container class="Input"> <label
+					style="text-align: left !important;" for="username">{{label.FIRSTNAME}}</label>
+				<input type="text" name="firstname" id="firstname"
+					class="form-control" ng-model="firstname" required /> <span
+					ng-show="form.firstname.$dirty && form.firstname.$error.required"
+					class="help-block">{{label.FIRSTNAME}}
+					{{label.ERROR.is_required}}</span></md-input-container>
+			</div>
+			<div class="form-group"
+				ng-class="{ 'has-error': form.surname.$dirty && form.surname.$error.required }">
+				<md-input-container> <label
+					style="text-align: left !important;" for="password">{{label.SURNAME}}</label>
+				<input type="surname" name="surname" id="surname"
+					class="form-control" ng-model="surname" required /> <span
+					ng-show="form.surname.$dirty && form.surname.$error.required"
+					class="help-block">{{label.SURNAME}}
+					{{label.ERROR.is_required}}</span> </md-input-container>
+			</div>
+		</div>
+		<div layout="column">
+			<div class="form-group"
+				ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }">
+				<md-input-container style="width: 100% !important;" class="Input">
+				<label style="text-align: left !important;" for="username">{{label.USERNAME}}</label>
+				<input type="text" name="email" id="email" class="form-control"
+					ng-model="email" required /> <span
+					ng-show="form.email.$dirty && form.email.$error.required"
+					class="help-block">{{label.USERNAME}}
+					{{label.ERROR.is_required}}</span></md-input-container>
+			</div>
+			<div class="form-group"
+				ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+				<md-input-container style="width: 100% !important;">
+				<label style="text-align: left !important;" for="password">{{label.PASSWORD}}</label>
+				<input type="password" name="password" id="password"
+					class="form-control" ng-model="password" required /> <span
+					ng-show="form.password.$dirty && form.password.$error.required"
+					class="help-block">{{label.PASSWORD}}
+					{{label.ERROR.is_required}}</span> </md-input-container>
+			</div>
+			<md-subheader class="md-primary">{{label.CONTACT_DETAILS}}</md-subheader>
+		</div>
+		<div layout="column">
+
+			<div class="form-group"
+				ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+				<md-input-container style="width: 100% !important;">
+				<label style="text-align: left !important;" for="password">{{label.STREET}}</label>
+				<input type="text" name="street" id="street" class="form-control"
+					ng-model="street" /> <span
+					ng-show="form.street.$dirty && form.street.$error.required"
+					class="help-block">{{label.STREET}}
+					{{label.ERROR.is_required}}</span> </md-input-container>
+			</div>
+			<div layout="row">
+				<div class="form-group"
+					ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+					<md-input-container> <label
+						style="text-align: left !important;" for="password">{{label.CITY}}</label>
+					<input type="text" name="city" id="" city"" class="form-control"
+						ng-model="city" /> <span
+						ng-show="form.city.$dirty && form.city.$error.required"
+						class="help-block">{{label.CITY}}
+						{{label.ERROR.is_required}}</span> </md-input-container>
+				</div>
+				<div class="form-group"
+					ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+					<md-input-container style="width: 100% !important;">
+					<label style="text-align: left !important;" for="password">{{label.STATE}}</label>
+					<input type="text" name="state" id="state" class="form-control"
+						ng-model="state" /> <span
+						ng-show="form.city.$dirty && form.city.$error.required"
+						class="help-block">{{label.STATE}}
+						{{label.ERROR.is_required}}</span> </md-input-container>
+				</div>
+			</div>
+			<div layout="row">
+				<div class="form-group"
+					ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+					<md-input-container> <label
+						style="text-align: left !important;" for="password">{{label.COUNTRY}}</label>
+					<input type="text" name="street" id="street" class="form-control"
+						ng-model="country" /> <span
+						ng-show="form.street.$dirty && form.street.$error.required"
+						class="help-block">{{label.COUNTRY}}
+						{{label.ERROR.is_required}}</span> </md-input-container>
+				</div>
+				<div class="form-group"
+					ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+					<md-input-container style="width: 100% !important;">
+					<label style="text-align: left !important;" for="password">{{label.PINCODE}}</label>
+					<input type="text" name="city" id="city" class="form-control"
+						ng-model="pincode" /> <span
+						ng-show="form.city.$dirty && form.city.$error.required"
+						class="help-block">{{label.PINCODE}}
+						{{label.ERROR.is_required}}</span> </md-input-container>
+				</div>
+			</div>
+			<div class="form-group"
+					ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+					<md-input-container style="width: 100% !important;">
+					<label style="text-align: left !important;" for="password">{{label.PHONE_NO}}</label>
+					<input type="text" name="phoneno" id="phoneno" class="form-control"
+						ng-model="phoneno" required /> <span
+						ng-show="form.phoneno.$dirty && form.phoneno.$error.required"
+						class="help-block">{{label.PHONE_NO}}
+						{{label.ERROR.is_required}}</span> </md-input-container>
+				</div>
+		</div>
+
+		<div class="form-actions">
+			<md-button class="md-raised md-primary" type="submit"
+				ng-disabled="form.$invalid || vm.dataLoading"
+				class="btn btn-primary">{{label.REGISTR}} </md-button>
+
+			<md-button class="md-primary" ng-click="cancelRegistration()"
+				class="btn btn-primary">{{label.CANCEL}} </md-button>
+		</div>
+	</form>
+</div>
