@@ -16,6 +16,7 @@ app.controller('LoginController', function($http, $scope, $rootScope, $state,
 		AuthenticationService.doLogin(username, password, function(response,
 				status) {
 
+			$scope.isLoading = false;
 			if (status == 401) {
 				UtilityService.showError(response.message);
 				return;
@@ -31,7 +32,7 @@ app.controller('LoginController', function($http, $scope, $rootScope, $state,
 			console.log(AuthenticationService.getSession())
 			console.log(AuthenticationService.getUsername())
 			console.log(AuthenticationService.getName())
-			$scope.isLoading = false;
+
 			$state.go('dashboard.item');
 		});
 	};

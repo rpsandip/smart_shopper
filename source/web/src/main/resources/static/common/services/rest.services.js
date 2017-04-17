@@ -23,12 +23,31 @@ var getCategoriesURL = function() {
 };
 
 var getAddOrUpdateItemURL = function(item) {
-	return PREFIX + "/" + "addOrUpdateItem" + "?itemDTO=" + JSON.stringify(item);
+	return PREFIX + "/" + "addOrUpdateItem" + "?itemDTO="
+			+ JSON.stringify(item);
 };
 
 var getAddOrUpdateCategoryURL = function() {
 	return PREFIX + "/" + "addOrUpdateCategory"
 };
+
+app.factory('UsersService', function($http, DefaultConstant) {
+	var service = {};
+
+	service.register = function(payload, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.SUDOERS + DefaultConstant.url.REGISTER;
+
+		$http.post(url, payload).success(
+				function(Response, Status, Headers, Config) {
+					callback(Response, Status);
+				}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
+	return service;
+});
 
 /**
  * Item

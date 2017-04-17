@@ -1,4 +1,4 @@
-package com.chillies.smartshopper.common.shell;
+package com.chillies.smartshopper.common.shell.web;
 
 import com.google.common.base.Preconditions;
 
@@ -11,13 +11,13 @@ import com.google.common.base.Preconditions;
  * @author Jinen Kothari
  *
  */
-public class AuthShell {
+public class UsersAuthShell {
 
 	private final String session;
 
-	private final SudoersShell user;
+	private final UsersShell user;
 
-	public AuthShell(final String session, final SudoersShell user) {
+	public UsersAuthShell(final String session, final UsersShell user) {
 		Preconditions.checkNotNull(session, "session can not be null.");
 		Preconditions.checkNotNull(user, "user can not be null.");
 
@@ -29,14 +29,14 @@ public class AuthShell {
 		return session;
 	}
 
-	public SudoersShell getUser() {
+	public UsersShell getUser() {
 		return user;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AuthShell [session=").append(session).append(", user=").append(user).append("]");
+		builder.append("AuthShell [session=").append(session).append(", user=").append(user.toString()).append("]");
 		return builder.toString();
 	}
 

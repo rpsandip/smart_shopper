@@ -1,5 +1,6 @@
-package com.chillies.smartshopper.common.shell;
+package com.chillies.smartshopper.common.shell.web_admin;
 
+import com.chillies.smartshopper.common.shell.DateMetaShell;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 

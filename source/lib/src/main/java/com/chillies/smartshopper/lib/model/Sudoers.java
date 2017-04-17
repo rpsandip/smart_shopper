@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.chillies.smartshopper.common.shell.SudoersShell;
+import com.chillies.smartshopper.common.shell.web_admin.SudoersShell;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 

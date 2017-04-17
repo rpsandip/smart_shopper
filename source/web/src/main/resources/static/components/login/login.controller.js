@@ -1,7 +1,7 @@
 'use strict';
 app.controller('LoginController', function($http, $scope, $rootScope, $state,
 		$location, $mdToast, $mdDialog, AuthenticationService, UtilityService,
-		DefaultConstant) {
+		UsersService, DefaultConstant) {
 
 	$scope.label = DefaultConstant.labels;
 	$scope.isLoading = false;
@@ -37,12 +37,36 @@ app.controller('LoginController', function($http, $scope, $rootScope, $state,
 		});
 	};
 
-	$scope.registration = function() {
+	$scope.onRegistration = function() {
 		$scope.isRegister = true;
+		$scope.registration = new Registration();
 	};
 
 	$scope.cancelRegistration = function() {
 		$scope.isRegister = false;
+	};
+
+	$scope.onRegister = function(registration) {
+		$scope.isLoading = true;
+		UsersService.register(registration.toJSON(),
+				function(response,
+				status) {
+
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			
+			console.log(response);
+			$scope.isLoading = false;
+			$scope.isRegister = false;
+		});
+		console.log(registration);
 	};
 
 });

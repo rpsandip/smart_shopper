@@ -6,6 +6,7 @@ app.constant("DefaultConstant", {
 		SERVER_ADDRESS : "/services",
 		SUDOERS : "/users",
 		AUTH : "/auth",
+		REGISTER:"/register"
 	},
 
 	labels : {
@@ -19,7 +20,7 @@ app.constant("DefaultConstant", {
 		REGISTR : 'Registr',
 		CANCEL : 'Cancel',
 		FIRSTNAME : 'Firstname',
-		SURNAME : 'Surname',
+		SURNAME : 'Lastname',
 		STREET : 'Street',
 		CITY : 'City',
 		STATE : 'State',
