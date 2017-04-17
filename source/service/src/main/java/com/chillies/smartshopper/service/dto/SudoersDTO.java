@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.chillies.smartshopper.common.shell.AuthShell;
+import com.chillies.smartshopper.common.shell.web_admin.AuthShell;
 import com.chillies.smartshopper.common.util.MessageUtils;
 import com.chillies.smartshopper.lib.exception.DbException;
 import com.chillies.smartshopper.lib.exception.NotAccatable;

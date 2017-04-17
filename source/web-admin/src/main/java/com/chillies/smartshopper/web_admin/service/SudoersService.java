@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.chillies.smartshopper.common.shell.AuthShell;
+import com.chillies.smartshopper.common.shell.web_admin.AuthShell;
 import com.chillies.smartshopper.service.dto.SudoersDTO;
 import com.chillies.smartshopper.service.model.LoginBody;
 
