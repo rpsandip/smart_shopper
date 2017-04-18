@@ -1,0 +1,6 @@
+dependencies {
+	compile project(':common')
+	
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-mongodb', version: '1.4.1.RELEASE'	
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
+}

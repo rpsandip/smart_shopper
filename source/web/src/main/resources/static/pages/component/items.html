@@ -1,0 +1,86 @@
+<div ng-controller="itemsController as itemsCtrl" layout="column"
+	ng-model="labels" layout-padding>
+
+	<md-toolbar class="title-section">
+	<div class="md-toolbar-tools">
+
+		<md-button class="md-icon-button" aria-label="add"
+			ng-click="itemsCtrl.onAddClick($event)"> <i
+			ng-if="!isItem" class="material-icons  topbar-buttons">note_add</i> <i
+			ng-if="isItem" class="material-icons topbar-buttons">close</i> <md-tooltip
+			ng-if="!isItem" md-direction="bottom">
+		{{labels.COMMON.ADD}} {{labels.ITEM.ITEM}} </md-tooltip> <md-tooltip ng-if="isItem"
+			md-direction="bottom"> {{labels.COMMON.CLOSE}}
+		{{labels.ITEM.ITEM}} </md-tooltip> </md-button>
+
+		<h3 ng-if="!isItem" class="title">{{labels.ITEM.ITEMS}}</h3>
+		<h3 ng-if="isItem" class="title">{{labels.ITEM.ITEM}}</h3>
+		<span flex></span>
+		<div ng-if="!isItem">
+			{{labels.COMMON.SEARCH}}: <input ng-model="itemsCtrl.searchText">
+		</div>
+
+		<div ng-if="isItem">
+			<md-button type="submit" ng-click="onSave($event,item,this.files)"
+				class="md-icon-button"> <i
+				class="material-icons topbar-buttons">save</i> <md-tooltip
+				md-direction="bottom"> {{labels.COMMON.SAVE}}
+			{{labels.ITEM.ITEM}} </md-tooltip> </md-button>
+		</div>
+	</div>
+	</md-toolbar>
+
+	<md-progress-linear md-mode="indeterminate" class="md-warn"
+		ng-if="isLoading"></md-progress-linear>
+
+	<div class="content-background">
+		<div ng-if="isItem" ng-include="'pages/component/item.html'"></div>
+
+		<md-grid-list ng-if="!isItem" md-cols-xs="1" md-cols-sm="2"
+			md-cols-md="4" md-cols-lg="6" md-cols-gt-lg="8" md-row-height="77px"
+			md-gutter="1px"> <md-grid-tile md-rowspan="2"
+			md-colspan="2" md-colspan-sm="1" md-colspan-xs="1"
+			ng-if="!item.DELETED"
+			ng-repeat="item in itemsCtrl.items | filter:itemsCtrl.searchText">
+
+		<md-card layout="column"
+			style="max-width: 100% !important;width: 95% !important; height:95% !important;">
+		<md-card-header> <md-card-avatar> <md-menu>
+		<md-button class="md-icon-button" aria-label="widgets"
+			ng-click="openMenu($mdOpenMenu, $event)"> <i
+			class="fa fa-th-large" aria-hidden="true"
+			style="font-size: 18px !important;"></i> <md-tooltip
+			md-direction="bottom"> {{labels.COMMON.ACTIONS}} </md-tooltip> </md-button> <md-menu-content>
+		<md-menu-item> <md-button
+			ng-click="itemsCtrl.onEdit($event,$index,item)"> <i
+			class="fa fa-pencil" aria-hidden="true"></i> {{labels.COMMON.EDIT}} </md-button>
+		<md-button ng-click="itemsCtrl.onDelete($event,$index,item)">
+		<i class="fa fa-trash" aria-hidden="true"></i>
+		{{labels.COMMON.DELETE}} </md-button> </md-menu-item></md-menu-content> </md-menu> </md-card-avatar> <md-card-header-text layout="row">
+		<h3 class="md-headline">
+			{{item.NAME}}
+			<md-tooltip md-direction="bottom"> {{item.CODE}} </md-tooltip>
+			<label class="md-subhead"> - &#8377; {{item.PRICE}}/-</label>
+		</h3>
+		</md-card-header-text> </md-card-header>
+
+		<div layout="row" layout-padding>
+			<div>
+				<div class="md-media-sm card-media">
+					<img
+						style="border-radius: 50% !important; height: 65px !important;"
+						src="{{item.IMAGE}}" alt="{{item.IMAGE}}"
+						onerror="this.onerror=null;this.src='resource/img/guj_dish.png';">
+				</div>
+
+			</div>
+			<div style="max-width: 50% !important; width: 50% !important;">
+
+				<p>{{item.DESC}}</p>
+				</md-card-content>
+			</div></md-card></md-grid-tile> </md-grid-list>
+
+	</div>
+</div>
+
+

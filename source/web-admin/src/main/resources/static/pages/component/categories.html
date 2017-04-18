@@ -1,0 +1,75 @@
+<div ng-controller="categoriesController as categoryTeableCtrl"
+	layout="column" ng-model="labels" layout-padding >
+	<md-toolbar class="title-section">
+	<div class="md-toolbar-tools">
+		<md-button class="md-icon-button" aria-label="add"
+			ng-click="categoryTeableCtrl.onAddClick($event)"> <i
+			ng-if="!isCategory" class="material-icons  topbar-buttons">note_add</i>
+		<i ng-if="isCategory" class="material-icons topbar-buttons">close</i>
+		<md-tooltip ng-if="!isCategory" md-direction="bottom">
+		{{labels.COMMON.ADD}} {{labels.CATEGORY.CATEGORY}} </md-tooltip> <md-tooltip
+			ng-if="isCategory" md-direction="bottom">
+		{{labels.COMMON.CLOSE}} {{labels.CATEGORY.CATEGORY}} </md-tooltip> </md-button>
+		<h3 ng-if="!isCategory" class="title">{{labels.CATEGORY.CATEGORIES}}</h3>
+		<h3 ng-if="isCategory" class="title">{{labels.CATEGORY.CATEGORY}}</h3>
+		<span flex></span>
+		<div ng-if="!isCategory">
+			{{labels.COMMON.SEARCH}}: <input
+				ng-model="categoryTeableCtrl.searchText">
+		</div>
+
+		<div ng-if="isCategory">
+			<md-button type="submit"
+				ng-click="onSave($event,category,categoryTeableCtrl.selectedItem)"
+				class="md-icon-button"> <i
+				class="material-icons topbar-buttons">save</i> <md-tooltip
+				md-direction="bottom"> {{labels.COMMON.SAVE}}
+			{{labels.CATEGORY.CATEGORY}} </md-tooltip> </md-button>
+		</div>
+	</div>
+	</md-toolbar>
+	<md-progress-linear md-mode="indeterminate" class="md-warn"
+		ng-if="isLoading"></md-progress-linear>
+
+	<div class="content-background table-responsive">
+
+		<div ng-if="isCategory" ng-include="'pages/component/category.html'"></div>
+
+		<table ng-if="!isCategory" datatable="ng"
+			dt-options="categoryTeableCtrl.dtOptions"
+			dt-columns="categoryTeableCtrl.dtColumn"
+			dt-column-defs="categoryTeableCtrl.dtColumnDefs"
+			class="table table-background table-sm">
+			<thead class="table-head-background"></thead>
+			<tbody>
+				<tr ng-show="!category.DELETED"
+					ng-repeat="category in categoryTeableCtrl.categories | filter:categoryTeableCtrl.searchText">
+					<td><h3 class="md-headline">
+							{{category.NAME}}
+							<md-tooltip md-direction="bottom"> {{category.CODE}}
+							</md-tooltip>
+						</h3>
+						<p>{{category.DESC}}</p></td>
+					<td><md-chips ng-model="category.ITEMS" readonly="true">
+						<md-chip-template> {{$chip.NAME}} </md-chip-template> </md-chips></td>
+					<td><button class="btn btn-warning"
+							ng-click="categoryTeableCtrl.onEdit($event,$index,category)"
+							aria-label="edit">
+							<i class="fa fa-pencil" aria-hidden="true"
+								style="font-size: 20px !important;"></i>
+							<md-tooltip md-direction="bottom">
+							{{labels.COMMON.EDIT}} </md-tooltip>
+						</button>
+						<button class="btn btn-danger"
+							ng-click="categoryTeableCtrl.onDelete($event,$index,category)"
+							aria-label="delete">
+							<i class="fa fa-trash" aria-hidden="true"
+								style="font-size: 20px !important;"></i>
+							<md-tooltip md-direction="bottom">
+							{{labels.COMMON.DELETE}} </md-tooltip>
+						</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
