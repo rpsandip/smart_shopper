@@ -1,0 +1,7 @@
+<div ng-controller="DashboardController" ng-model="labels"
+	layout="column" layout-gt-md="row" class="top-container">
+	<div style="width: 20% !important;" ui-view="sidebarView"></div>
+	<div layout-fill layout="column" >
+		<div ui-view="dashboardContentView"  class="container" layout-padding></div>
+	</div>
+</div>

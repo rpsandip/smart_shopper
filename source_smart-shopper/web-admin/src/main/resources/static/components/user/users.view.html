@@ -1,0 +1,39 @@
+<div ng-controller="UsersController as userCtrl" layout="column"
+	ng-model="labels" layout-padding>
+	<md-toolbar class="title-section">
+	<div class="md-toolbar-tools">
+		<h3 class="title">{{labels.USERS}}</h3>
+		<span flex></span> {{labels.COMMON.SEARCH}}: <input
+			ng-model="userCtrl.searchText">
+	</div>
+	</md-toolbar>
+	<md-progress-linear md-mode="indeterminate" class="md-warn"
+		ng-if="isLoading"></md-progress-linear>
+
+	<div class="content-background table-responsive">
+
+		<table datatable="ng" dt-options="userCtrl.dtOptions"
+			dt-columns="userCtrl.dtColumn" dt-column-defs="userCtrl.dtColumnDefs"
+			class="table table-background table-sm">
+			<thead class="table-head-background"></thead>
+			<tbody>
+				<tr ng-show="!user.DELETED"
+					ng-repeat="user in userCtrl.users | filter:userCtrl.searchText">
+					<td>{{$index + 1}}</td>
+					<td><h4>
+							{{user.USERNAME}}
+							<md-tooltip md-direction="bottom"> {{user.USERNAME}}
+							</md-tooltip>
+						</h4></td>
+					<td>{{user.FIRST_NAME}} {{user.LAST_NAME}}</td>
+					<td>{{user.REFERRAL_CODE}}</td>
+					<td><span ng-if="user.ACTIVATE_META.activate">{{labels.ACTIVATE}}</span>
+						<md-switch ng-if="!user.ACTIVATE_META.activate"
+							style="margin:0px !important;" aria-label="{{label.STATUS}}"
+							class="md-warn" ng-change="activate($event,user)"
+							ng-model="user.ACTIVATE_META.activate"> </md-switch></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>

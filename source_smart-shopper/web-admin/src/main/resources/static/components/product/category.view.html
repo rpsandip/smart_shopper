@@ -1,0 +1,27 @@
+<div class="sub-content">
+
+	<form  ng-model="category" name="categoryForm" layout="column"
+		layout-padding class="add-item">
+		<div>
+			<md-input-container class="md-block"> <label style="text-align: left !important;">{{labels.COMMON.NAME}}</label>
+			<input name="categoryName" ng-model="category.name" required>
+			<div ng-messages="categoryForm.categoryName.$error">
+				<div ng-message="required">{{labels.CATEGORY.CATEGORY}} 
+					{{labels.COMMON.NAME}} {{labels.ERROR.REQUIRED}}</div>
+			</div>
+			</md-input-container>
+		</div>
+		<div>
+			<md-input-container class="md-block"> <label style="text-align: left !important;">{{labels.COMMON.REMARK}}</label>
+			<textarea name="categoryRemark" ng-model="category.remark"
+				ng-minlength="30" required></textarea>
+			<div ng-messages="categoryForm.categoryRemark.$error">
+				<div ng-message="required">{{labels.CATEGORY.CATEGORY}}
+					{{labels.COMMON.REMARK}} {{labels.ERROR.REQUIRED}}</div>
+				<div ng-message="minlength"> {{labels.COMMON.REMARK}}
+					{{labels.ERROR.DESC_MIN_LENGTH}}</div>
+			</div>
+			</md-input-container>
+		</div>
+	</form>
+</div>
