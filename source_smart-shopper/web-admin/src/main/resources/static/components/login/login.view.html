@@ -1,0 +1,64 @@
+<div ng-controller="LoginController" ng-model="label" layout="row"
+	class="img-div">
+
+	<!-- 	#image page -->
+	<div style="width: 100% !important;">
+		<div class="center" layout-padding>
+			<h1 class="title-text"
+				style="color: white !important; font-size: 49px !important; font-family:Georgia, Times, serif !important;    text-align: center;">{{label.APP}}</h1>
+			<p
+				style="color: white !important; font-size: 25px !important; font-family: cursive !important; text-align: center;">Shopping
+				ki nayi paribhasha</p>
+		</div>
+	</div>
+	<div
+		style="float: right !important; width: 35% !important; background-color: white !important; height: 100vh !important;"
+		class="md-whiteframe-13dp">
+		<!-- 	#side bar  -->
+		<div>
+			<div>
+				<md-toolbar class="title-toolbar md-whiteframe-1dp" layout="column" style="height:50px !important;">
+				<div class="md-toolbar-tools">
+					<h2 class="title-text" md-truncate>{{label.LOGIN}}</h2>
+				</div>
+				</md-toolbar>
+			</div>
+			<div>
+				<md-progress-linear ng-if="isLoading" md-mode="indeterminate"
+					class="md-warn"></md-progress-linear>
+			</div>
+			<div>
+				<form name="form" ng-submit="login(username,password)" role="form"
+					layout-padding>
+					<div class="form-group"
+						ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
+						<md-input-container style="width: 100% !important;" class="Input">
+						<label style="text-align: left !important;" for="username">{{label.USERNAME}}</label>
+						<input type="text" name="username" id="username"
+							class="form-control" ng-model="username" required /> <span
+							ng-show="form.username.$dirty && form.username.$error.required"
+							class="help-block">{{label.USERNAME}}
+							{{label.ERROR.is_required}}</span></md-input-container>
+					</div>
+					<div class="form-group"
+						ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+						<md-input-container style="width: 100% !important;">
+						<label style="text-align: left !important;" for="password">{{label.PASSWORD}}</label>
+						<input type="password" name="password" id="password"
+							class="form-control" ng-model="password" required /> <span
+							ng-show="form.password.$dirty && form.password.$error.required"
+							class="help-block">{{label.PASSWORD}}
+							{{label.ERROR.is_required}}</span> </md-input-container>
+					</div>
+					<div class="form-actions">
+						<md-button class="md-raised md-primary" type="submit"
+							ng-disabled="form.$invalid || vm.dataLoading"
+							class="btn btn-primary">{{label.LOGIN}} </md-button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+
