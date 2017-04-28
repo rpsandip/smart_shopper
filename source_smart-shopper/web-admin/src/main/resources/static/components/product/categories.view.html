@@ -1,0 +1,64 @@
+<div ng-controller="CategoriesController as categoryTeableCtrl"
+	layout="column" ng-model="labels" layout-padding>
+	<md-toolbar class="title-section">
+	<div class="md-toolbar-tools">
+		<md-button class="md-icon-button" aria-label="add"
+			ng-click="categoryTeableCtrl.onAddClick($event)"> <i
+			ng-if="!isCategory" class="material-icons  topbar-buttons">note_add</i>
+		<i ng-if="isCategory" class="material-icons topbar-buttons">close</i>
+		<md-tooltip ng-if="!isCategory" md-direction="bottom">
+		{{labels.COMMON.ADD}} </md-tooltip> <md-tooltip ng-if="isCategory"
+			md-direction="bottom"> {{labels.COMMON.CLOSE}}
+		{{labels.CATEGORY.CATEGORY}} </md-tooltip> </md-button>
+		<h3 ng-if="!isCategory" class="title">{{labels.CATEGORY.CATEGORIES}}</h3>
+		<h3 ng-if="isCategory" class="title">{{labels.CATEGORY.CATEGORY}}</h3>
+		<span flex></span>
+		<div ng-if="!isCategory">
+			{{labels.COMMON.SEARCH}}: <input
+				ng-model="categoryTeableCtrl.searchText">
+		</div>
+
+		<div ng-if="isCategory">
+			<md-button type="submit" ng-click="onSave($event,category)"
+				class="md-icon-button"> <i
+				class="material-icons topbar-buttons">save</i> <md-tooltip
+				md-direction="bottom"> {{labels.COMMON.SAVE}}
+			{{labels.CATEGORY.CATEGORY}} </md-tooltip> </md-button>
+		</div>
+	</div>
+	</md-toolbar>
+	<md-progress-linear md-mode="indeterminate" class="md-warn"
+		ng-if="isLoading"></md-progress-linear>
+
+	<div class="content-background table-responsive">
+
+		<div ng-if="isCategory"
+			ng-include="'components/product/category.view.html'"></div>
+
+		<table ng-if="!isCategory" datatable="ng"
+			dt-options="categoryTeableCtrl.dtOptions"
+			dt-columns="categoryTeableCtrl.dtColumn"
+			dt-column-defs="categoryTeableCtrl.dtColumnDefs"
+			class="table table-background table-sm">
+			<thead class="table-head-background"></thead>
+			<tbody>
+				<tr ng-show="!category.DELETED"
+					ng-repeat="category in categoryTeableCtrl.categories | filter:categoryTeableCtrl.searchText">
+					<td>{{$index + 1}}</td>
+					<td><h3>
+							{{category.NAME}}
+							<md-tooltip md-direction="bottom"> {{category.NAME}}
+							</md-tooltip>
+						</h3>
+						<p>{{category.REMARK}}</p></td>
+					<td><md-menu>
+						<button ng-click="openMenu($mdOpenMenu, $event)" class="button">{{labels.COMMON.ACTIONS}}</button>
+						<md-menu-content style="height: 90px !important;">
+						<md-menu-item layout="column"> <md-button
+							ng-click=""> {{labels.COMMON.EDIT}} </md-button> <md-button
+							ng-click=""> {{labels.COMMON.DELETE}} </md-button> </md-menu-item></md-menu-content></md-menu></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
