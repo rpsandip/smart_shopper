@@ -1,7 +1,6 @@
 'use strict';
 app.controller('LoginController', function($http, $scope, $rootScope, $state,
-		$location, $mdToast, $mdDialog, AuthenticationService, UtilityService,
-		DefaultConstant) {
+		$location, AuthenticationService, UtilityService, DefaultConstant) {
 
 	$scope.label = DefaultConstant.labels;
 	$scope.isLoading = false;

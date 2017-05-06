@@ -96,6 +96,10 @@ public class Product {
 		return price;
 	}
 
+	public double price() {
+		return AppUtils.stringToDouble(price);
+	}
+
 	public String getPoints() {
 		return points;
 	}

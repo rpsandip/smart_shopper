@@ -13,6 +13,14 @@ app.constant("DefaultConstant", {
 		PRODUCTS : '/products',
 		CATEGORIES : '/categories',
 		CATEGORY : '/category',
+		CART : '/cart',
+		ORDER : '/order',
+		ORDERS : '/orders',
+		CANCEL : '/cancel',
+		PLACE : '/place',
+		ADD : '/add',
+		REMOVE : '/remove',
+		GET : '/get',
 		LOG_OUT : '/logout'
 	},
 
@@ -24,7 +32,26 @@ app.constant("DefaultConstant", {
 		PRODUCTS : 'Products',
 		PRICE : 'Price',
 		LOG_OUT : 'Logout',
+		NEXT : 'Next',
+		BACK : 'Back',
+		APPLY : 'Apply',
+		REFERRAL_CODE : 'Referral Code',
+		ADD_TO_CART : 'Add to cart',
 		BUY : 'Buy',
+		CART : 'Cart',
+		USER : 'User',
+		GROCERY : 'Grocery',
+		HOME : 'Home',
+		ORDERS : 'Orders',
+		DETAILS : 'Details',
+		PREVIEW : 'Preview',
+		CHECK_OUT : 'Check out',
+		REMOVE : 'Remove',
+		QUANTITY : 'Quantity',
+		ORDER : 'Order',
+		TOTAL : 'Total',
+		STATUS : 'Status',
+		ID : 'Id',
 
 		// registration
 		REGISTRATION : 'Registration',
@@ -41,21 +68,21 @@ app.constant("DefaultConstant", {
 		CONTACT_DETAILS : 'Contact details',
 		PHONE_NO : 'Phone No',
 		ERROR : {
-			is_required : 'is required.'
+			is_required : 'is required.',
+			EMAIL : 'Invalid email'
 		}
 	}
 });
 
-app.factory('UtilityService', function($http, $rootScope, $mdToast) {
+app.factory('UtilityService', function($http, $rootScope) {
 	var service = {};
 
 	service.showError = function(message) {
 		$rootScope.error = message;
-		$mdToast.show({
-			hideDelay : 10000,
-			position : 'top right',
-			controller : 'errorController',
-			templateUrl : 'common/view/error.view.html'
+		new PNotify({
+			title : 'Error occurred',
+			addclass : 'bg-danger',
+			text : message
 		});
 	}
 	return service;
@@ -83,32 +110,3 @@ var longFormat = 'YYYYMMDD';
 var getDateToLong = function(date) {
 	return moment(date).format(longFormat);
 };
-
-var showSucess = function($mdDialog, message) {
-	$mdDialog.show($mdDialog.alert().parent(
-			angular.element(document.querySelector('#popupContainer')))
-			.clickOutsideToClose(true).title(labels.SUCCESS).textContent(
-					message).ariaLabel(labels.SUCCESS).ok(labels.OK)
-			.targetEvent(null));
-};
-
-var showErrorDialouge = function($rootScope, $mdToast, message) {
-	$rootScope.error = message;
-	$mdToast.show({
-		hideDelay : 10000,
-		position : 'top right',
-		controller : 'errorController',
-		templateUrl : 'pages/component/error.html'
-	});
-};
-
-var errorController = app.controller('errorController', function($http, $scope,
-		$rootScope, $state, $location, $mdToast, DefaultConstant,
-		UtilityService) {
-	$scope.labels = DefaultConstant.labels;
-	$scope.message = $rootScope.error;
-
-	$scope.closeToast = function($event) {
-		$mdToast.hide();
-	};
-});

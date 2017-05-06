@@ -4,12 +4,11 @@
  * @global
  */
 var categoriesController = app.controller('CategoriesController', function(
-		$http, $scope, $rootScope, $state, $location, $mdToast, $mdDialog,
-		$element, DTDefaultOptions, DTOptionsBuilder, DTColumnDefBuilder,
+		$http, $scope, $rootScope, $state, $location, $element,
+		DTDefaultOptions, DTOptionsBuilder, DTColumnDefBuilder,
 		DefaultConstant, UtilityService, CategoryFactory, ProductService) {
 
-	var labels = DefaultConstant.labels;
-	$scope.labels = labels;
+	var labels = $scope.labels = DefaultConstant.labels;
 	var category = new Category();
 	category.clear();
 	$scope.isCategory = false;
@@ -20,23 +19,27 @@ var categoriesController = app.controller('CategoriesController', function(
 	CategoryFactory.setCategory(category);
 	var mainCategory = CategoryFactory.getCategory();
 
-	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(300)
-			.withDOM('trp').withBootstrap().withScroller();
+	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
+			.withDOM('ftp');
 	vm.dtColumnDefs = [
-			DTColumnDefBuilder.newColumnDef(0).withTitle('#').withOption('autoWidth', false).notSortable(),
+			DTColumnDefBuilder.newColumnDef(0).withTitle('#').withOption(
+					'autoWidth', false),
 			DTColumnDefBuilder.newColumnDef(1).withTitle(
 					labels.CATEGORY.CATEGORY).withOption('autoWidth', true),
 			DTColumnDefBuilder.newColumnDef(2).withTitle('').withOption(
-					'autoWidth', false) ];
+					'autoWidth', true) ];
 
 	// on add or close click
-	vm.onAddClick = function($event) {
-		$scope.isCategory ? $scope.isCategory = false
-				: $scope.isCategory = true;
+	$scope.onAddClick = function($event) {
+		$scope.isCategory = true;
 		var mainCategory = CategoryFactory.getCategory();
 		mainCategory.isEdit = false;
 
 		$scope.category = new Category();
+	};
+
+	$scope.onCloseClick = function($event) {
+		$scope.isCategory = false;
 	};
 
 	// on save click

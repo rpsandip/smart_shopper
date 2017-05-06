@@ -1,27 +1,54 @@
-<div class="sub-content">
 
-	<form  ng-model="category" name="categoryForm" layout="column"
-		layout-padding class="add-item">
-		<div>
-			<md-input-container class="md-block"> <label style="text-align: left !important;">{{labels.COMMON.NAME}}</label>
-			<input name="categoryName" ng-model="category.name" required>
-			<div ng-messages="categoryForm.categoryName.$error">
-				<div ng-message="required">{{labels.CATEGORY.CATEGORY}} 
-					{{labels.COMMON.NAME}} {{labels.ERROR.REQUIRED}}</div>
+<!-- Content area -->
+<div class="content">
+	<!-- 2 columns form -->
+	<form class="form-horizontal" ng-model="category" name="categoryForm">
+		<div class="panel panel-flat">
+
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<fieldset>
+							<legend class="text-semibold">{{labels.DETAILS}} </legend>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.COMMON.NAME}}</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" name="categoryName"
+										ng-model="category.name" required>
+									<div ng-messages="categoryForm.categoryName.$error">
+										<div ng-message="required">{{labels.CATEGORY.CATEGORY}}
+											{{labels.COMMON.NAME}} {{labels.ERROR.REQUIRED}}</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.COMMON.REMARK}}</label>
+								<div class="col-lg-9">
+									<textarea name="categoryRemark" ng-model="category.remark"
+										ng-minlength="30" required rows="5" cols="5"
+										class="form-control"
+										placeholder="{{labels.CATEGORY.CATEGORY}} {{labels.COMMON.REMARK}}"></textarea>
+									<div ng-messages="categoryForm.categoryRemark.$error">
+										<div ng-message="required">{{labels.CATEGORY.CATEGORY}}
+											{{labels.COMMON.REMARK}} {{labels.ERROR.REQUIRED}}</div>
+										<div ng-message="minlength">{{labels.COMMON.REMARK}}
+											{{labels.ERROR.DESC_MIN_LENGTH}}</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+
+				<div class="text-right">
+					<button type="submit" class="btn btn-primary"
+						ng-click="onSave($event,category)">{{labels.COMMON.SAVE}}
+					</button>
+				</div>
 			</div>
-			</md-input-container>
-		</div>
-		<div>
-			<md-input-container class="md-block"> <label style="text-align: left !important;">{{labels.COMMON.REMARK}}</label>
-			<textarea name="categoryRemark" ng-model="category.remark"
-				ng-minlength="30" required></textarea>
-			<div ng-messages="categoryForm.categoryRemark.$error">
-				<div ng-message="required">{{labels.CATEGORY.CATEGORY}}
-					{{labels.COMMON.REMARK}} {{labels.ERROR.REQUIRED}}</div>
-				<div ng-message="minlength"> {{labels.COMMON.REMARK}}
-					{{labels.ERROR.DESC_MIN_LENGTH}}</div>
-			</div>
-			</md-input-container>
 		</div>
 	</form>
+	<!-- /2 columns form -->
 </div>

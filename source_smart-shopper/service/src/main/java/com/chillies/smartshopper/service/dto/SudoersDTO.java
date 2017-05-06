@@ -169,7 +169,6 @@ public class SudoersDTO {
 			LOG.error(error);
 			throw new ServicesNotFound(error);
 		}
-
 	}
 
 }

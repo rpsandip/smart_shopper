@@ -1,64 +1,55 @@
+<!-- Basic datatable -->
 <div ng-controller="CategoriesController as categoryTeableCtrl"
-	layout="column" ng-model="labels" layout-padding>
-	<md-toolbar class="title-section">
-	<div class="md-toolbar-tools">
-		<md-button class="md-icon-button" aria-label="add"
-			ng-click="categoryTeableCtrl.onAddClick($event)"> <i
-			ng-if="!isCategory" class="material-icons  topbar-buttons">note_add</i>
-		<i ng-if="isCategory" class="material-icons topbar-buttons">close</i>
-		<md-tooltip ng-if="!isCategory" md-direction="bottom">
-		{{labels.COMMON.ADD}} </md-tooltip> <md-tooltip ng-if="isCategory"
-			md-direction="bottom"> {{labels.COMMON.CLOSE}}
-		{{labels.CATEGORY.CATEGORY}} </md-tooltip> </md-button>
-		<h3 ng-if="!isCategory" class="title">{{labels.CATEGORY.CATEGORIES}}</h3>
-		<h3 ng-if="isCategory" class="title">{{labels.CATEGORY.CATEGORY}}</h3>
-		<span flex></span>
-		<div ng-if="!isCategory">
-			{{labels.COMMON.SEARCH}}: <input
-				ng-model="categoryTeableCtrl.searchText">
-		</div>
-
-		<div ng-if="isCategory">
-			<md-button type="submit" ng-click="onSave($event,category)"
-				class="md-icon-button"> <i
-				class="material-icons topbar-buttons">save</i> <md-tooltip
-				md-direction="bottom"> {{labels.COMMON.SAVE}}
-			{{labels.CATEGORY.CATEGORY}} </md-tooltip> </md-button>
+	class="panel">
+	<div class="panel-heading  bg-blue-600">
+		<h3 ng-if="!isCategory" class="panel-title">{{labels.CATEGORY.CATEGORIES}}</h3>
+		<h3 ng-if="isCategory" class="panel-title">{{labels.CATEGORY.CATEGORY}}</h3>
+		<div class="heading-elements">
+			<ul class="icons-list">
+				<li ng-if="!isCategory"><a ng-click="onAddClick($event)"><i
+						class="icon-plus3"></i></a></li>
+				<li ng-if="isCategory"><a ng-click="onCloseClick($event)">
+						<i class="icon-cross2"></i>
+				</a></li>
+			</ul>
 		</div>
 	</div>
-	</md-toolbar>
-	<md-progress-linear md-mode="indeterminate" class="md-warn"
-		ng-if="isLoading"></md-progress-linear>
 
-	<div class="content-background table-responsive">
+	<div ng-if="isCategory"
+		ng-include="'components/product/category.view.html'"></div>
 
-		<div ng-if="isCategory"
-			ng-include="'components/product/category.view.html'"></div>
-
-		<table ng-if="!isCategory" datatable="ng"
-			dt-options="categoryTeableCtrl.dtOptions"
-			dt-columns="categoryTeableCtrl.dtColumn"
-			dt-column-defs="categoryTeableCtrl.dtColumnDefs"
-			class="table table-background table-sm">
-			<thead class="table-head-background"></thead>
+	<div ng-if="!isCategory">
+		<table class="table table-border" datatable="ng"
+			dt-options="categoryTeableCtrl.dtOptions">
+			<thead>
+				<tr class="bg-blue-600">
+					<th>#</th>
+					<th>{{labels.CATEGORY.CATEGORY1}}</th>
+					<th class="text-center">Actions</th>
+				</tr>
+			</thead>
 			<tbody>
 				<tr ng-show="!category.DELETED"
 					ng-repeat="category in categoryTeableCtrl.categories | filter:categoryTeableCtrl.searchText">
 					<td>{{$index + 1}}</td>
-					<td><h3>
-							{{category.NAME}}
-							<md-tooltip md-direction="bottom"> {{category.NAME}}
-							</md-tooltip>
-						</h3>
+					<td><h4 class="td-h4">{{category.NAME}}</h4>
 						<p>{{category.REMARK}}</p></td>
-					<td><md-menu>
-						<button ng-click="openMenu($mdOpenMenu, $event)" class="button">{{labels.COMMON.ACTIONS}}</button>
-						<md-menu-content style="height: 90px !important;">
-						<md-menu-item layout="column"> <md-button
-							ng-click=""> {{labels.COMMON.EDIT}} </md-button> <md-button
-							ng-click=""> {{labels.COMMON.DELETE}} </md-button> </md-menu-item></md-menu-content></md-menu></td>
+					<td>
+						<ul class="icons-list">
+							<li class="dropdown"><a target="_self" href="#"
+								class="dropdown-toggle" data-toggle="dropdown"
+								aria-expanded="false"> <i class="icon-menu9"></i>
+							</a>
+
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li><a><i class="icon-pencil7"></i> Edit</a></li>
+									<li><a><i class="icon-copy"></i> Copy</a></li>
+								</ul></li>
+						</ul>
+					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 </div>
+<!-- /basic datatable -->

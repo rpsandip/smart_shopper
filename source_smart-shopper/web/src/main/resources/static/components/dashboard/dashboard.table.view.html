@@ -1,27 +1,143 @@
-<div>
-	<md-progress-linear md-mode="indeterminate" class="md-warn"
-		ng-if="isLoading"></md-progress-linear>
-	<div class="content-background table-responsive">
-		<table datatable="ng" dt-options="ctrl.dtOptions"
-			dt-columns="ctrl.dtColumn" dt-column-defs="ctrl.dtColumnDefs"
-			class="table table-background table-sm">
-			<thead class="table-head-background"></thead>
-			<tbody>
-				<tr ng-show="!isProduct.DELETED" ng-repeat="product in products">
-					<td style="width: 7% !important;"><div
-							class="md-media-sm card-media">
-							<img style="height: 120px !important;"
-								src="{{product.IMAGE_URL}}" alt="{{product.NAME}}"
+<div class="row">
+	<div class="col-md-8">
+		<!-- Media library -->
+		<div class="panel panel-flat">
+			<div class="panel-heading"
+				style="border-bottom: 1px solid rgba(128, 128, 128, 0.45) !important;">
+				<h5 class="panel-title">{{CATEGORY_TITLE}}</h5>
+			</div>
+			<table id="productsTable" class="table table-border" datatable="ng"
+				dt-options="dctrl.dtOptions">
+				<thead class="bg-indigo">
+					<tr>
+						<th>{{labels.PREVIEW}}</th>
+						<th>{{labels.PRODUCTS}}</th>
+						<th class="text-center">{{labels.PRICE}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="product in dctrl.products">
+						<!-- 					<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_default">Launch <i class="icon-play3 position-right"></i></button> -->
+						<td><a href="{{product.IMAGE_URL}}" data-toggle="modal"
+							data-target="#modal_default1"
+							ng-click="onProductPopClick($event,product)"> <img
+								style="height: 130px !important;" ng-src="{{product.IMAGE_URL}}"
+								alt="{{product.NAME}}"
 								onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
-						</div></td>
-					<td style="width: 60% !important;"><h2>{{product.NAME}}</h2>
-						<p>{{product.REMARK}}</p></td>
-					<td><h3>{{product.PRICE | currency}}</h3></td>
-					<td>
-						<button ng-click="openMenu($mdOpenMenu, $event)" class="button">{{labels.BUY}}</button>
-					</td>
-				</tr>
-			</tbody>
-		</table>
+						</a></td>
+						<td><h3 class="td-h4">{{product.NAME}}</h3>
+							<p>{{product.REMARK}}</p></td>
+						<td><h4>{{product.PRICE | currency}}</h4>
+							<p>
+								<button ng-click="onAddToCart($event,product)"
+									class="btn  border-indigo btn-flat legitRipple">{{labels.ADD_TO_CART}}</button>
+							</p></td>
+					</tr>
+				</tbody>
+
+			</table>
+		</div>
+		<!-- /media library -->
+
+	</div>
+	<div class="col-md-4">
+		<!-- Main sidebar -->
+		<div class="sidebar sidebar-main sidebar-default">
+			<div class="sidebar-content">
+
+				<!-- Main navigation -->
+				<div class="sidebar-category sidebar-category-visible"
+					ng-model="cart">
+					<div class="category-content no-padding">
+						<div class="panel-heading"
+							style="border-bottom: 1px solid rgba(128, 128, 128, 0.45) !important;">
+							<div>
+								<h5 class="panel-title">
+									{{labels.CART}}
+									<button style="float: right !important;"
+										ng-click="onCheckOut($event)"
+										class="btn  border-indigo btn-flat legitRipple">
+										<i class="icon-cart5"></i> {{labels.CHECK_OUT}}
+									</button>
+								</h5>
+							</div>
+						</div>
+						<table id="cartTable" class="table table-border" datatable="ng"
+							dt-options="dctrl.dtOptions">
+							<thead class="bg-indigo">
+								<tr>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+									<th></th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="product in cart.products">
+									<td>{{$index + 1}}</td>
+									<td><img style="height: 35px !important;"
+										ng-src="{{product.product.productURL}}" alt="{{product.NAME}}"
+										onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';"></td>
+									<td>{{product.product.name}}</td>
+									<td>{{product.quantity}}</td>
+									<td>{{product.price}}</td>
+									<td>
+										<ul class="icons-list">
+											<li class="dropdown"><a target="_self" href="#"
+												class="dropdown-toggle" data-toggle="dropdown"
+												aria-expanded="false"> <i class="icon-menu9"></i>
+											</a>
+
+												<ul class="dropdown-menu dropdown-menu-right">
+													<li><a target="_self"
+														ng-click="removeFromCart($event, product)"><i
+															class="icon-cross2"></i> {{labels.REMOVE}}</a></li>
+												</ul></li>
+										</ul>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<!-- /main navigation -->
+			</div>
+		</div>
+		<!-- /main sidebar -->
+
+		<!-- 		<!-- Basic modal -->
+		<!-- 		<div id="modal_default1" class="modal fade"> -->
+		<!-- 			<div class="modal-dialog" ng-model="productPop"> -->
+		<!-- 				<div class="modal-content"> -->
+		<!-- 					<div class="modal-header"> -->
+		<!-- 						<button type="button" class="close" data-dismiss="modal">&times;</button> -->
+		<!-- 						<h5 class="modal-title">{{labels.DETAILS}}</h5> -->
+		<!-- 					</div> -->
+
+		<!-- 					<div class="modal-body"> -->
+		<!-- 						<div class="row"> -->
+		<!-- 							<div class="col-md-4"> -->
+		<!-- 								<img style="height: 130px !important;" -->
+		<!-- 									ng-src="{{productPop.IMAGE_URL}}" alt="{{productPop.NAME}}" -->
+		<!-- 									onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';"> -->
+		<!-- 							</div> -->
+		<!-- 							<div class="col-md-8"> -->
+		<!-- 								<h5> -->
+		<!-- 									{{productPop.NAME}} <small><p>{{productPop.REMARK}}</p></small> -->
+		<!-- 								</h5> -->
+		<!-- 								<h4>{{product.PRICE | currency}}</h4> -->
+		<!-- 								<p> -->
+		<!-- 									<button ng-click="onAddToCart($event,productPop)" -->
+		<!-- 										class="btn  border-indigo btn-flat legitRipple">{{labels.ADD_TO_CART}}</button> -->
+		<!-- 								</p> -->
+		<!-- 							</div> -->
+		<!-- 						</div> -->
+		<!-- 					</div> -->
+		<!-- 				</div> -->
+		<!-- 				/basic modal -->
+		<!-- 			</div> -->
+		<!-- 		</div> -->
 	</div>
 </div>

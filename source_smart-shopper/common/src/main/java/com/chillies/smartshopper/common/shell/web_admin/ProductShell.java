@@ -104,8 +104,7 @@ public class ProductShell {
 
 	@Override
 	public int hashCode() {
-		final int hash = id.hashCode();
-		return hash * 2;
+		return id.hashCode();
 	}
 
 	@Override

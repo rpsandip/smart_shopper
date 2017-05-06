@@ -13,6 +13,9 @@ app.constant("DefaultConstant", {
 		PRODUCT : "/product",
 		CATEGORY : "/category",
 		CATEGORIES : '/categories',
+		ORDERS : '/orders',
+		ORDER : '/order',
+		STATUS : '/status',
 		PRODUCTS : '/products',
 		ADD : "/add",
 		LOG_OUT : '/logout'
@@ -25,9 +28,19 @@ app.constant("DefaultConstant", {
 		USERNAME : 'Username',
 		PASSWORD : 'Password',
 		NAME : 'Name',
+		DETAILS : 'Details',
 		REFERRAL_CODE : 'Referral Code',
 		ACTIVATE : 'Activate',
+		PENDING : 'Pending',
 		STATUS : 'Status',
+		PREVIEW : 'Preview',
+		ID : 'Id',
+		ORDERS : 'Orders',
+		TOTAL : 'Total',
+		VIEW : 'View',
+		CANCEL : 'Cancel',
+		OUT_FOR_DELIVERY : 'Out for delivery',
+		DELIVERED : 'Delivered',
 		CATEGORY : {
 
 			CATEGORY1 : 'Category',
@@ -55,7 +68,7 @@ app.constant("DefaultConstant", {
 			ITEMS : 'Products',
 			IMAGE : 'Image',
 			PRICE : 'Price',
-			POINTS : 'Poits'
+			POINTS : 'Points'
 		},
 		ERROR : {
 			is_required : 'is required.',
@@ -66,16 +79,15 @@ app.constant("DefaultConstant", {
 	}
 });
 
-app.factory('UtilityService', function($http, $rootScope, $mdToast) {
+app.factory('UtilityService', function($http, $rootScope) {
 	var service = {};
 
 	service.showError = function(message) {
 		$rootScope.error = message;
-		$mdToast.show({
-			hideDelay : 10000,
-			position : 'top right',
-			controller : 'errorController',
-			templateUrl : 'common/view/error.view.html'
+		new PNotify({
+			title : 'Error occurred',
+			addclass : 'bg-danger',
+			text : message
 		});
 	}
 	return service;
@@ -112,56 +124,21 @@ var getDateToLong = function(date) {
 var menu = [ {
 	ID : 0,
 	TITLE : "Product",
-	FACE : "fa fa-tag",
+	FACE : " icon-snowflake",
 	CAN_VIEW : true
 }, {
 	ID : 1,
 	TITLE : "Product Category",
-	FACE : "fa fa-tags",
+	FACE : "icon-stack2",
 	CAN_VIEW : false
 }, {
 	ID : 2,
 	TITLE : "Users",
-	FACE : "fa fa-first-order",
+	FACE : " icon-users2",
 	CAN_VIEW : false
 }, {
 	ID : 3,
 	TITLE : "Orders",
-	FACE : "fa fa-first-order",
+	FACE : "icon-cart2",
 	CAN_VIEW : false
 } ];
-
-var showSucess = function($mdDialog, message) {
-	$mdDialog.show($mdDialog.alert().parent(
-			angular.element(document.querySelector('#popupContainer')))
-			.clickOutsideToClose(true).title(labels.SUCCESS).textContent(
-					message).ariaLabel(labels.SUCCESS).ok(labels.OK)
-			.targetEvent(null));
-};
-
-var showErrorDialouge = function($rootScope, $mdToast, message) {
-	$rootScope.error = message;
-	$mdToast.show({
-		hideDelay : 10000,
-		position : 'top right',
-		controller : 'errorController',
-		templateUrl : 'pages/component/error.html'
-	});
-};
-
-var errorController = app.controller('errorController', function($http, $scope,
-		$rootScope, $state, $location, $mdToast, DefaultConstant,
-		UtilityService) {
-	$scope.labels = DefaultConstant.labels;
-	$scope.message = $rootScope.error;
-
-	$scope.closeToast = function($event) {
-		$mdToast.hide();
-	};
-});
-
-var checkAuthorized = function($state, status) {
-	if (status == 401) {
-		$state.go('login');
-	}
-};

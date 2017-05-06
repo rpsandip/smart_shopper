@@ -1,70 +1,105 @@
-<div class="sub-content">
-	<form ng-cloak ng-model="product" name="productForm" layout="column"
-		layout-padding class="add-item">
-		<div>
-			<md-select placeholder="{{labels.CATEGORY.CATEGORY}}"
-				ng-model="product.selectedCategory" md-on-open="laodCategory()"
-				md-on-close="clearSearchTerm()"> <md-select-header
-				class="demo-select-header"> <input
-				ng-model="searchTerm" type="search" name="search"
-				ng-keydown="updateSearch($event)"
-				placeholder="Search {{labels.CATEGORY.CATEGORIES}}"
-				class="demo-header-searchbox md-text"
-				style="width: 100% !important; height: 30px !important;"> </md-select-header> <md-option
-				ng-value="category"
-				ng-repeat="category in categories |filter:searchTerm"">{{category.NAME}}</md-option>
-			</md-select>
-		</div>
-		<div>	
-			<md-input-container class="md-block"> <label
-				style="text-align: left !important;">{{labels.COMMON.NAME}}</label>
-			<input name="productName" ng-model="product.name" required>
-			<div ng-messages="productForm.productName.$error">
-				<div ng-message="required">{{labels.product.product}}
-					{{labels.COMMON.NAME}} {{labels.ERROR.REQUIRED}}</div>
-			</div>
-			</md-input-container>
-		</div>
-		<div>
-			<md-input-container class="md-block"> <label
-				style="text-align: left !important;">{{labels.ITEM.PRICE}}</label> <input
-				name="productPrice" ng-model="product.price" type="number" required>
-			<div ng-messages="productForm.productPrice.$error">
-				<div ng-message="required">{{labels.ITEM.PRICE}}
-					{{labels.ERROR.REQUIRED}}</div>
-			</div>
-			</md-input-container>
-		</div>
-		<div>
-			<md-input-container class="md-block"> <label
-				style="text-align: left !important;">{{labels.ITEM.POINTS}}</label>
-			<input name="productPoints" ng-model="product.points" type="number"
-				required>
-			<div ng-messages="productForm.productPoints.$error">
-				<div ng-message="required">{{labels.ITEM.POINTS}}
-					{{labels.ERROR.REQUIRED}}</div>
-			</div>
-			</md-input-container>
-		</div>
-		<div>
-			<md-input-container class="md-block"> <label
-				style="text-align: left !important;">{{labels.COMMON.REMARK}}</label>
-			<textarea name="productRemark" ng-model="product.remark"
-				ng-minlength="30" required></textarea>
-			<div ng-messages="productForm.productRemark.$error">
-				<div ng-message="required">{{labels.COMMON.REMARK}}
-					{{labels.ERROR.REQUIRED}}</div>
-				<div ng-message="minlength">{{labels.COMMON.REMARK}}
-					{{labels.ERROR.DESC_MIN_LENGTH}}</div>
-			</div>
-			</md-input-container>
-		</div>
 
-		<div lang="row">
-			<label>{{labels.product.IMAGE}}</label> <input type="file" name="pic"
-				accept="image/*"
-				onchange="angular.element(this).scope().uploadFile(this.files[0])"
-				class="choose-bottom">
+<!-- Content area -->
+<div class="content">
+	<!-- 2 columns form -->
+	<form class="form-horizontal" ng-model="product" name="productForm">
+		<div class="panel panel-flat">
+
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<fieldset>
+							<legend class="text-semibold">{{labels.DETAILS}} </legend>
+
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.CATEGORY.CATEGORY}}</label>
+								<div class="col-lg-9">
+									<select data-placeholder="Select your state"
+										tabindex="-1" aria-hidden="true"
+										data-ng-options="category as category.NAME for category  in categories"
+										ng-model="product.selectedCategory">
+									</select>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.COMMON.NAME}}</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="productName"
+										name="productName" ng-model="product.name"
+										placeholder="{{labels.ITEM.ITEM}} {{labels.COMMON.NAME}}"
+										required>
+									<div ng-messages="productForm.productName.$error">
+										<div ng-message="required">{{labels.product.product}}
+											{{labels.COMMON.NAME}} {{labels.ERROR.REQUIRED}}</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.ITEM.PRICE}}</label>
+								<div class="col-lg-9">
+									<input class="form-control" name="productPrice"
+										ng-model="product.price" type="number"
+										placeholder="{{labels.ITEM.ITEM}} {{labels.ITEM.PRICE}}"
+										required>
+									<div ng-messages="productForm.productPrice.$error">
+										<div ng-message="required">{{labels.ITEM.PRICE}}
+											{{labels.ERROR.REQUIRED}}</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.ITEM.POINTS}}</label>
+								<div class="col-lg-9">
+									<input class="form-control" name="productPoints"
+										ng-model="product.points" type="number"
+										placeholder="{{labels.ITEM.ITEM}} {{labels.ITEM.POINTS}}"
+										required>
+									<div ng-messages="productForm.productPoints.$error">
+										<div ng-message="required">{{labels.ITEM.POINTS}}
+											{{labels.ERROR.REQUIRED}}</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.product.IMAGE}}</label>
+								<div class="col-lg-9">
+									<input type="file" name="pic" accept="image/*"
+										onchange="angular.element(this).scope().uploadFile(this.files[0])"
+										class="choose-bottom">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.COMMON.REMARK}}</label>
+								<div class="col-lg-9">
+									<textarea name="productRemark" ng-model="product.remark"
+										rows="5" cols="5" class="form-control" ng-minlength="30"
+										required
+										placeholder="{{labels.ITEM.ITEM}} {{labels.COMMON.REMARK}}"></textarea>
+									<div ng-messages="productForm.productRemark.$error">
+										<div ng-message="required">{{labels.COMMON.REMARK}}
+											{{labels.ERROR.REQUIRED}}</div>
+										<div ng-message="minlength">{{labels.COMMON.REMARK}}
+											{{labels.ERROR.DESC_MIN_LENGTH}}</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+
+				<div class="text-right">
+					<button type="submit" class="btn btn-primary"
+						ng-click="onSave($event,product,image)">{{labels.COMMON.SAVE}}
+					</button>
+				</div>
+			</div>
 		</div>
 	</form>
+	<!-- /2 columns form -->
 </div>

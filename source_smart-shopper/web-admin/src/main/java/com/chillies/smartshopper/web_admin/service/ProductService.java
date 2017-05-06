@@ -19,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.chillies.smartshopper.common.shell.web.OrderShell;
 import com.chillies.smartshopper.common.shell.web_admin.ProductCategoryShell;
 import com.chillies.smartshopper.common.shell.web_admin.ProductShell;
+import com.chillies.smartshopper.common.util.OrderStatus;
 import com.chillies.smartshopper.lib.model.web_model.Sudoers;
 import com.chillies.smartshopper.service.dto.ProductDTO;
 import com.chillies.smartshopper.service.dto.SudoersDTO;
@@ -97,6 +99,22 @@ public class ProductService {
 	public void getProductImage(@PathVariable String productCode, HttpServletResponse response) throws IOException {
 		IOUtils.copy(productDTO.getProductImage(productCode), response.getOutputStream());
 		response.flushBuffer();
+	}
+
+	@RequestMapping(value = "${service.sudoers.order.orders}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SortedSet<OrderShell>> orders(
+			@RequestParam(value = "session", required = true) String session, final HttpServletRequest request) {
+		sudoersDTO.isValid(session);
+		return productDTO.orders(request);
+	}
+
+	@RequestMapping(value = "${service.sudoers.order.status}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<OrderShell> status(
+			@RequestParam(value = "session", required = true) String session,
+			@RequestParam(value = "status", required = true) OrderStatus status,
+			@RequestParam(value = "orderId", required = true) String orderId, final HttpServletRequest request) {
+		final Sudoers sudoers = sudoersDTO.isValid(session);
+		return productDTO.status(status, orderId, sudoers, request);
 	}
 
 }

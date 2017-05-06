@@ -1,20 +1,11 @@
 'use strict';
 app.controller('LoginController', function($http, $scope, $window, $rootScope,
-		$state, $location, $mdToast, $mdDialog, AuthenticationService,
-		UtilityService, UsersService, DefaultConstant) {
+		$state, $location, AuthenticationService, UtilityService, UsersService,
+		DefaultConstant, WizardHandler) {
 
 	$scope.label = DefaultConstant.labels;
 	$scope.isLoading = false;
-	if ($rootScope.isRegister == null || $rootScope.isRegister == undefined) {
-		$scope.isRegister = false;
-	} else {
-		if ($rootScope.isRegister) {
-			$scope.isRegister = true;
-			$scope.registration = new Registration();
-		} else {
-			$scope.isRegister = false;
-		}
-	}
+	$scope.isRegister = false;
 
 	(function initController() {
 		// reset login status
@@ -44,7 +35,8 @@ app.controller('LoginController', function($http, $scope, $window, $rootScope,
 					response.user.username, response.user.firstName + " "
 							+ response.user.lastName);
 
-			$state.go('dashboard.categories');
+			$('#modal_default').modal('toggle');
+			$window.location.reload();
 		});
 	};
 
@@ -58,6 +50,10 @@ app.controller('LoginController', function($http, $scope, $window, $rootScope,
 	};
 
 	$scope.onRegister = function(registration, referralCode) {
+		if (registration == undefined || registration == null) {
+			UtilityService.showError("Registration can not be null.");
+			return;
+		}
 		$scope.isLoading = true;
 		UsersService.register(registration.toJSON(referralCode), function(
 				response, status) {
@@ -72,32 +68,30 @@ app.controller('LoginController', function($http, $scope, $window, $rootScope,
 				return;
 			}
 			$scope.isRegister = false;
+			$scope.registration = new Registration();
+			WizardHandler.wizard().reset();
+			WizardHandler.wizard().finish();
+
 		});
 	};
 
 	$scope.isReferralCode = false;
-	$scope.onReferral = function($event) {
-		var confirm = $mdDialog.prompt().title('Referral Code').textContent('')
-				.placeholder('Enter referral code').ariaLabel('').initialValue(
-						'').targetEvent($event).ok('Ok').cancel('cancel');
 
-		$mdDialog.show(confirm).then(function(result) {
-			$scope.isLoading = true;
-			UsersService.referral(result, function(response, status) {
-				$scope.isLoading = false;
-				if (status == 401) {
-					UtilityService.showError(response.message);
-					return;
-				}
-				if (status != 200) {
-					UtilityService.showError(response.message);
-					return;
-				}
-				$scope.isReferralCode = true;
-				$scope.referralCode = response;
-			});
-		}, function() {
-			$scope.isReferralCode = false;
+	$scope.onReferral = function($event, referralCode) {
+		$scope.isLoading = true;
+		UsersService.referral(referralCode, function(response, status) {
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			$scope.isReferralCode = true;
+			$scope.referralCode = referralCode;
+			$scope.referralUser = response;
 		});
 	};
 

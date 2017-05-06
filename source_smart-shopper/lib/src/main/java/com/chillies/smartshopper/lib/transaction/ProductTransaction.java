@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -19,18 +20,26 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.chillies.smartshopper.common.shell.web.OrderShell;
 import com.chillies.smartshopper.common.shell.web_admin.ProductCategoryShell;
 import com.chillies.smartshopper.common.shell.web_admin.ProductShell;
 import com.chillies.smartshopper.common.util.AppUtils;
+import com.chillies.smartshopper.common.util.CartStatus;
 import com.chillies.smartshopper.common.util.DirectoryFiles;
 import com.chillies.smartshopper.common.util.MessageUtils;
+import com.chillies.smartshopper.common.util.OrderStatus;
 import com.chillies.smartshopper.lib.exception.NotAccatable;
 import com.chillies.smartshopper.lib.model.CreatedMeta;
 import com.chillies.smartshopper.lib.model.DateMeta;
+import com.chillies.smartshopper.lib.model.ProductMeta;
+import com.chillies.smartshopper.lib.model.web.Cart;
+import com.chillies.smartshopper.lib.model.web.Order;
+import com.chillies.smartshopper.lib.model.web.Users;
 import com.chillies.smartshopper.lib.model.web_model.Product;
 import com.chillies.smartshopper.lib.model.web_model.ProductCategory;
 import com.chillies.smartshopper.lib.model.web_model.Sudoers;
 import com.chillies.smartshopper.lib.service.IWebAdminDbService;
+import com.chillies.smartshopper.lib.service.IWebDbService;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
@@ -46,22 +55,65 @@ public final class ProductTransaction {
 	private static final Logger LOG = LoggerFactory.getLogger(ProductTransaction.class);
 
 	@Autowired
-	private IWebAdminDbService dbService;
+	private IWebAdminDbService iWebAdminDbService;
+
+	@Autowired
+	private IWebDbService iWebDbService;
+
+	@Autowired
+	private SudoersTransaction sudoersTransaction;
 
 	private ProductCategory save(final ProductCategory productCategory) {
 		Preconditions.checkNotNull(productCategory, "productCategory can not be null.");
 
-		return dbService.save(productCategory);
+		return iWebAdminDbService.save(productCategory);
+	}
+
+	private Cart save(final Cart cart) {
+		Preconditions.checkNotNull(cart, "cart can not be null.");
+
+		return iWebDbService.save(cart);
+	}
+
+	private Order save(final Order order) {
+		Preconditions.checkNotNull(order, "order can not be null.");
+		return iWebDbService.save(order);
+	}
+
+	private double totalSumOfItems(final Set<ProductMeta> metas) {
+		Preconditions.checkNotNull(metas, "metas can not be null.");
+		double total = 0;
+		for (final ProductMeta product : metas) {
+			double price = product.getQuantity() * product.price();
+			total += price;
+		}
+		return total;
+	}
+
+	public Optional<Order> orderById(final String id) {
+		Preconditions.checkNotNull(id, "id can not be null.");
+
+		return Optional.fromNullable(iWebDbService.byId(id));
+	}
+
+	public Order getOrderById(final String id) {
+		Preconditions.checkNotNull(id, "id can not be null.");
+
+		final Optional<Order> optional = this.orderById(id);
+		if (!optional.isPresent()) {
+			throw new NotAccatable(MessageUtils.ORDER_NOT_PRESENT);
+		}
+		return optional.get();
 	}
 
 	public Set<ProductCategory> categories() {
-		return dbService.productCategories();
+		return iWebAdminDbService.productCategories();
 	}
 
 	public void isProductCategoryName(final String name) {
 		Preconditions.checkNotNull(name, "name can not be null.");
 
-		final Optional<ProductCategory> optionalProductCategory = dbService.byProductCategory(name);
+		final Optional<ProductCategory> optionalProductCategory = iWebAdminDbService.byProductCategory(name);
 		if (optionalProductCategory.isPresent()) {
 			LOG.info(String.format("isProductCategoryName() category %s already exists.", name));
 			throw new NotAccatable(MessageUtils.PRODUCT_CATEGORY_ALREADY_EXISTS);
@@ -71,21 +123,21 @@ public final class ProductTransaction {
 	public Product save(final Product product) {
 		Preconditions.checkNotNull(product, "product can not be null.");
 
-		return dbService.save(product);
+		return iWebAdminDbService.save(product);
 	}
 
 	public Set<Product> products() {
-		return dbService.products();
+		return iWebAdminDbService.products();
 	}
 
 	public Set<Product> products(final ProductCategory category) {
-		return dbService.products(category);
+		return iWebAdminDbService.products(category);
 	}
 
 	public void isProductName(final String name) {
 		Preconditions.checkNotNull(name, "name can not be null.");
 
-		final Optional<Product> optional = dbService.byProduct(name);
+		final Optional<Product> optional = iWebAdminDbService.byProduct(name);
 		if (optional.isPresent()) {
 			LOG.info(String.format("isProductName() %s already exists.", name));
 			throw new NotAccatable(MessageUtils.PRODUCT_NAME_ALREADY_EXISTS);
@@ -95,7 +147,7 @@ public final class ProductTransaction {
 	public ProductCategory getProductCategortByName(final String name) {
 		Preconditions.checkNotNull(name, "name can not be null.");
 
-		final Optional<ProductCategory> optionalProductCategory = dbService.byProductCategoryById(name);
+		final Optional<ProductCategory> optionalProductCategory = iWebAdminDbService.byProductCategoryById(name);
 
 		if (!optionalProductCategory.isPresent()) {
 			LOG.info(String.format("getProductCategortByName() category %s is not present.", name));
@@ -108,7 +160,7 @@ public final class ProductTransaction {
 	public ProductCategory getProductCategoryId(final String categortId) {
 		Preconditions.checkNotNull(categortId, "categortId can not be null.");
 
-		final Optional<ProductCategory> optionalProductCategory = dbService.byProductCategoryById(categortId);
+		final Optional<ProductCategory> optionalProductCategory = iWebAdminDbService.byProductCategoryById(categortId);
 
 		if (!optionalProductCategory.isPresent()) {
 			LOG.info(String.format("getProductCategoryId() category %s is not present.", categortId));
@@ -198,7 +250,7 @@ public final class ProductTransaction {
 	public Product getProductId(final String productId) {
 		Preconditions.checkNotNull(productId, "productId can not be null.");
 
-		final Optional<Product> optional = dbService.byProductId(productId);
+		final Optional<Product> optional = iWebAdminDbService.byProductId(productId);
 
 		if (!optional.isPresent()) {
 			LOG.info(String.format("getProductId() product %s is not present.", productId));
@@ -209,6 +261,7 @@ public final class ProductTransaction {
 	}
 
 	public InputStream getProductImage(final String productCode) throws IOException {
+		Preconditions.checkNotNull(productCode, "productCode can not be null.");
 
 		final String imagePath = DirectoryFiles.FILES.getCompletePath() + AppUtils.PATH_SEPARATOR + productCode
 				+ ".png";
@@ -218,6 +271,102 @@ public final class ProductTransaction {
 		}
 		InputStream inputStream = new FileInputStream(new File(imagePath));
 		return inputStream;
+	}
+
+	public Optional<Cart> getCartByUser(final Users users) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+
+		return Optional.fromNullable(iWebDbService.byUsername(users, CartStatus.SAVED));
+	}
+
+	public Cart addOrUpdateCart(final Users users, final Product product, final int quantity) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		Preconditions.checkNotNull(product, "product can not be null.");
+
+		final Optional<Cart> optionalCart = this.getCartByUser(users);
+
+		final Cart cart;
+		if (optionalCart.isPresent()) {
+
+			final Cart updateCart = optionalCart.get();
+			final Optional<ProductMeta> optional = updateCart.getProducts(product.getId());
+			if (optional.isPresent()) {
+				final ProductMeta productMeta = optional.get();
+				final int finalQuantity = productMeta.getQuantity() + quantity;
+				productMeta.update(finalQuantity, product.price(), 0.0);
+			} else {
+				updateCart.addProduct(new ProductMeta(product, quantity, product.price(), 0.0));
+			}
+			cart = this.save(updateCart);
+
+		} else {
+			final Set<ProductMeta> productMetas = new HashSet<>();
+			productMetas.add(new ProductMeta(product, quantity, product.price(), 0.0));
+			cart = this.save(new Cart(new DateMeta(Optional.absent()), CartStatus.SAVED, users, productMetas));
+		}
+		return cart;
+	}
+
+	public Cart removeProductFromCart(final Cart cart, final Product product) {
+		Preconditions.checkNotNull(cart, "cart can not be null.");
+		Preconditions.checkNotNull(product, "product can not be null.");
+
+		final Optional<ProductMeta> optional = cart.getProducts(product.getId());
+		if (!optional.isPresent()) {
+			throw new NotAccatable(MessageUtils.PRODUCT_IS_NOT_PRESENT);
+		}
+		cart.removeProductMeta(optional.get());
+		return this.save(cart);
+	}
+
+	public Cart checkStatus(final Cart cart) {
+		Preconditions.checkNotNull(cart, "cart can not be null.");
+
+		cart.checkedOutStatus();
+		return this.save(cart);
+	}
+
+	public Order placeOrder(final Cart cart, final Users users) {
+		Preconditions.checkNotNull(cart, "cart can not be null.");
+		Preconditions.checkNotNull(users, "users can not be null.");
+
+		final double price = this.totalSumOfItems(cart.getProducts());
+		final Sudoers sudoers = sudoersTransaction.getSudoers("sys");
+		final Order order = this.save(new Order(new DateMeta(Optional.absent()), users, OrderStatus.PLACESED, price,
+				0.0, 0.0, new CreatedMeta(sudoers, Optional.absent()), cart));
+
+		return order;
+	}
+
+	public SortedSet<OrderShell> sortedOrders(final Users users, final String baseURL) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		final SortedSet<OrderShell> shells = new TreeSet<>(Comparator.comparing(OrderShell::getId)).descendingSet();
+		final Set<Order> orders = iWebDbService.orders(users);
+		orders.forEach(order -> shells.add(order.toShell(baseURL)));
+		return shells;
+	}
+
+	public SortedSet<OrderShell> sortedOrders(final String siteBaseUrl) {
+		Preconditions.checkNotNull(siteBaseUrl, "siteBaseUrl can not be null.");
+		final SortedSet<OrderShell> shells = new TreeSet<>(Comparator.comparing(OrderShell::getId)).descendingSet();
+		final Set<Order> orders = iWebDbService.orders();
+		orders.forEach(order -> shells.add(order.toShell(siteBaseUrl)));
+		return shells;
+	}
+
+	public Order cancelOrder(final Order order) {
+		Preconditions.checkNotNull(order, "order can not be null");
+		order.cancel();
+
+		return this.save(order);
+	}
+
+	public Order orderStatusUpdate(final Order order, final OrderStatus status, final Sudoers sudoers) {
+		Preconditions.checkNotNull(order, "order can not be null");
+		Preconditions.checkNotNull(status, "status can not be null");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null");
+		order.status(status, sudoers);
+		return this.save(order);
 	}
 
 }

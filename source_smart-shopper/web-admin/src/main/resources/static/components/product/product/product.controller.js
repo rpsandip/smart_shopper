@@ -4,9 +4,9 @@
  * @global
  */
 var productController = app.controller('ProductController', function($http,
-		$scope, $rootScope, $state, $location, $mdToast, $mdDialog, $element,
-		DTDefaultOptions, DTOptionsBuilder, DTColumnDefBuilder, ProductFactory,
-		DefaultConstant, UtilityService, ProductService) {
+		$scope, $rootScope, $state, $location, $element, DTDefaultOptions,
+		DTOptionsBuilder, DTColumnDefBuilder, ProductFactory, DefaultConstant,
+		UtilityService, ProductService) {
 
 	var labels = $scope.labels = DefaultConstant.labels;
 	var product = new Product();
@@ -15,41 +15,28 @@ var productController = app.controller('ProductController', function($http,
 
 	var vm = this;
 	vm.products = product.products;
-
 	ProductFactory.setProduct(product);
 
-	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(300)
-			.withDOM('trp').withBootstrap().withScroller();
+	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100).withDOM('ftp');
+
 	vm.dtColumnDefs = [
 			DTColumnDefBuilder.newColumnDef(0).withTitle('').withOption(
+					'autoWidth', false),
+			DTColumnDefBuilder.newColumnDef(1).withTitle('').withOption(
 					'autoWidth', false).notSortable(),
-			DTColumnDefBuilder.newColumnDef(1).withTitle(labels.ITEM.ITEM)
+			DTColumnDefBuilder.newColumnDef(2).withTitle(labels.ITEM.ITEM)
 					.withOption('autoWidth', true),
-			DTColumnDefBuilder.newColumnDef(2).withTitle(
+			DTColumnDefBuilder.newColumnDef(3).withTitle(
 					labels.CATEGORY.CATEGORY1).withOption('autoWidth', true),
-			DTColumnDefBuilder.newColumnDef(3).withTitle('').withOption(
+			DTColumnDefBuilder.newColumnDef(4).withTitle('').withOption(
 					'autoWidth', false).notSortable() ];
 
 	var mainProduct = ProductFactory.getProduct();
 
-	$scope.searchTerm;
-	$scope.clearSearchTerm = function() {
-		$scope.searchTerm = '';
-	};
-
-	$scope.updateSearch = function(ev) {
-		ev.stopPropagation();
-	};
-
-	vm = this;
-	// on add or close click
-	vm.onAddClick = function($event) {
-		$scope.isProduct ? $scope.isProduct = false : $scope.isProduct = true;
-
+	$scope.onAddClick = function($event) {
+		$scope.isProduct = true;
 		$scope.product = new Product();
-	};
 
-	$scope.laodCategory = function() {
 		var category = new Category();
 		$scope.isLoading = true;
 		ProductService.categories(function(response, status) {
@@ -69,6 +56,10 @@ var productController = app.controller('ProductController', function($http,
 		});
 	};
 
+	$scope.onCloseClick = function($event) {
+		$scope.isProduct = false;
+	};
+
 	$scope.onSave = function($event, product, image) {
 		if (!image) {
 			UtilityService.showError("No image has been selected.");
@@ -80,6 +71,7 @@ var productController = app.controller('ProductController', function($http,
 		}
 
 		$scope.isLoading = true;
+		console.log(product.toJSON())
 		ProductService.addProduct(product.toJSON(), image, function(response,
 				status) {
 			$scope.isLoading = false;
@@ -112,7 +104,7 @@ var productController = app.controller('ProductController', function($http,
 	};
 
 	// list all the categories
-	$scope.isLoading = true;
+	$scope.$parent.$parent.isLoading = true;
 	ProductService.products(function(response, status) {
 		$scope.isLoading = false;
 		if (status == 401) {

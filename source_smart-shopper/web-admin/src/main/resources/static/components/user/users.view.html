@@ -1,39 +1,52 @@
-<div ng-controller="UsersController as userCtrl" layout="column"
-	ng-model="labels" layout-padding>
-	<md-toolbar class="title-section">
-	<div class="md-toolbar-tools">
-		<h3 class="title">{{labels.USERS}}</h3>
-		<span flex></span> {{labels.COMMON.SEARCH}}: <input
-			ng-model="userCtrl.searchText">
+<!-- Basic datatable -->
+<div ng-controller="UsersController as userCtrl" class="panel">
+	<div class="panel-heading  bg-teal">
+		<h3 class="panel-title">{{labels.USERS}}</h3>
+		<div class="heading-elements">
+			<ul class="icons-list">
+				<li><a data-action="reload"></a></li>
+			</ul>
+		</div>
 	</div>
-	</md-toolbar>
-	<md-progress-linear md-mode="indeterminate" class="md-warn"
-		ng-if="isLoading"></md-progress-linear>
 
-	<div class="content-background table-responsive">
 
-		<table datatable="ng" dt-options="userCtrl.dtOptions"
-			dt-columns="userCtrl.dtColumn" dt-column-defs="userCtrl.dtColumnDefs"
-			class="table table-background table-sm">
-			<thead class="table-head-background"></thead>
-			<tbody>
-				<tr ng-show="!user.DELETED"
-					ng-repeat="user in userCtrl.users | filter:userCtrl.searchText">
-					<td>{{$index + 1}}</td>
-					<td><h4>
-							{{user.USERNAME}}
-							<md-tooltip md-direction="bottom"> {{user.USERNAME}}
-							</md-tooltip>
-						</h4></td>
-					<td>{{user.FIRST_NAME}} {{user.LAST_NAME}}</td>
-					<td>{{user.REFERRAL_CODE}}</td>
-					<td><span ng-if="user.ACTIVATE_META.activate">{{labels.ACTIVATE}}</span>
-						<md-switch ng-if="!user.ACTIVATE_META.activate"
-							style="margin:0px !important;" aria-label="{{label.STATUS}}"
-							class="md-warn" ng-change="activate($event,user)"
-							ng-model="user.ACTIVATE_META.activate"> </md-switch></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+	<table class="table table-border" datatable="ng"
+		dt-options="userCtrl.dtOptions">
+		<thead>
+			<tr class="bg-teal">
+				<th>#</th>
+				<th>{{labels.USERNAME}}</th>
+				<th>{{labels.NAME}}</th>
+				<th>{{labels.REFERRAL_CODE}}</th>
+				<th>{{labels.STATUS}}</th>
+				<th class="text-center">Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-show="!user.DELETED"
+				ng-repeat="user in userCtrl.users | filter:userCtrl.searchText">
+				<td>{{$index + 1}}</td>
+				<td>{{user.USERNAME}}</td>
+				<td>{{user.FIRST_NAME}} {{user.LAST_NAME}}</td>
+				<td>{{user.REFERRAL_CODE}}</td>
+				<td><span ng-if="user.ACTIVATE_META.activate"
+					class="label label-success">{{labels.ACTIVATE}}</span> <span
+					ng-if="!user.ACTIVATE_META.activate" class="label label-info">{{labels.PENDING}}</span>
+				</td>
+				<td>
+					<ul ng-if="!user.ACTIVATE_META.activate" class="icons-list">
+						<li class="dropdown"><a target="_self" href="#"
+							class="dropdown-toggle" data-toggle="dropdown"
+							aria-expanded="false"> <i class="icon-menu9"></i>
+						</a>
+
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a target="_self" ng-click="activate($event,user)"><i
+										class="icon-checkmark4"></i> {{labels.ACTIVATE}}</a></li>
+							</ul></li>
+					</ul>
+				</td>
+			</tr>
+		</tbody>
+	</table>
 </div>

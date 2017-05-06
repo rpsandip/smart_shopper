@@ -61,6 +61,31 @@ app.factory('ProductService', function($http, DefaultConstant,
 			callback(Response, Status);
 		});
 	}
+
+	service.orders = function(callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.ORDERS
+				+ "?session=" + AuthenticationService.getSession();
+		$http.post(url).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
+	service.orderStatus = function(orderId, orderStatus, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.ORDER
+				+ DefaultConstant.url.STATUS + "?session="
+				+ AuthenticationService.getSession() + "&status=" + orderStatus
+				+ "&orderId=" + orderId;
+		$http.post(url).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
 	return service;
 });
 
