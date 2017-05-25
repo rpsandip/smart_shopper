@@ -32,7 +32,7 @@ app.controller('LoginController', function($http, $scope, $rootScope, $state,
 			console.log(AuthenticationService.getUsername())
 			console.log(AuthenticationService.getName())
 
-			$state.go('dashboard.product');
+			$state.go('dashboard.order');
 		});
 	};
 

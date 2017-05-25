@@ -25,7 +25,7 @@ app.constant("DefaultConstant", {
 	},
 
 	labels : {
-		APP : 'Smart Shopper',
+		APP : 'Smart Shoppers',
 		LOGIN : 'Login',
 		USERNAME : 'Username or Email',
 		PASSWORD : 'Password',
@@ -52,6 +52,10 @@ app.constant("DefaultConstant", {
 		TOTAL : 'Total',
 		STATUS : 'Status',
 		ID : 'Id',
+		PLACED : 'Placed',
+		DATE : 'Date',
+		UPDATED : 'Updated',
+		VIEW : 'View',
 
 		// registration
 		REGISTRATION : 'Registration',

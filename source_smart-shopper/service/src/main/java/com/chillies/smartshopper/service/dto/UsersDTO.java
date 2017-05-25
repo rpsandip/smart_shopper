@@ -99,7 +99,8 @@ public class UsersDTO {
 
 			final Optional<Users> optionalParent;
 			if (registerBody.getParentId() != null) {
-				optionalParent = Optional.fromNullable(usersTransactions.getUserById(registerBody.getParentId()));
+				System.out.println(registerBody.getParentId());
+				optionalParent = Optional.fromNullable(usersTransactions.getUserByReferralCode(registerBody.getParentId()));
 			} else {
 				optionalParent = Optional.absent();
 			}

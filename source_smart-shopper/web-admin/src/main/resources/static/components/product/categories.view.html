@@ -36,14 +36,15 @@
 						<p>{{category.REMARK}}</p></td>
 					<td>
 						<ul class="icons-list">
-							<li class="dropdown"><a target="_self" href="#"
+							<li class="dropdown"><a target="_self"
 								class="dropdown-toggle" data-toggle="dropdown"
 								aria-expanded="false"> <i class="icon-menu9"></i>
 							</a>
 
 								<ul class="dropdown-menu dropdown-menu-right">
-									<li><a><i class="icon-pencil7"></i> Edit</a></li>
-									<li><a><i class="icon-copy"></i> Copy</a></li>
+									<li><a target="_self"
+										ng-click="onEditClick($event,category)"><i
+											class="icon-pencil7"></i> Edit</a></li>
 								</ul></li>
 						</ul>
 					</td>

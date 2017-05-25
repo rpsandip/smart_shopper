@@ -15,28 +15,27 @@
 			<!-- Main navbar -->
 			<div class="navbar  navbar-transparent navbar-fixed-top">
 				<div class="navbar-header" style="cursor: pointer !important;">
-					<h1 ng-click="onTopHomeMenu($event)">{{labels.APP}}</a></h1>
 
+					<h1 ng-click="onTopHomeMenu($event)">
+						<img style="height: 40px !important;"
+							ng-src="/resource/img/ss_logo.png"
+							onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">{{labels.APP}}
+					</h1>
 				</div>
 
-				<div class="navbar-collapse collapse" id="navbar-mobile">
-
-					<div class="navbar-left">
-						<div class="heading-elements" style="left: 310px;">
-							<form class="heading-form" action="#">
-								<div class="form-group">
-									<div class="has-feedback">
-										<input type="search" class="form-control" placeholder="Search">
-										<div class="form-control-feedback">
-											<i class="icon-search4 text-size-small text-muted"></i>
-										</div>
-									</div>
-								</div>
-							</form>
+				<div class="navbar-collapse collapse" id="navbar-form-icons">
+					<form ng-if="false" class="navbar-form navbar-left">
+						<div class="form-group has-feedback">
+							<input type="search" class="form-control" ng-model="searchTerm"
+								placeholder="Search field" style="color: white !important;"
+								>
+							<div class="form-control-feedback">
+								<i class="icon-search4 text-size-base"
+									style="color: white !important;"></i>
+							</div>
 						</div>
-					</div>
-
-					<div class="navbar-right">
+					</form>
+					<div class="navbar-right" ng-model="user">
 						<ul class="nav navbar-nav">
 							<li class="dropdown dropdown-user"><a ng-if="!isLoggedIn"
 								target="#_self" data-toggle="modal" data-target="#modal_default"
@@ -48,6 +47,9 @@
 									<i class="caret"></i>
 							</a>
 								<ul class="dropdown-menu dropdown-menu-right">
+									<li><a target="_self">Code: {{user.referralCode}} </a></li>
+									<li><a target="_self">Points: {{user.points}} </a></li>
+									<li class="divider"></li>
 									<li><a target="_self" ng-click="onLogout($event)"><i
 											class="icon-switch2"></i>{{labels.LOG_OUT}}</a></li>
 								</ul></li>
@@ -55,6 +57,8 @@
 					</div>
 				</div>
 			</div>
+
+			<div class="navbar-collapse collapse" id="navbar-mobile"></div>
 			<!-- /main navbar -->
 
 
@@ -77,20 +81,21 @@
 
 				<div class="navbar-collapse collapse" id="navbar-second-toggle">
 					<ul class="nav navbar-nav navbar-nav-material">
-						<li class="dropdown mega-menu mega-menu-wide"><a
+						<li class="dropdown mega-menu mega-menu-wide"><a href="#"
 							target="_self" ng-click="onTopCategoryMenu($event)"
 							class="dropdown-toggle" data-toggle="dropdown">{{labels.GROCERY}}
 								<span class="caret"></span>
 						</a>
 
-							<div class="dropdown-menu dropdown-content">
+							<div class="dropdown-menu dropdown-content"
+								style="max-width: 30% !important;">
 								<div class="dropdown-content-body">
 									<div class="row">
-										<div class="col-md-3">
+										<div class="col-md-12">
 											<span class="menu-heading underlined">{{labels.DETAILS
 												}}</span>
 											<ul class="menu-list">
-												<li ng-repeat="category in categories"><a
+												<li ng-repeat="category in categories | filter:searchTerm"><a
 													ng-click="onSelectionMenu($event,category)">{{
 														category.NAME }}</a></li>
 											</ul>
@@ -99,7 +104,7 @@
 								</div>
 							</div></li>
 
-						<li><a target="_self" ng-click="onTopOrderMenu($event)">{{labels.ORDERS}}</a></li>
+						<li ng-if="isLoggedIn" ng-click="onTopOrderMenu($event)"><a>{{labels.ORDERS}}</a></li>
 
 
 					</ul>

@@ -37,6 +37,8 @@ public interface IWebDbService {
 
 	public Set<Users> all() throws DbException;
 
+	public Users bySubUsers(final Users users) throws DbException;
+
 	// cart
 	public Cart save(final Cart cart) throws DbException;
 

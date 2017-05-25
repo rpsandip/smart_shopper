@@ -16,12 +16,12 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr ng-repeat="product in dctrl.products">
+					<tr ng-repeat="product in dctrl.products ">
 						<!-- 					<button type="button" class="btn btn-default btn-sm" data-toggle="modal" data-target="#modal_default">Launch <i class="icon-play3 position-right"></i></button> -->
 						<td><a href="{{product.IMAGE_URL}}" data-toggle="modal"
 							data-target="#modal_default1"
 							ng-click="onProductPopClick($event,product)"> <img
-								style="height: 130px !important;" ng-src="{{product.IMAGE_URL}}"
+								style="height: 200px !important;" ng-src="{{product.IMAGE_URL}}"
 								alt="{{product.NAME}}"
 								onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
 						</a></td>
@@ -108,36 +108,36 @@
 		<!-- /main sidebar -->
 
 		<!-- 		<!-- Basic modal -->
-		<!-- 		<div id="modal_default1" class="modal fade"> -->
-		<!-- 			<div class="modal-dialog" ng-model="productPop"> -->
-		<!-- 				<div class="modal-content"> -->
-		<!-- 					<div class="modal-header"> -->
-		<!-- 						<button type="button" class="close" data-dismiss="modal">&times;</button> -->
-		<!-- 						<h5 class="modal-title">{{labels.DETAILS}}</h5> -->
-		<!-- 					</div> -->
+		<div id="modal_default1" class="modal fade">
+			<div class="modal-dialog" ng-model="productPop">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h5 class="modal-title">{{labels.DETAILS}}</h5>
+					</div>
 
-		<!-- 					<div class="modal-body"> -->
-		<!-- 						<div class="row"> -->
-		<!-- 							<div class="col-md-4"> -->
-		<!-- 								<img style="height: 130px !important;" -->
-		<!-- 									ng-src="{{productPop.IMAGE_URL}}" alt="{{productPop.NAME}}" -->
-		<!-- 									onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';"> -->
-		<!-- 							</div> -->
-		<!-- 							<div class="col-md-8"> -->
-		<!-- 								<h5> -->
-		<!-- 									{{productPop.NAME}} <small><p>{{productPop.REMARK}}</p></small> -->
-		<!-- 								</h5> -->
-		<!-- 								<h4>{{product.PRICE | currency}}</h4> -->
-		<!-- 								<p> -->
-		<!-- 									<button ng-click="onAddToCart($event,productPop)" -->
-		<!-- 										class="btn  border-indigo btn-flat legitRipple">{{labels.ADD_TO_CART}}</button> -->
-		<!-- 								</p> -->
-		<!-- 							</div> -->
-		<!-- 						</div> -->
-		<!-- 					</div> -->
-		<!-- 				</div> -->
-		<!-- 				/basic modal -->
-		<!-- 			</div> -->
-		<!-- 		</div> -->
+					<div class="modal-body">
+						<div class="row">
+							<div class="col-md-4">
+								<img style="height: 130px !important;"
+									ng-src="{{productPop.IMAGE_URL}}" alt="{{productPop.NAME}}"
+									onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
+							</div>
+							<div class="col-md-8">
+								<h5>
+									{{productPop.NAME}} <small><p>{{productPop.REMARK}}</p></small>
+								</h5>
+								<h4>{{product.PRICE | currency}}</h4>
+								<p>
+									<button ng-click="onAddToCart($event,productPop)"
+										class="btn  border-indigo btn-flat legitRipple">{{labels.ADD_TO_CART}}</button>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!--basic modal -->
+			</div>
+		</div>
 	</div>
 </div>

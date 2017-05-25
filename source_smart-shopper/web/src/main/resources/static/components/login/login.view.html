@@ -2,8 +2,12 @@
 <div class="modal-dialog" ng-controller="LoginController"
 	ng-model="label">
 	<div class="modal-content row">
-		<div class="col-md-4 bg-indigo-800" style="min-height: 70vh !important;">
+		<div class="col-md-4 bg-indigo-800"
+			style="min-height: 70vh !important;">
 			<div class="panel-body">
+				<img style="height: 100px !important; margin-left: 17% !important;"
+					ng-src="/resource/img/ss_logo.png"
+					onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">
 				<h1
 					style="font-family: Georgia, Times, serif !important; text-align: center;">{{label.APP}}</h1>
 				<p style="font-family: cursive !important; text-align: center;">Shopping
@@ -58,10 +62,9 @@
 								</div>
 
 								<div class="form-group">
-									<button type="submit" class="btn  btn-block" type="submit"
+									<button type="submit" class="btn  btn-block bg-indigo-800" type="submit"
 										ng-disabled="login-form.$invalid || vm.dataLoading">
-										{{label.LOGIN}}
-									</button>
+										{{label.LOGIN}}</button>
 								</div>
 							</form>
 						</div>
@@ -124,7 +127,7 @@
 										<div ng-if="!isReferralCode" class="col-md-2">
 											<button ng-disabled="form.referralCode.$invalid"
 												ng-click="onReferral($event,referralCode)"
-												class="btn border-slate bg-teal btn-sm legitRipple">{{label.APPLY}}</button>
+												class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.APPLY}}</button>
 										</div>
 									</div>
 
@@ -132,7 +135,7 @@
 								<div style="float: right !important;">
 									<button wz-next
 										ng-disabled="form.firstname.$invalid ||form.lastname.$invalid || form.phoneno.$invalid || vm.dataLoading"
-										class="btn border-slate bg-teal btn-sm legitRipple">{{label.NEXT}}</button>
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.NEXT}}</button>
 								</div>
 								</wz-step> <wz-step canenter="enterValidation" wz-title="step2">
 								<div class="form-group"
@@ -159,10 +162,10 @@
 								</div>
 								<div style="float: right !important;">
 									<button wz-previous
-										class="btn border-slate bg-teal btn-sm legitRipple">{{label.BACK}}</button>
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.BACK}}</button>
 									<button wz-next
 										ng-disabled="form.username.$invalid ||form.password.$invalid"
-										class="btn border-slate bg-teal btn-sm legitRipple">{{label.NEXT}}</button>
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.NEXT}}</button>
 								</div>
 								</wz-step> <wz-step wz-title="step3">
 								<div layout="column">
@@ -222,11 +225,11 @@
 								</div>
 								<div style="float: right !important;">
 									<button wz-previous
-										class="btn border-slate bg-teal btn-sm legitRipple">{{label.BACK}}</button>
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.BACK}}</button>
 									<button wz-next="setMode(mode)"
 										ng-disabled="form.$invalid || vm.dataLoading" type="submit"
 										ng-click="onRegister(registration,referralCode)"
-										class="btn border-slate bg-teal btn-sm legitRipple">{{label.REGISTR}}</button>
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.REGISTR}}</button>
 								</div>
 								</wz-step> </wizard>
 							</form>

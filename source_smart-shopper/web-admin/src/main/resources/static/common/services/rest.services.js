@@ -20,6 +20,19 @@ app.factory('ProductService', function($http, DefaultConstant,
 		});
 	}
 
+	service.updateCategory = function(payload, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.CATEGORY
+				+ DefaultConstant.url.UPDATE + "?session="
+				+ AuthenticationService.getSession();
+		$http.post(url, payload).success(
+				function(Response, Status, Headers, Config) {
+					callback(Response, Status);
+				}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
 	service.categories = function(callback) {
 		var url = DefaultConstant.url.SERVER_ADDRESS
 				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.CATEGORY
@@ -35,6 +48,25 @@ app.factory('ProductService', function($http, DefaultConstant,
 	service.addProduct = function(payload, productImage, callback) {
 		var url = DefaultConstant.url.SERVER_ADDRESS
 				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.ADD
+				+ "?session=" + AuthenticationService.getSession()
+				+ "&productBody=" + JSON.stringify(payload);
+		var formdata = new FormData();
+		formdata.append('productImage', productImage);
+		$http.post(url, formdata, {
+			transformRequest : angular.identity,
+			headers : {
+				'Content-Type' : undefined
+			}
+		}).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
+	service.updateProduct = function(payload, productImage, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.UPDATE
 				+ "?session=" + AuthenticationService.getSession()
 				+ "&productBody=" + JSON.stringify(payload);
 		var formdata = new FormData();

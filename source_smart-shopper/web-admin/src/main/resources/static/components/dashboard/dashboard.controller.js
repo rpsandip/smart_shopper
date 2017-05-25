@@ -90,7 +90,6 @@ var orderController = app.controller('OrderController',
 					return;
 				}
 				$scope.isProductDetails = true;
-				console.log(order.users);
 				$scope.products = order.cart.products;
 				$scope.user = order.users;
 			};

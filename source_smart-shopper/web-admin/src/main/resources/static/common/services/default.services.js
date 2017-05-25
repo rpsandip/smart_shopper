@@ -18,13 +18,15 @@ app.constant("DefaultConstant", {
 		STATUS : '/status',
 		PRODUCTS : '/products',
 		ADD : "/add",
+		UPDATE : "/update",
 		LOG_OUT : '/logout'
 	},
 
 	labels : {
-		APP : 'Smart Shopper Admin',
+		APP : 'Smart Shoppers Admin',
 		LOGIN : 'Login',
 		USERS : 'Users',
+		CONTACT : 'Contact',
 		USERNAME : 'Username',
 		PASSWORD : 'Password',
 		NAME : 'Name',
@@ -41,6 +43,9 @@ app.constant("DefaultConstant", {
 		CANCEL : 'Cancel',
 		OUT_FOR_DELIVERY : 'Out for delivery',
 		DELIVERED : 'Delivered',
+		PLACED : 'Placed',
+		DATE : 'Date',
+		UPDATED : 'Updated',
 		CATEGORY : {
 
 			CATEGORY1 : 'Category',
@@ -68,6 +73,7 @@ app.constant("DefaultConstant", {
 			ITEMS : 'Products',
 			IMAGE : 'Image',
 			PRICE : 'Price',
+			QUANTITY : 'Quantity',
 			POINTS : 'Points'
 		},
 		ERROR : {

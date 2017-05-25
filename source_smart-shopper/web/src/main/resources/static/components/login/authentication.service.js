@@ -1,7 +1,7 @@
 'use strict';
 
 app.factory('AuthenticationService', function($http, $cookies, $rootScope,
-		$state, $timeout, DefaultConstant, UtilityService) {
+		$window, $state, $timeout, DefaultConstant, UtilityService) {
 	var service = {};
 
 	var cookieKey = 'web-app'
@@ -22,22 +22,23 @@ app.factory('AuthenticationService', function($http, $cookies, $rootScope,
 	}
 
 	service.setCredentials = function(session, username, name) {
-		$rootScope.globals = {
-			currentUser : {
-				session : session,
-				username : username,
-				name : name
-			}
-		};
 
+		var currentUser = new Object();
+		currentUser.session = session;
+		currentUser.username = username;
+		currentUser.name = name;
+		
 		// store user details in globals cookie that keeps user logged
 		// in
 		// for 2days (or until they logout)
-		var cookieExp = new Date();
-		cookieExp.setDate(cookieExp.getDate() + 2);
-		$cookies.putObject(cookieKey, $rootScope.globals, {
-			expires : cookieExp
-		});
+		$window.localStorage.setItem(cookieKey, JSON.stringify(currentUser));
+		// var cookieExp = new Date();
+		// cookieExp.setDate(cookieExp.getDate() + 2);
+		// $cookies.putObject(cookieKey, $rootScope.globals, {
+		// expires : cookieExp
+		// });
+
+		$window.location.reload();
 	};
 
 	service.doLogout = function() {
@@ -58,39 +59,39 @@ app.factory('AuthenticationService', function($http, $cookies, $rootScope,
 	};
 
 	service.getSession = function() {
-		var session = $cookies.getObject(cookieKey);
+		var session = angular.fromJson($window.localStorage.getItem(cookieKey));
 		if (session) {
-			return session.currentUser.session;
+			return session.session;
 		}
 	};
 
 	service.getUsername = function() {
-		var session = $cookies.getObject(cookieKey);
+		var session = angular.fromJson($window.localStorage.getItem(cookieKey));
 		if (session) {
-			return session.currentUser.username;
+			return session.username;
 		}
 	};
 
 	service.getName = function() {
-		var session = $cookies.getObject(cookieKey);
+		var session = angular.fromJson($window.localStorage.getItem(cookieKey));
 		if (session) {
-			return session.currentUser.name;
+			return session.name;
 		}
 	};
 
 	service.isLoggedIn = function(callback) {
-		var session = $cookies.getObject(cookieKey);
+		var session = angular.fromJson($window.localStorage.getItem(cookieKey));
 		if (session) {
-			var currentUserSession = session.currentUser.session;
+			var currentUserSession = session.session;
 			var url = DefaultConstant.url.SERVER_ADDRESS
 					+ DefaultConstant.url.SUDOERS
 					+ DefaultConstant.url.IS_ACTIVE + "?session="
 					+ currentUserSession;
 			$http.post(url).success(
 					function(Response, Status, Headers, Config) {
-						callback(true);
+						callback(true, Response);
 					}).error(function(Response, Status, Headers, Config) {
-				callback(false);
+				callback(false, Response);
 			});
 		} else {
 			callback(false);
@@ -99,7 +100,7 @@ app.factory('AuthenticationService', function($http, $cookies, $rootScope,
 
 	service.clearCredentials = function() {
 		$rootScope.globals = {};
-		$cookies.remove(cookieKey);
+		$window.localStorage.removeItem(cookieKey);
 	}
 	return service;
 });

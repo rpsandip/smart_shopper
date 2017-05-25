@@ -63,6 +63,9 @@ public final class ProductTransaction {
 	@Autowired
 	private SudoersTransaction sudoersTransaction;
 
+	@Autowired
+	private UsersTransactions usersTransactions;
+
 	private ProductCategory save(final ProductCategory productCategory) {
 		Preconditions.checkNotNull(productCategory, "productCategory can not be null.");
 
@@ -86,6 +89,16 @@ public final class ProductTransaction {
 		for (final ProductMeta product : metas) {
 			double price = product.getQuantity() * product.price();
 			total += price;
+		}
+		return total;
+	}
+
+	private double totalSumOfPoints(final Set<ProductMeta> metas) {
+		Preconditions.checkNotNull(metas, "metas can not be null.");
+		double total = 0;
+		for (final ProductMeta product : metas) {
+			double points = product.getQuantity() * product.getProduct().points();
+			total += points;
 		}
 		return total;
 	}
@@ -182,9 +195,20 @@ public final class ProductTransaction {
 		return this.save(productCategory);
 	}
 
+	public ProductCategory update(final ProductCategory category, final String name, final Optional<String> remark,
+			final Sudoers sudoers) {
+		Preconditions.checkNotNull(category, "category can not be null.");
+		Preconditions.checkNotNull(name, "name can not be null.");
+		Preconditions.checkNotNull(remark, "remark can not be null.");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
+
+		category.update(name, remark, sudoers);
+		return this.save(category);
+	}
+
 	public SortedSet<ProductCategoryShell> sortedCategories() {
-		final SortedSet<ProductCategoryShell> shells = new TreeSet<>(Comparator.comparing(ProductCategoryShell::getId))
-				.descendingSet();
+		final SortedSet<ProductCategoryShell> shells = new TreeSet<>(
+				Comparator.comparing(ProductCategoryShell::getName));
 		final Set<ProductCategory> categories = this.categories();
 		categories.forEach(category -> shells.add(category.toShell()));
 		return shells;
@@ -192,7 +216,7 @@ public final class ProductTransaction {
 
 	public SortedSet<ProductShell> sortedProducts(final String baseURL) {
 		Preconditions.checkNotNull(baseURL, "baseURL can not be empty.");
-		final SortedSet<ProductShell> shells = new TreeSet<>(Comparator.comparing(ProductShell::getId)).descendingSet();
+		final SortedSet<ProductShell> shells = new TreeSet<>(Comparator.comparing(ProductShell::getName));
 		final Set<Product> products = this.products();
 		products.forEach(product -> shells.add(product.toShell(baseURL)));
 		return shells;
@@ -201,9 +225,27 @@ public final class ProductTransaction {
 	public SortedSet<ProductShell> sortedCategorizedProduct(final String baseURL, final ProductCategory category) {
 		Preconditions.checkNotNull(baseURL, "baseURL can not be empty.");
 		Preconditions.checkNotNull(category, "category can not be empty.");
-		final SortedSet<ProductShell> shells = new TreeSet<>(Comparator.comparing(ProductShell::getId)).descendingSet();
+		final SortedSet<ProductShell> shells = new TreeSet<>(Comparator.comparing(ProductShell::getName));
 		final Set<Product> products = this.products(category);
 		products.forEach(product -> shells.add(product.toShell(baseURL)));
+		return shells;
+	}
+
+	public SortedSet<ProductShell> sortedCategorizedProduct(final String baseURL, final ProductCategory category,
+			boolean dahsboard) {
+		Preconditions.checkNotNull(baseURL, "baseURL can not be empty.");
+		Preconditions.checkNotNull(category, "category can not be empty.");
+		final SortedSet<ProductShell> shells = new TreeSet<>(Comparator.comparing(ProductShell::getName));
+		final Set<Product> products = this.products(category);
+		int i = 0;
+		for (final Product product : products) {
+			i++;
+
+			shells.add(product.toShell(baseURL));
+			if (i == 4) {
+				break;
+			}
+		}
 		return shells;
 	}
 
@@ -219,6 +261,17 @@ public final class ProductTransaction {
 				new CreatedMeta(sudoers, Optional.absent()), price, points, productCategory, path);
 
 		return this.save(product);
+	}
+
+	public Product update(final Product oldProduct, final String name, final Optional<String> optionalRemark,
+			double price, double points, final ProductCategory productCategory, final Sudoers sudoers) {
+		Preconditions.checkNotNull(oldProduct, "oldProduct can not be null.");
+		Preconditions.checkNotNull(name, "name can not be null.");
+		Preconditions.checkNotNull(optionalRemark, "optionalRemark can not be null.");
+		Preconditions.checkNotNull(productCategory, "productCategory can not be null.");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
+		oldProduct.update(name, optionalRemark, price, points, productCategory, sudoers);
+		return this.save(oldProduct);
 	}
 
 	public String uploadImageToDisk(final MultipartFile file, final String name) {
@@ -247,7 +300,7 @@ public final class ProductTransaction {
 		}
 	}
 
-	public Product getProductId(final String productId) {
+	public Product getProductById(final String productId) {
 		Preconditions.checkNotNull(productId, "productId can not be null.");
 
 		final Optional<Product> optional = iWebAdminDbService.byProductId(productId);
@@ -366,6 +419,15 @@ public final class ProductTransaction {
 		Preconditions.checkNotNull(status, "status can not be null");
 		Preconditions.checkNotNull(sudoers, "sudoers can not be null");
 		order.status(status, sudoers);
+		if (status == OrderStatus.DELIVERED) {
+			final Users users = usersTransactions.addPoints(order.getUsers(),
+					this.totalSumOfPoints(order.getCart().getProducts()));
+			final Optional<Users> optional = usersTransactions.bySubUser(users);
+			if (optional.isPresent()) {
+				usersTransactions.addPointsToParent(optional.get(),
+						this.totalSumOfPoints(order.getCart().getProducts()));
+			}
+		}
 		return this.save(order);
 	}
 

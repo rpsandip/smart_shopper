@@ -6,10 +6,10 @@
 			{{user.firstName}} {{user.lastName}} <small
 				style="color: white !important;">
 				<p>
-					<strong>Contact:</strong> {{user.contactMeta.phoneNo}}
+					<i class=" icon-mobile2"></i> {{user.contactMeta.phoneNo}}
 				</p>
 				<p>
-					<strong>Email:</strong> {{user.username}}
+					<i class="icon-mailbox"></i> {{user.username}}
 				</p>
 				<p>
 					<strong>Address:</strong> {{user.contactMeta.street}},
@@ -33,6 +33,9 @@
 				<tr>
 					<th>#</th>
 					<th>{{labels.ID}}</th>
+					<th>{{labels.USERS}}</th>
+					<th>{{labels.PLACED}} {{labels.DATE}}</th>
+					<th>{{labels.UPDATED}} {{labels.DATE}}</th>
 					<th>{{labels.TOTAL}}</th>
 					<th>{{labels.STATUS}}</th>
 					<th class="text-center">Action</th>
@@ -42,16 +45,26 @@
 				<tr ng-repeat="order in octrl.orders">
 					<td>{{$index + 1}}</td>
 					<td>{{order.id}}</td>
+					<td><h4 class="td-h4">{{order.users.firstName}}
+							{{order.users.firstName}}</h4> <small><p>
+								<i class="icon-mailbox"></i> {{order.users.username}}
+							</p>
+							<p>
+								<i class=" icon-mobile2"></i>
+								{{order.users.contactMeta.phoneNo}}
+							</p></small></td>
+					<td>{{order.date.created}}</td>
+					<td>{{order.date.updated}}</td>
 					<td>{{order.total | currency}}</td>
 					<td><span ng-if="order.status==='PLACESED'"
-						class="label label-info">{{order.status}}</span><span
-						ng-if="order.status==='DELIVERED'" class="label bg-success">{{order.status}}</span><span
-						ng-if="order.status==='CANCEL'" class="label label-danger">{{order.status}}</span>
+						class="label label-info">{{order.orderStatus}}</span><span
+						ng-if="order.status==='DELIVERED'" class="label bg-success">{{order.orderStatus}}</span><span
+						ng-if="order.status==='CANCEL'" class="label label-danger">{{order.orderStatus}}</span>
 						<span ng-if="order.status=='OUT_FOR_DELIVERY'"
-						class="label bg-orange">{{order.status}}</span></td>
+						class="label bg-orange">{{order.orderStatus}}</span></td>
 					<td>
 						<ul class="icons-list">
-							<li class="dropdown"><a target="_self" href="#"
+							<li class="dropdown"><a target="_self"
 								class="dropdown-toggle" data-toggle="dropdown"
 								aria-expanded="false"> <i class="icon-menu9"></i>
 							</a>
@@ -82,6 +95,7 @@
 					<th>#</th>
 					<th>{{labels.PREVIEW}}</th>
 					<th>{{labels.ITEM.ITEM}}</th>
+					<th>{{labels.ITEM.QUANTITY}}</th>
 					<th>{{labels.ITEM.PRICE}}</th>
 				</tr>
 			</thead>
@@ -97,6 +111,7 @@
 					</a></td>
 					<td><h4 class="td-h4">{{product.product.name}}</h4>
 						<p>{{product.product.remark}}</p></td>
+					<td>{{product.quantity}}</td>
 					<td>{{product.price | currency}}</td>
 				</tr>
 			</tbody>

@@ -4,7 +4,7 @@
  * @global
  */
 var categoriesController = app.controller('CategoriesController', function(
-		$http, $scope, $rootScope, $state, $location, $element,
+		$http, $scope, $rootScope, $state, $window, $location, $element,
 		DTDefaultOptions, DTOptionsBuilder, DTColumnDefBuilder,
 		DefaultConstant, UtilityService, CategoryFactory, ProductService) {
 
@@ -38,6 +38,20 @@ var categoriesController = app.controller('CategoriesController', function(
 		$scope.category = new Category();
 	};
 
+	// on add or close click
+	$scope.onEditClick = function($event, category) {
+		if (category == undefined) {
+			UtilityService.showError("Category can not be null.");
+			return;
+		}
+		$scope.isCategory = true;
+
+		var mainCategory = CategoryFactory.getCategory();
+		mainCategory.isEdit = true;
+		mainCategory.editCategory(category);
+		$scope.category = mainCategory;
+	};
+
 	$scope.onCloseClick = function($event) {
 		$scope.isCategory = false;
 	};
@@ -48,22 +62,39 @@ var categoriesController = app.controller('CategoriesController', function(
 			UtilityService.showError("Category can not be null.");
 			return;
 		}
-		$scope.isLoading = true;
-		ProductService.addCategory(category.toJSON(),
-				function(response, status) {
-					$scope.isLoading = false;
-					if (status == 401) {
-						UtilityService.showError(response.message);
-						return;
-					}
-					if (status != 200) {
-						UtilityService.showError(response.message);
-						return;
-					}
-					$scope.isCategory = false;
-					$scope.category = new Category();
-					mainCategory.fromJSON(response);
-				});
+		if (!category.isEdit) {
+			$scope.isLoading = true;
+			ProductService.addCategory(category.toJSON(), function(response,
+					status) {
+				$scope.isLoading = false;
+				if (status == 401) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				if (status != 200) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				$scope.isCategory = false;
+				$scope.category = new Category();
+				mainCategory.fromJSON(response);
+			});
+		} else {
+			$scope.isLoading = true;
+			ProductService.updateCategory(category.toJSON(), function(response,
+					status) {
+				$scope.isLoading = false;
+				if (status == 401) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				if (status != 200) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				$window.location.reload();
+			});
+		}
 	};
 
 	// list all the categories

@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 
 public enum OrderStatus {
 
-	PLACESED("Placesed"), OUT_FOR_DELIVERY("Out for delivery"), DELIVERED("Delivered"), CANCEL("Cancel");
+	PLACESED("Placed"), OUT_FOR_DELIVERY("Out for delivery"), DELIVERED("Delivered"), CANCEL("Cancel");
 
 	private final String name;
 

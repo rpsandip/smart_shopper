@@ -78,6 +78,7 @@ public class Order {
 		Preconditions.checkNotNull(sudoers, "sudoers can not be null");
 		this.status = status;
 		this.createdMeta.setUpdated(sudoers);
+		this.date.setUpdated(DateUtils.currentUTC());
 	}
 
 	public String getId() {

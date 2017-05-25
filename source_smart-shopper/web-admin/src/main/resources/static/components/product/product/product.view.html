@@ -15,10 +15,11 @@
 							<div class="form-group">
 								<label class="col-lg-3 control-label">{{labels.CATEGORY.CATEGORY}}</label>
 								<div class="col-lg-9">
-									<select data-placeholder="Select your state"
+									<select data-placeholder="product.selectedCategory"
 										tabindex="-1" aria-hidden="true"
 										data-ng-options="category as category.NAME for category  in categories"
 										ng-model="product.selectedCategory">
+										<option  value="{{product.selectedCategory}}"></option>
 									</select>
 								</div>
 							</div>

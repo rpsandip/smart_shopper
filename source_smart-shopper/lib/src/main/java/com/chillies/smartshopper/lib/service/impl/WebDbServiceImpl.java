@@ -70,6 +70,12 @@ public final class WebDbServiceImpl implements IWebDbService {
 	}
 
 	@Override
+	public Users bySubUsers(final Users users) throws DbException {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		return iUsers.findBySubUsersIn(users);
+	}
+
+	@Override
 	public Cart save(final Cart cart) throws DbException {
 		Preconditions.checkNotNull(cart, "cart can not be null.");
 		return iCart.save(cart);
@@ -118,4 +124,5 @@ public final class WebDbServiceImpl implements IWebDbService {
 		Preconditions.checkNotNull(id, "id can not be null.");
 		return iOrder.findOne(id);
 	}
+
 }

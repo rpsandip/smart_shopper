@@ -10,9 +10,9 @@ var Cart = function() {
 
 	this.carts = [];
 
-	this.toJSON = function(product, quantity) {
+	this.toJSON = function(productId, quantity) {
 		return {
-			"productId" : product.ID,
+			"productId" : productId,
 			"quantity" : quantity
 		};
 	};

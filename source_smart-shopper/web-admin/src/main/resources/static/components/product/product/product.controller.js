@@ -4,9 +4,9 @@
  * @global
  */
 var productController = app.controller('ProductController', function($http,
-		$scope, $rootScope, $state, $location, $element, DTDefaultOptions,
-		DTOptionsBuilder, DTColumnDefBuilder, ProductFactory, DefaultConstant,
-		UtilityService, ProductService) {
+		$scope, $rootScope, $state, $location, $element, $window,
+		DTDefaultOptions, DTOptionsBuilder, DTColumnDefBuilder, ProductFactory,
+		DefaultConstant, UtilityService, ProductService) {
 
 	var labels = $scope.labels = DefaultConstant.labels;
 	var product = new Product();
@@ -17,7 +17,8 @@ var productController = app.controller('ProductController', function($http,
 	vm.products = product.products;
 	ProductFactory.setProduct(product);
 
-	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100).withDOM('ftp');
+	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
+			.withDOM('ftp');
 
 	vm.dtColumnDefs = [
 			DTColumnDefBuilder.newColumnDef(0).withTitle('').withOption(
@@ -56,24 +57,17 @@ var productController = app.controller('ProductController', function($http,
 		});
 	};
 
-	$scope.onCloseClick = function($event) {
-		$scope.isProduct = false;
-	};
-
-	$scope.onSave = function($event, product, image) {
-		if (!image) {
-			UtilityService.showError("No image has been selected.");
+	// on add or close click
+	$scope.onEditClick = function($event, product) {
+		if (product == undefined) {
+			UtilityService.showError("Product can not be null.");
 			return;
 		}
-		if (!product) {
-			UtilityService.showError("Product can not be empty.");
-			return;
-		}
+		$scope.isProduct = true;
 
+		var category = new Category();
 		$scope.isLoading = true;
-		console.log(product.toJSON())
-		ProductService.addProduct(product.toJSON(), image, function(response,
-				status) {
+		ProductService.categories(function(response, status) {
 			$scope.isLoading = false;
 			if (status == 401) {
 				UtilityService.showError(response.message);
@@ -83,10 +77,67 @@ var productController = app.controller('ProductController', function($http,
 				UtilityService.showError(response.message);
 				return;
 			}
-			$scope.isProduct = false
-			$scope.product = new Product();
-			mainProduct.fromJSON(response);
+			for (i in response) {
+				category.fromJSON(response[i]);
+			}
+			$scope.categories = category.categories;
+
+			var mainProduct = ProductFactory.getProduct();
+			mainProduct.isEdit = true;
+			mainProduct.editProduct(product);
+			$scope.product = mainProduct;
 		});
+
+	};
+
+	$scope.onCloseClick = function($event) {
+		$scope.isProduct = false;
+	};
+
+	$scope.onSave = function($event, product, image) {
+		if (!product) {
+			UtilityService.showError("Product can not be empty.");
+			return;
+		}
+
+		if (!product.isEdit) {
+			if (!image) {
+				UtilityService.showError("No image has been selected.");
+				return;
+			}
+
+			$scope.isLoading = true;
+			ProductService.addProduct(product.toJSON(), image, function(
+					response, status) {
+				$scope.isLoading = false;
+				if (status == 401) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				if (status != 200) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				$scope.isProduct = false
+				$scope.product = new Product();
+				mainProduct.fromJSON(response);
+			});
+		} else {
+			$scope.isLoading = true;
+			ProductService.updateProduct(product.toJSON(), image, function(
+					response, status) {
+				$scope.isLoading = false;
+				if (status == 401) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				if (status != 200) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				$window.location.reload();
+			});
+		}
 	};
 
 	$scope.uploadFile = function(file) {

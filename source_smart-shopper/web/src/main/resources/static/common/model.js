@@ -21,7 +21,7 @@ var Registration = function() {
 			"firstName" : this.firstname,
 			"lastName" : this.lastname,
 			"remark" : null,
-			"parentId" : referralCode != undefined && referralCode != null ? referralCode.id
+			"parentId" : referralCode != undefined && referralCode != null ? referralCode
 					: null,
 			"contactBody" : {
 				"street" : this.street,

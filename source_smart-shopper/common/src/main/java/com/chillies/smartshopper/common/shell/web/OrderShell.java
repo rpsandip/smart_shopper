@@ -16,6 +16,8 @@ public class OrderShell {
 
 	private final OrderStatus status;
 
+	private final String orderStatus;
+
 	private final double total;
 
 	private final double discountAmount;
@@ -41,6 +43,7 @@ public class OrderShell {
 		this.date = date;
 		this.users = users;
 		this.status = status;
+		this.orderStatus = status.getName();
 		this.total = AppUtils.stringToDouble(total);
 		this.discountAmount = AppUtils.stringToDouble(discountAmount);
 		this.discount = AppUtils.stringToDouble(discount);
@@ -64,6 +67,10 @@ public class OrderShell {
 		return status;
 	}
 
+	public String getOrderStatus() {
+		return orderStatus;
+	}
+
 	public double getTotal() {
 		return total;
 	}
@@ -83,7 +90,7 @@ public class OrderShell {
 	public CartShell getCart() {
 		return cart;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int hash = id.hashCode();

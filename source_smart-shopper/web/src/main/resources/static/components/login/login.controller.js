@@ -7,10 +7,10 @@ app.controller('LoginController', function($http, $scope, $window, $rootScope,
 	$scope.isLoading = false;
 	$scope.isRegister = false;
 
-	(function initController() {
-		// reset login status
-		AuthenticationService.clearCredentials();
-	})();
+	// (function initController() {
+	// // reset login status
+	// AuthenticationService.clearCredentials();
+	// })();
 
 	$scope.onAdminPortalClicked = function() {
 		$window.open('http://localhost:13000');
@@ -36,7 +36,6 @@ app.controller('LoginController', function($http, $scope, $window, $rootScope,
 							+ response.user.lastName);
 
 			$('#modal_default').modal('toggle');
-			$window.location.reload();
 		});
 	};
 
@@ -54,6 +53,7 @@ app.controller('LoginController', function($http, $scope, $window, $rootScope,
 			UtilityService.showError("Registration can not be null.");
 			return;
 		}
+
 		$scope.isLoading = true;
 		UsersService.register(registration.toJSON(referralCode), function(
 				response, status) {
@@ -68,10 +68,15 @@ app.controller('LoginController', function($http, $scope, $window, $rootScope,
 				return;
 			}
 			$scope.isRegister = false;
+			$scope.isReferralCode = false;
 			$scope.registration = new Registration();
 			WizardHandler.wizard().reset();
 			WizardHandler.wizard().finish();
-
+			new PNotify({
+				title : 'Congratulations',
+				addclass : 'bg-success',
+				text : 'Your Account has been registered successfully. Please Login to your account.'
+			});
 		});
 	};
 

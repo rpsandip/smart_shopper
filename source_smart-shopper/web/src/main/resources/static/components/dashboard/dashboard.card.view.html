@@ -27,33 +27,34 @@
 	<div ng-repeat="category in categories">
 		<!-- Image grid-->
 
-		<h6 class="content-group text-semibold">{{category.NAME}}</h6>
+		<div class="row">
+			<h6 class="content-group text-semibold col-md-10">{{category.NAME}}</h6>
+			<button ng-if="category.PRODUCTS.length == 4" type="button"
+				class="btn bg-indigo btn-sm pull-right col-md-1"
+				ng-click="onCategorySelection($event,category)">More</button>
+		</div>
 		<div class="row">
 			<div ng-repeat="product in category.PRODUCTS">
-				<div class="col-lg-3 col-sm-6">
+				<div class="col-lg-3 col-sm-6" style="overflow-x: auto !important;">
 					<div class="thumbnail">
-						<div class="thumb">
+						<div class="thumb" ng-click="onCategorySelection($event,category)"
+							style="cursor: pointer;">
 							<img style="height: 256px !important;"
 								ng-src="{{product.productURL}}" alt="{{product.name}}"
 								onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
-							<!-- 							<div class="caption-overflow"> -->
-							<!-- 								<span> <a href="{{product.productURL}}" -->
-							<!-- 									data-popup="lightbox" -->
-							<!-- 									class="btn border-white text-white btn-flat btn-icon btn-rounded"><i -->
-							<!-- 										class="icon-plus3"></i></a> <a target="_self" href="#" -->
-							<!-- 									class="btn border-white text-white btn-flat btn-icon btn-rounded ml-5"><i -->
-							<!-- 										class="icon-link2"></i></a> -->
-							<!-- 								</span> -->
-							<!-- 							</div> -->
+
 						</div>
 
 						<div class="caption"
 							style="border-top: 1px solid rgba(128, 128, 128, 0.45) !important;">
 							<h6 class="no-margin-top text-semibold">
 								<a target="_self" class="text-default">{{product.name}}</a> <a
-									target="_self" ng-click="onProductClick($event)"
-									class="text-muted" ng-click="onProductClick($event)"> <i class="icon-cart-add2 pull-right"></i></a>
+									target="_self" class="text-muted"
+									ng-click="onAddToCart($event,product)"><i
+									class="icon-cart-add2 pull-right"
+									style="font-size: 20px !important;"></i></a>
 							</h6>
+							{{product.price | currency}}
 						</div>
 					</div>
 				</div>

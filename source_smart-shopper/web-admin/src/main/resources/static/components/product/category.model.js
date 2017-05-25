@@ -7,11 +7,13 @@ var Category = function() {
 	this.remark;
 	this.createdMeta;
 	this.dateMeta;
+	this.isEdit = false;
 
 	this.categories = [];
 
 	this.toJSON = function() {
 		return {
+			"id" : this.id,
 			"name" : this.name,
 			"remark" : this.remark
 		};
@@ -23,7 +25,7 @@ var Category = function() {
 		this.remark = data.remark;
 		this.createdmeta = data.createdMeta;
 		this.dateMeta = data.dateMeta;
-		
+
 		this.addCategory(this.toRows(this));
 	};
 
@@ -41,6 +43,18 @@ var Category = function() {
 		if (this.categories.indexOf(category) == -1) {
 			this.categories.push(category);
 		}
+	};
+
+	this.editCategory = function(row) {
+		if (!row) {
+			return;
+		}
+		this.id = row.ID;
+		this.name = row.NAME;
+		this.remark = row.REMARK;
+		this.createdMeta = row.CREATED_META;
+		this.dateMeta = row.DATE_META;
+		this.isEdit = true;
 	};
 
 	this.clear = function() {

@@ -32,9 +32,9 @@
 				<tr ng-show="!isProduct.DELETED"
 					ng-repeat="product in productCtrl.products | filter:productCtrl.searchText">
 					<td>{{$index + 1}}</td>
-					<td><a href="{{product.IMAGE_URL}}"  data-popup="lightbox">
+					<td><a href="{{product.IMAGE_URL}}" data-popup="lightbox">
 							<img class="img-square img-preview"
-							ng-style="height: 70px !important;" src="{{product.IMAGE_URL}}"
+							style="height: 70px !important;" ng-src="{{product.IMAGE_URL}}"
 							alt="{{product.NAME}}"
 							onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
 					</a></td>
@@ -43,13 +43,14 @@
 					<td>{{product.CATEGORY.name}}</td>
 					<td>
 						<ul class="icons-list">
-							<li class="dropdown"><a target="_self" href="#" class="dropdown-toggle"
-								data-toggle="dropdown" aria-expanded="false"> <i
-									class="icon-menu9"></i>
+							<li class="dropdown"><a target="_self" href="#"
+								class="dropdown-toggle" data-toggle="dropdown"
+								aria-expanded="false"> <i class="icon-menu9"></i>
 							</a>
-							<ul class="dropdown-menu dropdown-menu-right">
-									<li><a><i class="icon-pencil7"></i> Edit</a></li>
-									<li><a><i class="icon-copy"></i> Copy</a></li>
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li><a target="_self"
+										ng-click="onEditClick($event,product)"><i
+											class="icon-pencil7"></i> Edit</a></li>
 								</ul></li>
 						</ul>
 					</td>

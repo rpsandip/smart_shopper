@@ -51,7 +51,13 @@ public class ProductService {
 			@RequestParam(value = "session", required = true) String session) {
 		final Sudoers sudoers = sudoersDTO.isValid(session);
 		return productDTO.addCategory(productCategoryBody, sudoers);
-
+	}
+	
+	@RequestMapping(value = "${service.sudoers.product.category.update}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ProductCategoryShell> updateCategory(@Valid @RequestBody ProductCategoryBody productCategoryBody,
+			@RequestParam(value = "session", required = true) String session) {
+		final Sudoers sudoers = sudoersDTO.isValid(session);
+		return productDTO.updateCategory(productCategoryBody, sudoers);
 	}
 
 	@RequestMapping(value = "${service.sudoers.product.category.categories}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -78,6 +84,19 @@ public class ProductService {
 
 		final Sudoers sudoers = sudoersDTO.isValid(session);
 		return productDTO.addProduct(productBody, Optional.fromNullable(productImage), sudoers, request);
+
+	}
+	
+	
+	@RequestMapping(value = "${service.sudoers.product.update}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ProductShell> updateProduct(
+			@RequestParam(value = "productBody", required = true) String productBody,
+			@RequestParam(value = "session", required = true) String session,
+			@RequestParam(value = "productImage", required = false) MultipartFile productImage,
+			HttpServletRequest request) {
+
+		final Sudoers sudoers = sudoersDTO.isValid(session);
+		return productDTO.updateProduct(productBody, Optional.fromNullable(productImage), sudoers, request);
 
 	}
 

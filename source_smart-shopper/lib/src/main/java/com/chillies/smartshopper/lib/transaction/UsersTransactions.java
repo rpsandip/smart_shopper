@@ -35,6 +35,12 @@ public final class UsersTransactions {
 	@Autowired
 	private IWebDbService dbService;
 
+	private Users save(final Users user) {
+		Preconditions.checkNotNull(user, "user can not be null.");
+
+		return dbService.save(user);
+	}
+
 	private Optional<Users> byUsername(final String username) {
 		Preconditions.checkNotNull(username, "username can not be null.");
 
@@ -60,6 +66,61 @@ public final class UsersTransactions {
 		Preconditions.checkNotNull(id, "id can not be null.");
 		final Optional<Users> optionalUsers = Optional.fromNullable(dbService.byUserId(id));
 		return optionalUsers;
+	}
+
+	protected Optional<Users> bySubUser(final Users users) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+
+		return Optional.fromNullable(dbService.bySubUsers(users));
+	}
+
+	private Users apply3Percent(final double total, final Users users) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		final Users firstParent = this.addPoints(users, this.getPercentageAmount(total, 3));
+		
+
+		final Optional<Users> optional = this.bySubUser(firstParent);
+		if (!optional.isPresent()) {
+			return firstParent;
+		}
+		return this.apply6Percent(total, optional.get());
+	}
+
+	private Users apply6Percent(final double total, final Users users) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		final Users secondParent = this.addPoints(users, this.getPercentageAmount(total, 6));
+
+		final Optional<Users> optional = this.bySubUser(secondParent);
+		if (!optional.isPresent()) {
+			return secondParent;
+		}
+		return this.apply9Percent(total, optional.get());
+	}
+
+	private Users apply9Percent(final double total, final Users users) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		final Users thirdParent = this.addPoints(users, this.getPercentageAmount(total, 9));
+
+		final Optional<Users> optional = this.bySubUser(thirdParent);
+		if (!optional.isPresent()) {
+			return thirdParent;
+		}
+		return this.apply12Percent(total, optional.get());
+	}
+
+	private Users apply12Percent(final double total, final Users users) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		final Users fourthParent = this.addPoints(users, this.getPercentageAmount(total, 12));
+
+		final Optional<Users> optional = this.bySubUser(fourthParent);
+		if (!optional.isPresent()) {
+			return fourthParent;
+		}
+		return this.apply12Percent(total, optional.get());
+	}
+
+	private double getPercentageAmount(final double total, final double percentage) {
+		return (total * percentage) / 100;
 	}
 
 	public boolean isUsername(final String username) {
@@ -134,8 +195,7 @@ public final class UsersTransactions {
 		Preconditions.checkNotNull(child, "child can not be null.");
 
 		parent.addSubUsers(child);
-		final Users p1 = dbService.save(parent);
-		return p1;
+		return dbService.save(parent);
 	}
 
 	public Users getUserByReferralCode(final String referralCode) {
@@ -172,4 +232,15 @@ public final class UsersTransactions {
 		return usersShells;
 	}
 
+	public Users addPoints(final Users users, final double points) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		users.addPoints(points);
+		return this.save(users);
+	}
+
+	public Optional<Users> addPointsToParent(final Users users, final double totalAmount) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		
+		return Optional.fromNullable(this.apply3Percent(totalAmount, users));
+	}
 }

@@ -113,6 +113,52 @@ public class ProductDTO {
 		}
 	}
 
+	public ResponseEntity<ProductCategoryShell> updateCategory(ProductCategoryBody productCategoryBody,
+			Sudoers sudoers) {
+		Preconditions.checkNotNull(productCategoryBody, "productCategoryBody can not be null.");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
+		try {
+
+			LOG.info(String.format("update() request %s", productCategoryBody.toString()));
+
+			final String categoryId = productCategoryBody.getId();
+
+			if (categoryId == null) {
+				throw new NotAccatable(MessageUtils.REQUIRED_FIELD);
+			}
+
+			final String categoryName = productCategoryBody.getName();
+			final ProductCategory oldCategory = productTransaction.getProductCategoryId(categoryId);
+
+			if (!categoryName.equals(oldCategory.getName())) {
+				productTransaction.isProductCategoryName(categoryName);
+			}
+
+			final ProductCategory category = productTransaction.update(oldCategory, categoryName,
+					Optional.fromNullable(productCategoryBody.getRemark()), sudoers);
+
+			final ResponseEntity<ProductCategoryShell> responseEntity = new ResponseEntity<ProductCategoryShell>(
+					category.toShell(), HttpStatus.OK);
+
+			LOG.info(String.format("update() response %s", responseEntity.toString()));
+
+			return responseEntity;
+
+		} catch (DbException e) {
+			final String error = String.format("update() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (ServicesNotAcceptable | ServicesNotFound | NotAccatable e) {
+			final String error = String.format(e.getMessage());
+			LOG.info(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (Exception e) {
+			final String error = String.format("update() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotFound(error);
+		}
+	}
+
 	public ResponseEntity<SortedSet<ProductCategoryShell>> categories() {
 		try {
 
@@ -225,6 +271,65 @@ public class ProductDTO {
 		}
 	}
 
+	public ResponseEntity<ProductShell> updateProduct(final String productBody,
+			final Optional<MultipartFile> productImage, final Sudoers sudoers, final HttpServletRequest request) {
+		Preconditions.checkNotNull(productBody, "productBody can not be null.");
+		Preconditions.checkNotNull(productImage, "productImage can not be null.");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
+		Preconditions.checkNotNull(request, "request can not be null.");
+		try {
+
+			LOG.info(String.format("updateProduct() request %s", productBody));
+
+			final ProductBody productBody2 = new Gson().fromJson(URLDecoder.decode(productBody, "UTF-8"),
+					ProductBody.class);
+
+			if (productBody2.getId() == null || productBody2.getCategoryId() == null
+					|| productBody2.getName() == null) {
+				throw new NotAccatable(MessageUtils.REQUIRED_FIELD);
+			}
+
+			final double price = this.isValid(productBody2.getPrice());
+			final double points = this.isValid(productBody2.getPoints());
+
+			final Product oldProduct = productTransaction.getProductById(productBody2.getId());
+			if (!oldProduct.getName().equals(productBody2.getName())) {
+				productTransaction.isProductName(productBody2.getName());
+			}
+
+			final ProductCategory productCategory = productTransaction
+					.getProductCategoryId(productBody2.getCategoryId());
+
+			final String path = oldProduct.getPath();
+
+			if (productImage.isPresent()) {
+				productTransaction.uploadImageToDisk(productImage.get(), path);
+			}
+
+			final Product product = productTransaction.update(oldProduct, productBody2.getName(),
+					Optional.fromNullable(productBody2.getRemark()), price, points, productCategory, sudoers);
+
+			final ResponseEntity<ProductShell> responseEntity = new ResponseEntity<>(
+					product.toShell(ServiceUtils.siteBaseUrl(request)), HttpStatus.OK);
+
+			LOG.info(String.format("updateProduct() response %s", responseEntity));
+			return responseEntity;
+
+		} catch (DbException e) {
+			final String error = String.format("updateProduct() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (ServicesNotAcceptable | ServicesNotFound | NotAccatable e) {
+			final String error = String.format(e.getMessage());
+			LOG.info(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (Exception e) {
+			final String error = String.format("updateProduct() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotFound(error);
+		}
+	}
+
 	public ResponseEntity<SortedSet<ProductShell>> products(final HttpServletRequest request) {
 		Preconditions.checkNotNull(request, "request can not be null.");
 		try {
@@ -258,7 +363,7 @@ public class ProductDTO {
 
 			LOG.info(String.format("getProductId() request %s", productId));
 
-			final Product product = productTransaction.getProductId(productId);
+			final Product product = productTransaction.getProductById(productId);
 
 			final ResponseEntity<ProductShell> responseEntity = new ResponseEntity<ProductShell>(
 					product.toShell(ServiceUtils.siteBaseUrl(request)), HttpStatus.OK);
@@ -343,16 +448,14 @@ public class ProductDTO {
 
 		try {
 			final SortedSet<CategoryProductShell> categoryShells = new TreeSet<>(
-					Comparator.comparing(CategoryProductShell::getId));
+					Comparator.comparing(CategoryProductShell::getName));
 
 			final Stream<ProductCategory> stream = productTransaction.categories().stream().limit(10);
 			stream.forEach(category -> {
-
 				final SortedSet<ProductShell> shells = productTransaction
-						.sortedCategorizedProduct(ServiceUtils.siteBaseUrl(request), category);
+						.sortedCategorizedProduct(ServiceUtils.siteBaseUrl(request), category, true);
 
 				categoryShells.add(new CategoryProductShell(category.toShell(), shells));
-
 			});
 
 			final ResponseEntity<Set<CategoryProductShell>> responseEntity = new ResponseEntity<Set<CategoryProductShell>>(
@@ -384,7 +487,7 @@ public class ProductDTO {
 
 		try {
 
-			final Product product = productTransaction.getProductId(productMetaBody.getProductId());
+			final Product product = productTransaction.getProductById(productMetaBody.getProductId());
 			final Cart cart = productTransaction.addOrUpdateCart(users, product, productMetaBody.getQuantity());
 
 			final ResponseEntity<CartShell> responseEntity = new ResponseEntity<CartShell>(
@@ -417,7 +520,7 @@ public class ProductDTO {
 
 		try {
 
-			final Product product = productTransaction.getProductId(productId);
+			final Product product = productTransaction.getProductById(productId);
 
 			final Optional<Cart> optionalCart = productTransaction.getCartByUser(users);
 			if (!optionalCart.isPresent()) {
@@ -605,8 +708,8 @@ public class ProductDTO {
 		}
 	}
 
-	public ResponseEntity<OrderShell> status(final OrderStatus status, final String orderId,
-			final Sudoers sudoers, final HttpServletRequest request) {
+	public ResponseEntity<OrderShell> status(final OrderStatus status, final String orderId, final Sudoers sudoers,
+			final HttpServletRequest request) {
 		Preconditions.checkNotNull(status, "status can not be null.");
 		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
 		Preconditions.checkNotNull(orderId, "orderId can not be null.");
