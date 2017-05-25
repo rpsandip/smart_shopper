@@ -1,7 +1,193 @@
-<div ng-controller="DashboardController" ng-model="labels"
-	layout="column" layout-gt-md="row" class="top-container">
-	<div style="width: 20% !important;" ui-view="sidebarView"></div>
-	<div layout-fill layout="column" >
-		<div ui-view="dashboardContentView"  class="container" layout-padding></div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Global stylesheets -->
+<link
+	href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900"
+	rel="stylesheet" type="text/css">
+<link href="resource/assets/css/icons/icomoon/styles.css"
+	rel="stylesheet" type="text/css">
+<link href="resource/assets/css/bootstrap.css" rel="stylesheet"
+	type="text/css">
+<link href="resource/assets/css/core.css" rel="stylesheet"
+	type="text/css">
+<link href="resource/assets/css/components.css" rel="stylesheet"
+	type="text/css">
+<link href="resource/assets/css/colors.css" rel="stylesheet"
+	type="text/css">
+<!-- /global stylesheets -->
+
+<!-- Core JS files -->
+<script type="text/javascript"
+	src="resource/assets/js/plugins/loaders/pace.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/core/libraries/jquery.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/core/libraries/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/loaders/blockui.min.js"></script>
+<!-- /core JS files -->
+
+<!-- Theme JS files -->
+<script type="text/javascript"
+	src="resource/assets/js/plugins/visualization/d3/d3.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/visualization/d3/d3_tooltip.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/forms/styling/switchery.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/forms/styling/uniform.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/forms/selects/bootstrap_multiselect.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/ui/moment/moment.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/pickers/daterangepicker.js"></script>
+
+<!-- Datatable -->
+<script type="text/javascript"
+	src="resource/assets/js/plugins/tables/datatables/datatables.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/tables/datatables/extensions/responsive.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/forms/selects/select2.min.js"></script>
+
+<script type="text/javascript"
+	src="resource/assets/js/plugins/notifications/pnotify.min.js"></script>
+
+<script type="text/javascript"
+	src="resource/assets/js/plugins/loaders/progressbar.min.js"></script>
+
+<script type="text/javascript" src="resource/assets/js/core/app.js"></script>
+
+<script type="text/javascript"
+	src="resource/assets/js/pages/components_loaders.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/pages/gallery_library.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/pages/form_layouts.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/pages/datatables_responsive.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/pages/components_notifications_pnotify.js"></script>
+
+<script type="text/javascript"
+	src="resource/assets/js/plugins/ui/ripple.min.js"></script>
+<!-- /theme JS files -->
+
+</head>
+
+<body ng-controller="DashboardController" ng-model="labels">
+
+	<!-- Main navbar -->
+	<div class="navbar navbar-default header-highlight bg-slate-800">
+		<div class="navbar-header">
+			<!-- 			<a class="navbar-brand" href="#/product"><h4>{{labels.APP}}</h4></a> -->
+
+			<ul class="nav navbar-nav visible-xs-block">
+				<li><a data-toggle="collapse" data-target="#navbar-mobile"><i
+						class="icon-tree5"></i></a></li>
+				<li><a class="sidebar-mobile-main-toggle"><i
+						class="icon-paragraph-justify3"></i></a></li>
+			</ul>
+		</div>
+
+		<div class="navbar-collapse collapse" id="navbar-mobile">
+			<ul class="nav navbar-nav">
+				<li><a
+					class="btn text-white btn-flat legitRipple sidebar-control sidebar-main-toggle hidden-xs"><img
+						style="height: 30px !important;"
+						ng-src="/resource/img/ss_logo.png"
+						onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">
+						{{labels.APP}}</a></li>
+
+				<li class="dropdown"></li>
+			</ul>
+
+			<div class="navbar-right"></div>
+		</div>
 	</div>
-</div>
+	<!-- /main navbar -->
+
+
+	<!-- Page container -->
+	<div class="page-container">
+
+		<!-- Page content -->
+		<div class="page-content">
+			<!-- Main sidebar -->
+			<div class="sidebar sidebar-main">
+				<div class="sidebar-content">
+
+					<!-- User menu -->
+					<div class="sidebar-user-material">
+						<div class="category-content">
+							<div class="sidebar-user-material-content">
+								<a href="#"><img src="resource/img/ss_user_1.png"
+									class="img-circle img-responsive" alt=""></a>
+								<h4>{{USER}}</h4>
+							</div>
+						</div>
+					</div>
+
+					<div class="sidebar-category sidebar-category-visible">
+						<div class="category-content no-padding">
+							<ul class="navigation navigation-main navigation-accordion">
+
+								<!-- Main -->
+
+								<li><a href="#"><i class="icon-user"></i> <span>Profile</span></a>
+									<ul>
+
+										<li><a ng-click="onLogout($event)">
+												{{labels.COMMON.LOGOUT}}</a></li>
+									</ul></li>
+								<!-- /main -->
+							</ul>
+						</div>
+					</div>
+					<!-- /main navigation -->
+
+					<!-- /user menu -->
+
+
+					<!-- Main navigation -->
+					<div class="sidebar-category sidebar-category-visible">
+						<div class="category-content no-padding">
+							<ul class="navigation navigation-main navigation-accordion">
+								<li ng-repeat="menu in menus"><a
+									ng-click="onSelectionMenu($event,menu)"> <i
+										class="{{menu.FACE}}"></i><span>{{ menu.TITLE }}</span></a></li>
+							</ul>
+						</div>
+					</div>
+					<!-- /main navigation -->
+
+				</div>
+			</div>
+			<!-- /main sidebar -->
+
+			<!-- Main content -->
+			<div class="content-wrapper">
+
+				<!-- Content area -->
+				<div class="content">
+					<div ui-view="dashboardContentView"></div>
+				</div>
+				<!-- /content area -->
+
+			</div>
+			<!-- /main content -->
+
+		</div>
+		<!-- /page content -->
+
+	</div>
+	<!-- /page container -->
+
+</body>
+</html>

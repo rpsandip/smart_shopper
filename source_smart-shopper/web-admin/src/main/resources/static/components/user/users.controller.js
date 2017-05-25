@@ -4,12 +4,11 @@
  * @global
  */
 var usersController = app.controller('UsersController', function($http, $scope,
-		$rootScope, $state, $location, $mdToast, $mdDialog, $element,
-		DTDefaultOptions, DTOptionsBuilder, DTColumnDefBuilder,
-		DefaultConstant, UtilityService, UserFactory, UserService) {
+		$rootScope, $state, $location, $element, DTDefaultOptions,
+		DTOptionsBuilder, DTColumnDefBuilder, DefaultConstant, UtilityService,
+		UserFactory, UserService) {
 
-	var labels = DefaultConstant.labels;
-	$scope.labels = labels;
+	var labels = $scope.labels = DefaultConstant.labels;
 	var user = new User();
 	user.clear();
 
@@ -19,11 +18,10 @@ var usersController = app.controller('UsersController', function($http, $scope,
 	UserFactory.set(user);
 	var mainUser = UserFactory.get();
 
-	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(300)
-			.withDOM('trp').withBootstrap().withScroller();
+	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100).withDOM('ftp');
 	vm.dtColumnDefs = [
 			DTColumnDefBuilder.newColumnDef(0).withTitle('#').withOption(
-					'autoWidth', true),
+					'autoWidth', false),
 			DTColumnDefBuilder.newColumnDef(1).withTitle(labels.USERNAME)
 					.withOption('autoWidth', true),
 			DTColumnDefBuilder.newColumnDef(2).withTitle(labels.NAME)
@@ -31,7 +29,9 @@ var usersController = app.controller('UsersController', function($http, $scope,
 			DTColumnDefBuilder.newColumnDef(3).withTitle(labels.REFERRAL_CODE)
 					.withOption('autoWidth', true),
 			DTColumnDefBuilder.newColumnDef(4).withTitle(labels.STATUS)
-					.withOption('autoWidth', true) ];
+					.withOption('autoWidth', true),
+			DTColumnDefBuilder.newColumnDef(5).withTitle('').withOption(
+					'autoWidth', true) ];
 
 	$scope.activate = function($event, user) {
 		if (user == undefined || user == null) {
@@ -41,7 +41,7 @@ var usersController = app.controller('UsersController', function($http, $scope,
 		$scope.isLoading = true;
 		UserService.activate(user.ID, function(response, status) {
 			$scope.isLoading = false;
-			$scope.user.ACTIVATE_META.activate = false;
+
 			if (status == 401) {
 				UtilityService.showError(response.message);
 				return;
@@ -50,7 +50,7 @@ var usersController = app.controller('UsersController', function($http, $scope,
 				UtilityService.showError(response.message);
 				return;
 			}
-			$scope.user.ACTIVATE_META.activate = true;
+			user.ACTIVATE_META.activate = true;
 		});
 
 	};

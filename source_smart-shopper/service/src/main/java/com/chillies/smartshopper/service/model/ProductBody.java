@@ -14,6 +14,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class ProductBody {
 
+	@SerializedName("id")
+	@Expose
+	private String id;
+
 	@SerializedName("name")
 	@Expose
 	private String name;
@@ -33,6 +37,10 @@ public class ProductBody {
 	@SerializedName("categoryId")
 	@Expose
 	private String categoryId;
+
+	public String getId() {
+		return id;
+	}
 
 	public String getName() {
 		return name;

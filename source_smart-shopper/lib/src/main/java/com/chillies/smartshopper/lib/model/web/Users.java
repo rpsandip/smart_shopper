@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.chillies.smartshopper.common.shell.web.UsersShell;
+import com.chillies.smartshopper.common.util.AppUtils;
 import com.chillies.smartshopper.common.util.DateUtils;
 import com.chillies.smartshopper.lib.model.ContactMeta;
 import com.chillies.smartshopper.lib.model.DateMeta;
@@ -42,6 +43,8 @@ public class Users {
 	private DateMeta dateMeta;
 
 	private String remark;
+
+	private String point;
 
 	@Indexed(unique = true)
 	@TextIndexed
@@ -83,8 +86,9 @@ public class Users {
 		this.referralCode = referralCode;
 		this.contactMeta = contactMeta.orNull();
 		this.remark = remark.orNull();
+		this.point = "0.0";
 		this.subUsers = optionalUsers.orNull();
-		this.activateMeta = new ActivateMeta(false, Optional.absent());
+		this.activateMeta = new ActivateMeta(true, Optional.absent());
 	}
 
 	public void addSubUsers(final Users users) {
@@ -104,6 +108,12 @@ public class Users {
 		Preconditions.checkNotNull(updatedBy, "updatedBy");
 		this.activateMeta = new ActivateMeta(true, Optional.of(updatedBy));
 		this.dateMeta.setUpdated(DateUtils.currentUTC());
+	}
+
+	public void addPoints(final double newPoints) {
+		double tempPoint = AppUtils.stringToDouble(point);
+		tempPoint += newPoints;
+		this.point = AppUtils.doubleToString(tempPoint);
 	}
 
 	public String getId() {
@@ -132,6 +142,14 @@ public class Users {
 
 	public String getRemark() {
 		return remark;
+	}
+
+	public String getPoint() {
+		return point;
+	}
+
+	public double point() {
+		return AppUtils.stringToDouble(point);
 	}
 
 	public String getReferralCode() {
@@ -176,7 +194,7 @@ public class Users {
 		}
 		return new UsersShell(this.id, this.username, this.firstName, this.lastName, this.dateMeta.toShell(),
 				Optional.fromNullable(this.remark), this.referralCode, this.contactMeta.toShell(),
-				Optional.fromNullable(usersShells),this.activateMeta.toShell());
+				Optional.fromNullable(usersShells), this.activateMeta.toShell(), this.point);
 	}
 
 }

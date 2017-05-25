@@ -1,7 +1,165 @@
-<div ng-controller="DashboardController as ctrl" ng-model="labels"
-	layout="column" layout-gt-md="row" class="top-container">
-	<div style="width: 20% !important;" ui-view="sidebarView"></div>
-	<div layout-fill layout="column" >
-		<div ui-view="dashboardContentView" class="container" layout-padding></div>
+<html>
+<head>
+<style type="text/css">
+.nav>li>a:hover, .nav>li>a:focus {
+	text-decoration: none !important;
+	background-color: transparent !important;
+}
+</style>
+</head>
+<body class="navbar-bottom navbar-top">
+	<div ng-controller="DashboardController as dctrl" ng-model="labels">
+		<!-- Page header -->
+		<div class="page-header bg-indigo-800">
+
+			<!-- Main navbar -->
+			<div class="navbar  navbar-transparent navbar-fixed-top">
+				<div class="navbar-header" style="cursor: pointer !important;">
+
+					<h1 ng-click="onTopHomeMenu($event)">
+						<img style="height: 40px !important;"
+							ng-src="/resource/img/ss_logo.png"
+							onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">{{labels.APP}}
+					</h1>
+				</div>
+
+				<div class="navbar-collapse collapse" id="navbar-form-icons">
+					<form ng-if="false" class="navbar-form navbar-left">
+						<div class="form-group has-feedback">
+							<input type="search" class="form-control" ng-model="searchTerm"
+								placeholder="Search field" style="color: white !important;"
+								>
+							<div class="form-control-feedback">
+								<i class="icon-search4 text-size-base"
+									style="color: white !important;"></i>
+							</div>
+						</div>
+					</form>
+					<div class="navbar-right" ng-model="user">
+						<ul class="nav navbar-nav">
+							<li class="dropdown dropdown-user"><a ng-if="!isLoggedIn"
+								target="#_self" data-toggle="modal" data-target="#modal_default"
+								class="legitRipple" aria-expanded="false" style="color: white;">
+									<i class=" icon-user"></i> <span>{{labels.LOGIN}}</span>
+							</a> <a ng-if="isLoggedIn" class="dropdown-toggle legitRipple"
+								data-toggle="dropdown" aria-expanded="false"
+								style="color: white;"> <i class=" icon-user"></i> <span>{{USER}}</span>
+									<i class="caret"></i>
+							</a>
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li><a target="_self">Code: {{user.referralCode}} </a></li>
+									<li><a target="_self">Points: {{user.points}} </a></li>
+									<li class="divider"></li>
+									<li><a target="_self" ng-click="onLogout($event)"><i
+											class="icon-switch2"></i>{{labels.LOG_OUT}}</a></li>
+								</ul></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="navbar-collapse collapse" id="navbar-mobile"></div>
+			<!-- /main navbar -->
+
+
+			<!-- Page header content -->
+			<div class="page-header-content">
+				<div class="page-title"></div>
+
+			</div>
+			<!-- /page header content -->
+
+
+			<!-- Second navbar -->
+			<div class="navbar navbar-inverse navbar-transparent"
+				id="navbar-second">
+				<ul class="nav navbar-nav visible-xs-block">
+					<li><a class="text-center collapsed" data-toggle="collapse"
+						data-target="#navbar-second-toggle"><i
+							class="icon-paragraph-justify3"></i></a></li>
+				</ul>
+
+				<div class="navbar-collapse collapse" id="navbar-second-toggle">
+					<ul class="nav navbar-nav navbar-nav-material">
+						<li class="dropdown mega-menu mega-menu-wide"><a href="#"
+							target="_self" ng-click="onTopCategoryMenu($event)"
+							class="dropdown-toggle" data-toggle="dropdown">{{labels.GROCERY}}
+								<span class="caret"></span>
+						</a>
+
+							<div class="dropdown-menu dropdown-content"
+								style="max-width: 30% !important;">
+								<div class="dropdown-content-body">
+									<div class="row">
+										<div class="col-md-12">
+											<span class="menu-heading underlined">{{labels.DETAILS
+												}}</span>
+											<ul class="menu-list">
+												<li ng-repeat="category in categories | filter:searchTerm"><a
+													ng-click="onSelectionMenu($event,category)">{{
+														category.NAME }}</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div></li>
+
+						<li ng-if="isLoggedIn" ng-click="onTopOrderMenu($event)"><a>{{labels.ORDERS}}</a></li>
+
+
+					</ul>
+				</div>
+			</div>
+			<!-- /second navbar -->
+
+		</div>
+		<!-- /page header -->
+
+
+		<div id="modal_default" class="modal fade">
+			<div ng-if="!isLoggedIn"
+				ng-include="'components/login/login.view.html'"></div>
+		</div>
+		<!-- Page container -->
+		<div class="page-container">
+
+			<!-- Page content -->
+			<div class="page-content">
+
+				<!-- Main content -->
+				<div class="content-wrapper">
+					<div ui-view="dashboardContentView"></div>
+				</div>
+				<!-- /main content -->
+
+			</div>
+			<!-- /page content -->
+
+		</div>
+		<!-- /page container -->
+
+		<!-- Footer -->
+		<div class="navbar navbar-default navbar-fixed-bottom footer">
+			<ul class="nav navbar-nav visible-xs-block">
+				<li><a class="text-center collapsed" data-toggle="collapse"
+					data-target="#footer"><i class="icon-circle-up2"></i></a></li>
+			</ul>
+
+			<div class="navbar-collapse collapse" id="footer">
+				<div class="navbar-text">
+					&copy; 2017. <a target="_self" href="#" class="navbar-link">{{labels.APP}}</a>
+				</div>
+
+				<!-- 			<div class="navbar-right"> -->
+				<!-- 				<ul class="nav navbar-nav"> -->
+				<!-- 					<li><a href="#">About</a></li> -->
+				<!-- 					<li><a href="#">Terms</a></li> -->
+				<!-- 					<li><a href="#">Contact</a></li> -->
+				<!-- 				</ul> -->
+				<!-- 			</div> -->
+			</div>
+		</div>
+		<!-- /footer -->
 	</div>
-</div>
+</body>
+</html>

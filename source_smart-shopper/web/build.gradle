@@ -5,3 +5,7 @@ dependencies {
 	compile project(':service')
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.4.0.RELEASE'
 }
+jar {
+    baseName = 'ssGo'
+    version =  '1.0.0'
+}

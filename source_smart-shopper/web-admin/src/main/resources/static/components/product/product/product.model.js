@@ -14,11 +14,13 @@ var Product = function() {
 	this.category;
 	this.categories = [];
 	this.selectedCategory;
+	this.isEdit = false;
 
 	this.products = [];
 
 	this.toJSON = function() {
 		return {
+			"id" : this.id,
 			"name" : this.name,
 			"remark" : this.remark,
 			"price" : this.price,
@@ -54,6 +56,23 @@ var Product = function() {
 			CATEGORY : product.category,
 			OBJECT : product
 		}
+	};
+	
+	
+	this.editProduct = function(row) {
+		if (!row) {
+			return;
+		}
+		this.id = row.ID;
+		this.name = row.NAME;
+		this.remark = row.REMARK;
+		this.createdMeta = row.CREATED_META;
+		this.dateMeta = row.DATE_META;
+		this.price = row.PRICE;
+		this.points = row.POINTS;
+		this.imageSrc = row.IMAGE_URL;
+		this.selectedCategory = row.CATEGORY;
+		this.isEdit = true;
 	};
 
 	this.addProduct = function(product) {

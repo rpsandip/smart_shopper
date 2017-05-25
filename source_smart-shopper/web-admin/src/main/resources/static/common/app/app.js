@@ -5,8 +5,8 @@
  * 
  */
 var app = angular.module('web-admin', [ 'ui.router', 'datatables',
-		'datatables.scroller', 'datatables.bootstrap', 'datatables.buttons',
-		'ngResource', 'ngSanitize', 'ngCookies', 'ngMaterial', 'ngMessages' ]);
+		'datatables.buttons', 'ngResource', 'ngSanitize', 'ngCookies',
+		'ngMessages' ]);
 
 /**
  * Application Route provider.
@@ -17,30 +17,7 @@ var routeProvider = app
 		.config([
 				'$stateProvider',
 				'$urlRouterProvider',
-				'$mdThemingProvider',
-				'$mdDateLocaleProvider',
-				function($stateProvider, $urlRouterProvider,
-						$mdThemingProvider, $mdDateLocaleProvider) {
-
-					$mdDateLocaleProvider.formatDate = function(date) {
-						return moment(date).format('MMM DD YYYY');
-					};
-
-					$mdThemingProvider.theme('default').primaryPalette(
-							'blue-grey', {
-								'default' : '700',
-								'hue-1' : '700',
-								'hue-2' : '800',
-								'hue-3' : 'A700'
-							}).accentPalette('cyan', {
-						'default' : 'A200',
-						'hue-1' : '500',
-						'hue-2' : '700',
-						'hue-3' : 'A700'
-					});
-
-					$mdThemingProvider.setDefaultTheme('default');
-					$mdThemingProvider.alwaysWatchTheme(true);
+				function($stateProvider, $urlRouterProvider) {
 
 					$urlRouterProvider.otherwise('/login');
 
@@ -55,40 +32,12 @@ var routeProvider = app
 										authenticate : true
 									})
 							.state(
-									'dashboard.menu',
-									{
-										url : '',
-										views : {
-											'sidebarView@dashboard' : {
-												templateUrl : 'common/sideBar.view.html'
-											}
-										},
-										authenticate : true
-									})
-							.state(
 									'dashboard.product',
 									{
 										url : '/product',
 										views : {
-											'sidebarView@dashboard' : {
-												templateUrl : 'common/sideBar.view.html'
-											},
 											'dashboardContentView@dashboard' : {
 												templateUrl : 'components/product/product/products.view.html'
-											}
-										},
-										authenticate : true
-									})
-							.state(
-									'dashboard.order',
-									{
-										url : '/order',
-										views : {
-											'sidebarView@dashboard' : {
-												templateUrl : 'common/sideBar.view.html'
-											},
-											'dashboardContentView@dashboard' : {
-												templateUrl : 'pages/component/order.html'
 											}
 										},
 										authenticate : true
@@ -98,9 +47,6 @@ var routeProvider = app
 									{
 										url : '/category',
 										views : {
-											'sidebarView@dashboard' : {
-												templateUrl : 'common/sideBar.view.html'
-											},
 											'dashboardContentView@dashboard' : {
 												templateUrl : 'components/product/categories.view.html'
 											}
@@ -112,11 +58,19 @@ var routeProvider = app
 									{
 										url : '/user',
 										views : {
-											'sidebarView@dashboard' : {
-												templateUrl : 'common/sideBar.view.html'
-											},
 											'dashboardContentView@dashboard' : {
 												templateUrl : 'components/user/users.view.html'
+											}
+										},
+										authenticate : true
+									})
+							.state(
+									'dashboard.order',
+									{
+										url : '/order',
+										views : {
+											'dashboardContentView@dashboard' : {
+												templateUrl : 'components/product/order.view.html'
 											}
 										},
 										authenticate : true

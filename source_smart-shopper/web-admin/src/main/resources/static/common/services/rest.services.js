@@ -20,6 +20,19 @@ app.factory('ProductService', function($http, DefaultConstant,
 		});
 	}
 
+	service.updateCategory = function(payload, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.CATEGORY
+				+ DefaultConstant.url.UPDATE + "?session="
+				+ AuthenticationService.getSession();
+		$http.post(url, payload).success(
+				function(Response, Status, Headers, Config) {
+					callback(Response, Status);
+				}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
 	service.categories = function(callback) {
 		var url = DefaultConstant.url.SERVER_ADDRESS
 				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.CATEGORY
@@ -51,6 +64,25 @@ app.factory('ProductService', function($http, DefaultConstant,
 		});
 	}
 
+	service.updateProduct = function(payload, productImage, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.UPDATE
+				+ "?session=" + AuthenticationService.getSession()
+				+ "&productBody=" + JSON.stringify(payload);
+		var formdata = new FormData();
+		formdata.append('productImage', productImage);
+		$http.post(url, formdata, {
+			transformRequest : angular.identity,
+			headers : {
+				'Content-Type' : undefined
+			}
+		}).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
 	service.products = function(callback) {
 		var url = DefaultConstant.url.SERVER_ADDRESS
 				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.PRODUCTS
@@ -61,6 +93,31 @@ app.factory('ProductService', function($http, DefaultConstant,
 			callback(Response, Status);
 		});
 	}
+
+	service.orders = function(callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.ORDERS
+				+ "?session=" + AuthenticationService.getSession();
+		$http.post(url).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
+	service.orderStatus = function(orderId, orderStatus, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.ORDER
+				+ DefaultConstant.url.STATUS + "?session="
+				+ AuthenticationService.getSession() + "&status=" + orderStatus
+				+ "&orderId=" + orderId;
+		$http.post(url).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
 	return service;
 });
 

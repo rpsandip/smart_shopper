@@ -13,10 +13,16 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class ProductCategoryBody {
 
+	private String id;
+
 	@NotBlank(message = "name can not be null.")
 	private String name;
 
 	private String remark;
+
+	public String getId() {
+		return id;
+	}
 
 	public String getName() {
 		return name;
@@ -30,6 +36,8 @@ public class ProductCategoryBody {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ProductCategoryBody [");
+		if (id != null)
+			builder.append("id=").append(id).append(", ");
 		if (name != null)
 			builder.append("name=").append(name).append(", ");
 		if (remark != null)

@@ -6,6 +6,7 @@ import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.chillies.smartshopper.common.shell.web_admin.ProductCategoryShell;
+import com.chillies.smartshopper.common.util.DateUtils;
 import com.chillies.smartshopper.lib.model.CreatedMeta;
 import com.chillies.smartshopper.lib.model.DateMeta;
 import com.google.common.base.Optional;
@@ -50,6 +51,17 @@ public class ProductCategory {
 		this.remark = remark.orNull();
 		this.dateMeta = dateMeta;
 		this.createdMeta = createdMeta;
+	}
+	
+	public void update(String name, Optional<String> remark, Sudoers sudoers) {
+		Preconditions.checkNotNull(name, "name can not be null.");
+		Preconditions.checkNotNull(remark, "remark can not be null.");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
+		
+		this.name = name;
+		this.remark = remark.orNull();
+		this.createdMeta.setUpdated(sudoers);
+		this.dateMeta.setUpdated(DateUtils.currentUTC());
 	}
 
 	public String getId() {
