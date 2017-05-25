@@ -1,67 +1,62 @@
-<div ng-controller="ProductController as productCtrl" layout="column"
-	ng-model="labels" layout-padding>
-
-	<md-toolbar>
-	<div class="md-toolbar-tools">
-
-		<md-button class="md-icon-button" aria-label="add"
-			ng-click="productCtrl.onAddClick($event)"> <i
-			ng-if="!isProduct" class="material-icons  topbar-buttons">note_add</i>
-		<i ng-if="isProduct" class="material-icons topbar-buttons">close</i> <md-tooltip
-			ng-if="!isProduct" md-direction="bottom">
-		{{labels.COMMON.ADD}} </md-tooltip> <md-tooltip ng-if="isProduct"
-			md-direction="bottom"> {{labels.COMMON.CLOSE}} </md-tooltip> </md-button>
-
-		<h3 ng-if="!isProduct" class="title">{{labels.ITEM.ITEMS}}</h3>
-		<h3 ng-if="isProduct" class="title">{{labels.ITEM.ITEM}}</h3>
-		<span flex></span>
-		<div ng-if="!isProduct">
-			{{labels.COMMON.SEARCH}}: <input ng-model="productCtrl.searchText">
-		</div>
-
-		<div ng-if="isProduct">
-			<md-button type="submit" ng-click="onSave($event,product,image)"
-				class="md-icon-button"> <i
-				class="material-icons topbar-buttons">save</i> <md-tooltip
-				md-direction="bottom"> {{labels.COMMON.SAVE}}
-			{{labels.product.product}} </md-tooltip> </md-button>
+<!-- Basic datatable -->
+<div ng-controller="ProductController as productCtrl" class="panel">
+	<div class="panel-heading  bg-info">
+		<h3 ng-if="!isProduct" class="panel-title">{{labels.ITEM.ITEMS}}</h3>
+		<h3 ng-if="isProduct" class="panel-title">{{labels.ITEM.ITEM}}</h3>
+		<div class="heading-elements">
+			<ul class="icons-list">
+				<li ng-if="!isProduct"><a ng-click="onAddClick($event)"><i
+						class="icon-plus3"></i></a></li>
+				<li ng-if="isProduct"><a ng-click="onCloseClick($event)"> <i
+						class="icon-cross2"></i></a></li>
+			</ul>
 		</div>
 	</div>
-	</md-toolbar>
 
-	<md-progress-linear md-mode="indeterminate" class="md-warn"
-		ng-if="isLoading"></md-progress-linear>
+	<div ng-if="isProduct"
+		ng-include="'components/product/product/product.view.html'"></div>
 
-	<div class="content-background table-responsive">
-		<div ng-if="isProduct"
-			ng-include="'components/product/product/product.view.html'"></div>
-
-		<table ng-if="!isProduct" datatable="ng"
-			dt-options="productCtrl.dtOptions" dt-columns="productCtrl.dtColumn"
-			dt-column-defs="productCtrl.dtColumnDefs"
-			class="table table-background table-sm">
-			<thead class="table-head-background"></thead>
+	<div ng-if="!isProduct">
+		<table class="table table-border" datatable="ng"
+			dt-options="productCtrl.dtOptions">
+			<thead>
+				<tr class="bg-info">
+					<th>#</th>
+					<th>{{labels.PREVIEW}}</th>
+					<th>{{labels.ITEM.ITEM}}</th>
+					<th>{{labels.CATEGORY.CATEGORY1}}</th>
+					<th class="text-center">Actions</th>
+				</tr>
+			</thead>
 			<tbody>
 				<tr ng-show="!isProduct.DELETED"
 					ng-repeat="product in productCtrl.products | filter:productCtrl.searchText">
-					<td><div style="width: 7% !important;"
-							class="md-media-sm card-media">
-							<img style="height: 50px !important;" src="{{product.IMAGE_URL}}"
-								alt="{{product.NAME}}"
-								onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
-						</div></td>
-					<td style="width: 60% !important;"><div>
-							<h2>{{product.NAME}}</h2>
-							<p>{{product.REMARK}}</p>
-						</div></td>
-					<td style="width: 20%!important;">{{product.CATEGORY.name}}</td>
-					<td><md-menu>
-						<button ng-click="openMenu($mdOpenMenu, $event)" class="button">{{labels.COMMON.ACTIONS}}</button>
-						<md-menu-content style="height: 90px !important;"> <md-menu-item layout="column">
-						<md-button ng-click=""> {{labels.COMMON.EDIT}} </md-button> <md-button
-							ng-click=""> {{labels.COMMON.DELETE}} </md-button> </md-menu-item></md-menu-content></md-menu></td>
+					<td>{{$index + 1}}</td>
+					<td><a href="{{product.IMAGE_URL}}" data-popup="lightbox">
+							<img class="img-square img-preview"
+							style="height: 70px !important;" ng-src="{{product.IMAGE_URL}}"
+							alt="{{product.NAME}}"
+							onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
+					</a></td>
+					<td><h4 class="td-h4">{{product.NAME}}</h4>
+						<p>{{product.REMARK}}</p></td>
+					<td>{{product.CATEGORY.name}}</td>
+					<td>
+						<ul class="icons-list">
+							<li class="dropdown"><a target="_self" href="#"
+								class="dropdown-toggle" data-toggle="dropdown"
+								aria-expanded="false"> <i class="icon-menu9"></i>
+							</a>
+								<ul class="dropdown-menu dropdown-menu-right">
+									<li><a target="_self"
+										ng-click="onEditClick($event,product)"><i
+											class="icon-pencil7"></i> Edit</a></li>
+								</ul></li>
+						</ul>
+					</td>
 				</tr>
 			</tbody>
 		</table>
 	</div>
 </div>
+<!-- /basic datatable -->

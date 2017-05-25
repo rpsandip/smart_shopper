@@ -35,13 +35,19 @@ public final class SudoersTransaction {
 
 		final Optional<Sudoers> optionalAdmin = Optional.fromNullable(dbService.byUsername("admin"));
 		if (!optionalAdmin.isPresent()) {
-			dbService.save(
-					new Sudoers("admin", "admin", "admin", "min", new DateMeta(Optional.absent()), Optional.absent()));
+			dbService.save(new Sudoers("admin", "admin", "Smart", "Shopper Admin", new DateMeta(Optional.absent()),
+					Optional.absent()));
 		}
 		final Optional<Sudoers> optionalTest = Optional.fromNullable(dbService.byUsername("test"));
 		if (!optionalTest.isPresent()) {
+			dbService.save(new Sudoers("test", "test", "Smart", "Shopper Tester", new DateMeta(Optional.absent()),
+					Optional.absent()));
+		}
+		final Optional<Sudoers> optionalSys = Optional.fromNullable(dbService.byUsername("sys"));
+
+		if (!optionalSys.isPresent()) {
 			dbService.save(
-					new Sudoers("test", "test", "test", "min", new DateMeta(Optional.absent()), Optional.absent()));
+					new Sudoers("sys", "sys", "Smart", "Shopper", new DateMeta(Optional.absent()), Optional.absent()));
 		}
 	}
 

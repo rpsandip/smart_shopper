@@ -32,6 +32,10 @@ public final class MessageUtils {
 
 	public static final String USER_IS_IN_ACTIVE = "User is not active.";
 
+	public static final String CART_AVAIABLE = "No Cart is present.";
+
+	public static final String ORDER_NOT_PRESENT = "Order is not present.";
+
 	// admin user
 	public static String userNotRegistered(final String username) {
 		Preconditions.checkNotNull(username, "Please enter username.");

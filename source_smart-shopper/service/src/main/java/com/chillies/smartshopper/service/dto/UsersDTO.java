@@ -19,6 +19,7 @@ import com.chillies.smartshopper.lib.exception.DbException;
 import com.chillies.smartshopper.lib.exception.NotAccatable;
 import com.chillies.smartshopper.lib.exception.ServicesNotAcceptable;
 import com.chillies.smartshopper.lib.exception.ServicesNotFound;
+import com.chillies.smartshopper.lib.exception.ServicesUnauthorized;
 import com.chillies.smartshopper.lib.model.web.Users;
 import com.chillies.smartshopper.lib.model.web_model.Sudoers;
 import com.chillies.smartshopper.lib.transaction.UsersTransactions;
@@ -51,6 +52,35 @@ public class UsersDTO {
 	@Autowired
 	private EmailValidator emailValidator;
 
+	public Users isValid(final String session) {
+		Preconditions.checkNotNull(session, "username can not be null.");
+
+		try {
+			LOG.info(String.format("isValid() request %s", session));
+			final String username = sessionManager.getSessionUser(session);
+
+			final Users users = usersTransactions.getUsersByUsername(username);
+			LOG.info(String.format("isValid() response %s", users.toString()));
+			return users;
+		} catch (DbException e) {
+			final String error = String.format("isValid() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (ServicesNotAcceptable | ServicesNotFound e) {
+			final String error = String.format(e.getMessage());
+			LOG.info(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (ServicesUnauthorized e) {
+			final String error = String.format(e.getMessage());
+			LOG.info(error);
+			throw new ServicesUnauthorized(error);
+		} catch (Exception e) {
+			final String error = String.format("isValid() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotFound(error);
+		}
+	}
+
 	public ResponseEntity<UsersShell> register(final RegisterBody registerBody, final HttpServletRequest httpRequest) {
 		Preconditions.checkNotNull(registerBody, "registerBody can not be null.");
 		Preconditions.checkNotNull(httpRequest, "httpRequest can not be null.");
@@ -69,7 +99,8 @@ public class UsersDTO {
 
 			final Optional<Users> optionalParent;
 			if (registerBody.getParentId() != null) {
-				optionalParent = Optional.fromNullable(usersTransactions.getUserById(registerBody.getParentId()));
+				System.out.println(registerBody.getParentId());
+				optionalParent = Optional.fromNullable(usersTransactions.getUserByReferralCode(registerBody.getParentId()));
 			} else {
 				optionalParent = Optional.absent();
 			}

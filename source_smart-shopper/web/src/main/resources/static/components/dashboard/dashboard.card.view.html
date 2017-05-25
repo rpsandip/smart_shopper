@@ -1,43 +1,66 @@
-<div ng-controller="DashboardCardController as ctrl" ng-model="labels">
-	<div>
-		<!-- header toolbar -->
-		<md-toolbar class="md-hue-2 md-whiteframe-9dp">
-		<div class="md-toolbar-tools">
-			<h2>{{toolbarTitle}}</h2>
-			<span flex></span>
 
-			<md-button ng-if="!isLoggedIn" ng-click="onRegister($event)">{{labels.REGISTR}}</md-button>
-			<md-button ng-if="!isLoggedIn" ng-click="onLogin($event)">{{labels.LOGIN}}</md-button>
+<style type="text/css">
+#slides_control {
+	position: absolute;
+	width: 1109px !important;
+	height: 315px !important;
+	top: 20px;
+}
+</style>
 
-			<h2 ng-if="isLoggedIn">Welcome, {{USER}}</h2>
-			<md-button ng-if="isLoggedIn"
-				class="md-icon-button demo-menu-open-button" aria-label="More"
-				ng-click="onLogout($event)"> <i class="fa fa-sign-out"
-				aria-hidden="true" style="font-size: 25px !important;"></i> <md-tooltip
-				ng-if="!isCategory" md-direction="bottom">
-			{{labels.COMMON.LOGOUT}} </md-tooltip> </md-button>
-		</div>
-		</md-toolbar>
-		<!-- end -->
-	</div>
-	<div layout-padding>
-		<md-list> <md-list-item class="md-1-line"
-			ng-repeat="category in categories"
-			ng-click="onCategorySelection($event,category)">
-		<div class="md-list-item-text" layout="column" layout-padding>
-			<h2>{{ category.NAME }}</h2>
-			<div layout="row" layout-wrap layout-sm="column" layout-padding>
-				<div flex class="md-1-line" ng-repeat="product in category.PRODUCTS"
-					layout="row">
-					<md-card layout-padding> <img
-						style="height: 150px !important; width: 150px !important;"
-						ng-src="{{product.productURL}}" class="md-card-image"
-						alt="product.name"> <md-card-title> <md-card-title-text>
-					<h3 class="md-headline">{{product.name}}</h3>
-					</md-card-title-text> </md-card-title> <md-card-content> </md-card-content> </md-card>
+<div ng-controller="DashboardCardController as ctrl" ng-model="labels"
+	style="margin-top: 30% !important;">
+	<div class="row">
+		<div>
+			<div id="slides_control">
+				<div>
+					<carousel interval="myInterval"> <slide
+						ng-repeat="slide in slides" active="slide.active"> <img
+						ng-src="{{slide.image}}" style="width: 1109px; height: 315px;">
+					<div class="carousel-caption"></div>
+					</slide> </carousel>
 				</div>
 			</div>
+		</div>
+	</div>
 
+	<div ng-repeat="category in categories">
+		<!-- Image grid-->
+
+		<div class="row">
+			<h6 class="content-group text-semibold col-md-10">{{category.NAME}}</h6>
+			<button ng-if="category.PRODUCTS.length == 4" type="button"
+				class="btn bg-indigo btn-sm pull-right col-md-1"
+				ng-click="onCategorySelection($event,category)">More</button>
+		</div>
+		<div class="row">
+			<div ng-repeat="product in category.PRODUCTS">
+				<div class="col-lg-3 col-sm-6" style="overflow-x: auto !important;">
+					<div class="thumbnail">
+						<div class="thumb" ng-click="onCategorySelection($event,category)"
+							style="cursor: pointer;">
+							<img style="height: 256px !important;"
+								ng-src="{{product.productURL}}" alt="{{product.name}}"
+								onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
+
+						</div>
+
+						<div class="caption"
+							style="border-top: 1px solid rgba(128, 128, 128, 0.45) !important;">
+							<h6 class="no-margin-top text-semibold">
+								<a target="_self" class="text-default">{{product.name}}</a> <a
+									target="_self" class="text-muted"
+									ng-click="onAddToCart($event,product)"><i
+									class="icon-cart-add2 pull-right"
+									style="font-size: 20px !important;"></i></a>
+							</h6>
+							{{product.price | currency}}
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+
+

@@ -1,64 +1,142 @@
-<div ng-controller="LoginController" ng-model="label" layout="row"
-	class="img-div">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Smart-shopper</title>
 
-	<!-- 	#image page -->
-	<div style="width: 100% !important;">
-		<div class="center" layout-padding>
-			<h1 class="title-text"
-				style="color: white !important; font-size: 49px !important; font-family:Georgia, Times, serif !important;    text-align: center;">{{label.APP}}</h1>
-			<p
-				style="color: white !important; font-size: 25px !important; font-family: cursive !important; text-align: center;">Shopping
-				ki nayi paribhasha</p>
-		</div>
-	</div>
-	<div
-		style="float: right !important; width: 35% !important; background-color: white !important; height: 100vh !important;"
-		class="md-whiteframe-13dp">
-		<!-- 	#side bar  -->
-		<div>
-			<div>
-				<md-toolbar class="title-toolbar md-whiteframe-1dp" layout="column" style="height:50px !important;">
-				<div class="md-toolbar-tools">
-					<h2 class="title-text" md-truncate>{{label.LOGIN}}</h2>
+<!-- Global stylesheets -->
+<link
+	href="https://fonts.googleapis.com/css?family=Roboto:400,300,100,500,700,900"
+	rel="stylesheet" type="text/css">
+<link href="resource/assets/css/icons/icomoon/styles.css"
+	rel="stylesheet" type="text/css">
+<link href="resource/assets/css/bootstrap.css" rel="stylesheet"
+	type="text/css">
+<link href="resource/assets/css/core.css" rel="stylesheet"
+	type="text/css">
+<link href="resource/assets/css/components.css" rel="stylesheet"
+	type="text/css">
+<link href="resource/assets/css/colors.css" rel="stylesheet"
+	type="text/css">
+<!-- /global stylesheets -->
+
+<!-- Core JS files -->
+<script type="text/javascript"
+	src="resource/assets/js/plugins/loaders/pace.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/core/libraries/jquery.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/core/libraries/bootstrap.min.js"></script>
+<script type="text/javascript"
+	src="resource/assets/js/plugins/loaders/blockui.min.js"></script>
+<!-- /core JS files -->
+
+<!-- Theme JS files -->
+<script type="text/javascript"
+	src="resource/assets/js/plugins/forms/styling/uniform.min.js"></script>
+
+<script type="text/javascript" src="resource/assets/js/core/app.js"></script>
+<script type="text/javascript" src="resource/assets/js/pages/login.js"></script>
+
+<script type="text/javascript"
+	src="resource/assets/js/plugins/ui/ripple.min.js"></script>
+<!-- /theme JS files -->
+
+</head>
+
+<body class="login-container bg-slate-800 img-div"
+	ng-controller="LoginController" ng-model="label">
+
+
+	<!-- Page container -->
+	<div class="login-container img-div page-container">
+
+		<!-- Page content -->
+		<div class="page-content">
+
+			<div class="content-wrapper"
+				style="float: left; width: 50% !important; padding: 0px !important; margin: 10% !important;">
+				<h1 class="title-text"
+					style="color: white !important; font-size: 49px !important; font-family: Georgia, Times, serif !important; text-align: center;">{{label.APP}}</h1>
+				<p
+					style="color: white !important; font-size: 25px !important; font-family: cursive !important; text-align: center;">Shopping
+					ki nayi paribhasha</p>
+
+			</div>
+
+			<!-- Main content -->
+			<div class="content-wrapper"
+				style="float: right; width: 30% !important;">
+
+				<!-- Content area -->
+				<div class="content">
+					<!-- Advanced login -->
+					<form name="form" ng-submit="login(username,password)" role="form">
+						<div class="panel panel-body login-form">
+							<div class="text-center">
+								<div>
+									<img style="height: 200px !important;"
+										ng-src="/resource/img/ss_logo.png"
+										onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">
+								</div>
+								<h5 class="content-group">
+									{{label.APP}}<small class="display-block">Login to your
+										account</small>
+								</h5>
+							</div>
+
+							<div class="form-group has-feedback has-feedback-left">
+								<input type="text" placeholder="{{label.USERNAME}}"
+									class="form-control" ng-model="username" name="username"
+									id="username" required /> <span
+									ng-show="form.username.$dirty && form.username.$error.required"
+									class="help-block">{{label.USERNAME}}
+									{{label.ERROR.is_required}}</span>
+								<div class="form-control-feedback">
+									<i class="icon-user text-muted"></i>
+								</div>
+							</div>
+
+							<div class="form-group has-feedback has-feedback-left">
+								<input type="password" name="password" id="password"
+									class="form-control" ng-model="password"
+									placeholder="{{label.PASSWORD}}" required /> <span
+									ng-show="form.password.$dirty && form.password.$error.required"
+									class="help-block">{{label.PASSWORD}}
+									{{label.ERROR.is_required}}</span>
+								<div class="form-control-feedback">
+									<i class="icon-lock2 text-muted"></i>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<button type="submit" class="btn bg-info-400 btn-block"
+									type="submit" ng-disabled="form.$invalid || vm.dataLoading">
+									{{label.LOGIN}}</button>
+							</div>
+							<div class="loading" ng-if="isLoading">
+								<img class="img-square img-preview"
+									src="resource/img/loader.gif" alt="{{product.NAME}}"
+									onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
+							</div>
+
+						</div>
+					</form>
+					<!-- /advanced login -->
+
 				</div>
-				</md-toolbar>
+				<!-- /content area -->
+
 			</div>
-			<div>
-				<md-progress-linear ng-if="isLoading" md-mode="indeterminate"
-					class="md-warn"></md-progress-linear>
-			</div>
-			<div>
-				<form name="form" ng-submit="login(username,password)" role="form"
-					layout-padding>
-					<div class="form-group"
-						ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
-						<md-input-container style="width: 100% !important;" class="Input">
-						<label style="text-align: left !important;" for="username">{{label.USERNAME}}</label>
-						<input type="text" name="username" id="username"
-							class="form-control" ng-model="username" required /> <span
-							ng-show="form.username.$dirty && form.username.$error.required"
-							class="help-block">{{label.USERNAME}}
-							{{label.ERROR.is_required}}</span></md-input-container>
-					</div>
-					<div class="form-group"
-						ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
-						<md-input-container style="width: 100% !important;">
-						<label style="text-align: left !important;" for="password">{{label.PASSWORD}}</label>
-						<input type="password" name="password" id="password"
-							class="form-control" ng-model="password" required /> <span
-							ng-show="form.password.$dirty && form.password.$error.required"
-							class="help-block">{{label.PASSWORD}}
-							{{label.ERROR.is_required}}</span> </md-input-container>
-					</div>
-					<div class="form-actions">
-						<md-button class="md-raised md-primary" type="submit"
-							ng-disabled="form.$invalid || vm.dataLoading"
-							class="btn btn-primary">{{label.LOGIN}} </md-button>
-					</div>
-				</form>
-			</div>
+			<!-- /main content -->
+
 		</div>
+		<!-- /page content -->
+
 	</div>
-</div>
+	<!-- /page container -->
 
-
+</body>
+</html>

@@ -19,13 +19,19 @@ public final class DateUtils {
 
 	private final static DateTimeFormatter PATH = DateTimeFormat.forPattern("yyyyMMdd-HHmmssSSS");
 
+	private final static DateTimeFormatter DISPLAY = DateTimeFormat.forPattern("E, d MMMM yyyy");
+
 	public static DateTime currentUTC() {
 		return DateTime.now(DateTimeZone.UTC);
 	}
 
-	public static String toString(final DateTime dateTime) {
+	public static String toString(final DateTime dateTime, final boolean timeZone) {
 		Preconditions.checkNotNull(dateTime, "dateTime can not be null.");
-		return DATE_TIME_ZONE.print(dateTime);
+		if (timeZone) {
+			return DATE_TIME_ZONE.print(dateTime);
+		}
+		
+		return DISPLAY.print(dateTime);
 	}
 
 	public static String dateTimeToAddon() {

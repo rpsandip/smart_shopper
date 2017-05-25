@@ -59,5 +59,24 @@ public class ProductCategoryShell {
 	public CreatedMetaShell getCreatedMeta() {
 		return createdMeta;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int hash = id.hashCode();
+		return hash * 2;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+
+		if (this == obj) {
+			return true;
+		}
+		final ProductCategoryShell categoryProduct = (ProductCategoryShell) obj;
+		return categoryProduct.id == this.id;
+	}
 
 }

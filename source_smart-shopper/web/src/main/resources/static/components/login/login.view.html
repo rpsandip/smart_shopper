@@ -1,72 +1,242 @@
-<div ng-controller="LoginController" ng-model="label" layout="row"
-	class="img-div">
 
-	<!-- 	#image page -->
-	<div style="width: 100% !important;">
-		<div class="center" layout-padding>
-			<h1 class="title-text"
-				style="color: white !important; font-size: 49px !important; font-family: Georgia, Times, serif !important; text-align: center;">{{label.APP}}</h1>
-			<p
-				style="color: white !important; font-size: 25px !important; font-family: cursive !important; text-align: center;">Shopping
-				ki nayi paribhasha</p>
-		</div>
-	</div>
-
-	<div class="md-whiteframe-13dp"
-		style="float: right !important; width: 35% !important; background-color: white !important; height: 100vh !important;">
-		<div>
-			<md-toolbar class="title-toolbar md-whiteframe-1dp" layout="column"
-				style="height:50px !important;">
-			<div class="md-toolbar-tools">
-				<h2 class="title-text" md-truncate>{{label.APP}}</h2>
-				<span flex></span>
-				<md-button class="md-icon-button demo-menu-open-button"
-					aria-label="More" ng-click="onAdminPortalClicked()"> <i
-					class="fa fa-building" aria-hidden="true"
-					style="font-size: 25px !important; background: #00838F !important;"></i>
-					
-				<md-tooltip ng-if="!isCategory" md-direction="bottom">
-				{{label.APP}} Admin </md-tooltip> </md-button>
+<div class="modal-dialog" ng-controller="LoginController"
+	ng-model="label">
+	<div class="modal-content row">
+		<div class="col-md-4 bg-indigo-800"
+			style="min-height: 70vh !important;">
+			<div class="panel-body">
+				<img style="height: 100px !important; margin-left: 17% !important;"
+					ng-src="/resource/img/ss_logo.png"
+					onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">
+				<h1
+					style="font-family: Georgia, Times, serif !important; text-align: center;">{{label.APP}}</h1>
+				<p style="font-family: cursive !important; text-align: center;">Shopping
+					ki nayi paribhasha</p>
 			</div>
 		</div>
-		<div>
-			<md-progress-linear ng-if="isLoading" md-mode="indeterminate"
-				class="md-warn"></md-progress-linear>
-		</div>
-		<div ng-show="isRegister"
-			ng-include="'components/login/registration.view.html'"></div>
-		<div ng-show="!isRegister">
-			<form name="form" ng-submit="login(username,password)" role="form"
-				layout-padding>
+		<div class="col-md-8">
+			<div class="modal-header">
+				<a class="close" data-dismiss="modal"> <i class="icon-cross2"></i>
+				</a>
+			</div>
+			<div class="modal-body row">
 
-				<div class="form-group"
-					ng-class="{ 'has-error': form.username.$dirty && form.username.$error.required }">
-					<md-input-container style="width: 100% !important;" class="Input">
-					<label style="text-align: left !important;" for="username">{{label.USERNAME}}</label>
-					<input type="text" name="username" id="username"
-						class="form-control" ng-model="username" required /> <span
-						ng-show="form.username.$dirty && form.username.$error.required"
-						class="help-block">{{label.USERNAME}}
-						{{label.ERROR.is_required}}</span></md-input-container>
+
+				<div class="tabbable">
+					<ul class="nav nav-tabs nav-tabs-bottom bottom-divided">
+						<li class="active"><a target="_self" href="#basic-tab1"
+							data-toggle="tab"><h6 class="text-semibold">{{label.LOGIN}}</h6></a></li>
+						<li><a target="_self" href="#basic-tab2"
+							ng-click="onRegistration()" data-toggle="tab"><h6>{{label.REGISTRATION}}</h6></a></li>
+					</ul>
+
+					<div class="tab-content panel-body">
+						<div class="tab-pane active" id="basic-tab1">
+							<form ng-submit="login(username,password)" class="login-form"
+								role="login-form" name="login-form">
+								<div class="form-group has-feedback has-feedback-left">
+									<input type="email" placeholder="{{label.USERNAME}}"
+										class="form-control" ng-model="username" name="username"
+										id="username" required /> <span
+										ng-show="login-form.username.$dirty && login-form.username.$error.required"
+										class="help-block">{{label.USERNAME}}
+										{{label.ERROR.is_required}}</span> <span
+										ng-show="login-form.username.$dirty && login-form.username.$error.email"
+										class="help-block">{{label.USERNAME}}
+										{{label.ERROR.EMAIL}}</span>
+									<div class="form-control-feedback">
+										<i class="icon-user text-muted"></i>
+									</div>
+								</div>
+
+								<div class="form-group has-feedback has-feedback-left">
+									<input type="password" name="password" id="password"
+										class="form-control" ng-model="password"
+										placeholder="{{label.PASSWORD}}" required /> <span
+										ng-show="login-form.password.$dirty && login-form.password.$error.required"
+										class="help-block">{{label.PASSWORD}}
+										{{label.ERROR.is_required}}</span>
+									<div class="form-control-feedback">
+										<i class="icon-lock2 text-muted"></i>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<button type="submit" class="btn  btn-block bg-indigo-800" type="submit"
+										ng-disabled="login-form.$invalid || vm.dataLoading">
+										{{label.LOGIN}}</button>
+								</div>
+							</form>
+						</div>
+
+						<div class="tab-pane" id="basic-tab2">
+							<form class="form-horizontal" ng-model="registration" name="form"
+								role="form">
+								<wizard hide-indicators="true"> <wz-step
+									wz-title="step1" canexit="exitValidation">
+
+								<div class="column">
+									<div class="row" class="form-group">
+										<div class="form-group col-md-6"
+											ng-class="{ 'has-error': form.firstname.$dirty && form.firstname.$error.required }">
+											<input type="text" name="firstname" id="firstname"
+												class="form-control" ng-model="registration.firstname"
+												placeholder="{{label.FIRSTNAME}}" required /> <span
+												ng-show="form.firstname.$dirty && form.firstname.$error.required"
+												class="help-block">{{label.FIRSTNAME}}
+												{{label.ERROR.is_required}}</span>
+										</div>
+										<div class="form-group col-md-6"
+											ng-class="{ 'has-error': form.surname.$dirty && form.surname.$error.required }"
+											style="margin-left: 3px !important;">
+											<input type="text" name="lastname" id="lastname"
+												class="form-control" ng-model="registration.lastname"
+												placeholder="{{label.SURNAME}}" required required /> <span
+												ng-show="form.lastname.$dirty && form.lastname.$error.required"
+												class="help-block">{{label.SURNAME}}
+												{{label.ERROR.is_required}}</span>
+										</div>
+									</div>
+									<div class="form-group"
+										ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+										<input type="number" name="phoneno" id="phoneno"
+											class="form-control" ng-model="registration.phoneno"
+											placeholder="{{label.PHONE_NO}}" required /> <span
+											ng-show="form.phoneno.$dirty && form.phoneno.$error.required"
+											class="help-block">{{label.PHONE_NO}}
+											{{label.ERROR.is_required}}</span> <span
+											ng-show="form.phoneno.$dirty && form.phoneno.$error.number"
+											class="help-block">{{label.PHONE_NO}}</span>
+									</div>
+									<div ng-if="isReferralCode">
+										<h5>{{referralUser.firstName}} {{referralUser.lastName}}</h5>
+										<p>{{referralUser.referralCode}}</p>
+									</div>
+									<div class="form-group" ng-if="!isReferralCode">
+										<div class="col-md-10"
+											ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+											<input type="text" name="referralCode" id="referralCode"
+												class="form-control" ng-model="referralCode"
+												placeholder="{{label.REFERRAL_CODE}}" /> <span
+												ng-show="form.phoneno.$dirty && form.phoneno.$error.required"
+												class="help-block">{{label.REFERRAL_CODE}}
+												{{label.ERROR.is_required}}</span> <span
+												ng-show="form.referralCode.$dirty && form.referralCode.$error.number"
+												class="help-block">{{label.REFERRAL_CODE}}</span>
+										</div>
+										<div ng-if="!isReferralCode" class="col-md-2">
+											<button ng-disabled="form.referralCode.$invalid"
+												ng-click="onReferral($event,referralCode)"
+												class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.APPLY}}</button>
+										</div>
+									</div>
+
+								</div>
+								<div style="float: right !important;">
+									<button wz-next
+										ng-disabled="form.firstname.$invalid ||form.lastname.$invalid || form.phoneno.$invalid || vm.dataLoading"
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.NEXT}}</button>
+								</div>
+								</wz-step> <wz-step canenter="enterValidation" wz-title="step2">
+								<div class="form-group"
+									ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }">
+									<input type="email" name="username" id="username"
+										class="form-control" ng-model="registration.username"
+										placeholder="{{label.USERNAME}}" required /> <span
+										ng-show="form.username.$dirty && form.username.$error.required"
+										class="help-block">{{label.USERNAME}}
+										{{label.ERROR.is_required}}</span><span
+										ng-show="form.username.$dirty && form.username.$error.email"
+										class="help-block">{{label.USERNAME}}
+										{{label.ERROR.EMAIL}}</span>
+								</div>
+								<div class="form-group"
+									ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
+									<input type="password" name="password" id="password"
+										class="form-control" ng-model="registration.password"
+										placeholder="{{label.PASSWORD}}" required /> <span
+										ng-show="form.password.$dirty && form.password.$error.required"
+										class="help-block">{{label.PASSWORD}}
+										{{label.ERROR.is_required}}</span>
+									</md-input-container>
+								</div>
+								<div style="float: right !important;">
+									<button wz-previous
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.BACK}}</button>
+									<button wz-next
+										ng-disabled="form.username.$invalid ||form.password.$invalid"
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.NEXT}}</button>
+								</div>
+								</wz-step> <wz-step wz-title="step3">
+								<div layout="column">
+									<div class="form-group"
+										ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+										<input type="text" name="street" id="street"
+											class="form-control" ng-model="registration.street"
+											placeholder="{{label.STREET}}" required /> <span
+											ng-show="form.street.$dirty && form.street.$error.required"
+											class="help-block">{{label.STREET}}
+											{{label.ERROR.is_required}}</span>
+									</div>
+									<div layout="row">
+										<div class="form-group"
+											ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+											<input type="text" name="city" id="city" class="form-control"
+												ng-model="registration.city" placeholder="{{label.CITY}}"
+												required /> <span
+												ng-show="form.city.$dirty && form.city.$error.required"
+												class="help-block">{{label.CITY}}
+												{{label.ERROR.is_required}}</span>
+											</md-input-container>
+										</div>
+										<div class="form-group"
+											ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+											<input type="text" name="city" id="city" class="form-control"
+												ng-model="registration.state" placeholder="{{label.STATE}}"
+												required /> <span
+												ng-show="form.city.$dirty && form.city.$error.required"
+												class="help-block">{{label.STATE}}
+												{{label.ERROR.is_required}}</span>
+											</md-input-container>
+										</div>
+									</div>
+									<div layout="row">
+										<div class="form-group"
+											ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+											<input type="text" name="country" id="country"
+												class="form-control" ng-model="registration.country"
+												placeholder="{{label.COUNTRY}}" required /> <span
+												ng-show="form.country.$dirty && form.country.$error.required"
+												class="help-block">{{label.COUNTRY}}
+												{{label.ERROR.is_required}}</span>
+											</md-input-container>
+										</div>
+										<div class="form-group"
+											ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+											<input type="text" name="pincode" id="pincode"
+												class="form-control" ng-model="registration.pincode"
+												placeholder="{{label.PINCODE}}" required /> <span
+												ng-show="form.pincode.$dirty && form.pincode.$error.required"
+												class="help-block">{{label.PINCODE}}
+												{{label.ERROR.is_required}}</span>
+											</md-input-container>
+										</div>
+									</div>
+								</div>
+								<div style="float: right !important;">
+									<button wz-previous
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.BACK}}</button>
+									<button wz-next="setMode(mode)"
+										ng-disabled="form.$invalid || vm.dataLoading" type="submit"
+										ng-click="onRegister(registration,referralCode)"
+										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.REGISTR}}</button>
+								</div>
+								</wz-step> </wizard>
+							</form>
+						</div>
+					</div>
 				</div>
-				<div class="form-group"
-					ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
-					<md-input-container style="width: 100% !important;">
-					<label style="text-align: left !important;" for="password">{{label.PASSWORD}}</label>
-					<input type="password" name="password" id="password"
-						class="form-control" ng-model="password" required /> <span
-						ng-show="form.password.$dirty && form.password.$error.required"
-						class="help-block">{{label.PASSWORD}}
-						{{label.ERROR.is_required}}</span> </md-input-container>
-				</div>
-				<div class="form-actions">
-					<md-button class="md-raised md-primary" type="submit"
-						ng-disabled="form.$invalid || vm.dataLoading"
-						class="btn btn-primary">{{label.LOGIN}} </md-button>
-					<md-button class="md-primary" ng-click="onRegistration()"
-						class="btn btn-primary">{{label.REGISTRATION}} </md-button>
-				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 </div>

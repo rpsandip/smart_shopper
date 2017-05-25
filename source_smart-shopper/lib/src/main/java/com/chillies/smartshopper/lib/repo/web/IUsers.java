@@ -18,4 +18,6 @@ public interface IUsers extends MongoRepository<Users, String> {
 	public Users findByContactMetaPhoneNo(String phoneNo);
 
 	public Users findByReferralCode(String referralCode);
+
+	public Users findBySubUsersIn(Users users);
 }

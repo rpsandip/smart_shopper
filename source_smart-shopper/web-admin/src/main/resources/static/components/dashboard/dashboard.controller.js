@@ -4,8 +4,8 @@
  * @global
  */
 var dashboardController = app.controller('DashboardController', function($http,
-		$scope, $rootScope, $state, $location, $mdSidenav, $mdToast, $mdPanel,
-		$mdDialog, DefaultConstant, AuthenticationService) {
+		$scope, $rootScope, $state, $location, DefaultConstant, UtilityService,
+		AuthenticationService) {
 
 	$scope.toolbarTitle = document.title = DefaultConstant.labels.APP;
 	$scope.labels = DefaultConstant.labels;
@@ -16,14 +16,11 @@ var dashboardController = app.controller('DashboardController', function($http,
 		AuthenticationService.doLogout();
 	};
 
-	$scope.onMenuClick = function($event) {
-		$mdSidenav('left').toggle();
-	};
+	$scope.isLoading = false;
 
 	$scope.onSelectionMenu = function($event, menu) {
 		if (!menu) {
-			showErrorDialouge($rootScope, $mdToast,
-					"No menu has been selected!");
+			UtilityService.showError("No menu has been selected.");
 			return;
 		}
 
@@ -42,14 +39,75 @@ var dashboardController = app.controller('DashboardController', function($http,
 			$state.go('dashboard.order');
 			break;
 		default:
-			$state.go('dashboard.menu');
+			$state.go('dashboard.product');
 			break;
 		}
 
 	};
-
-	$scope.openMenu = function($mdOpenMenu, $event) {
-		$mdOpenMenu($event);
-	};
-
 });
+
+var orderController = app.controller('OrderController',
+		function($http, $scope, $rootScope, $state, $location, $window,
+				DefaultConstant, DTDefaultOptions, DTOptionsBuilder,
+				DTColumnDefBuilder, ProductService) {
+
+			var labels = DefaultConstant.labels;
+			$scope.isProductDetails = false;
+
+			var vm = this;
+			vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
+					.withDOM('ftp');
+
+			$scope.onProductDetailsClose = function($event) {
+				$scope.isProductDetails = false;
+			};
+			$scope.onOrderStatusChange = function($event, status, order) {
+				if (!order) {
+					UtilityService.showError("No order is selected.");
+					return;
+				}
+
+				$scope.isLoading = true;
+				ProductService.orderStatus(order.id, status, function(response,
+						status) {
+					
+					$scope.isLoading = false;
+					if (status == 401) {
+						UtilityService.showError(response.message);
+						return;
+					}
+					if (status != 200) {
+						UtilityService.showError(response.message);
+						return;
+					}
+					$window.location.reload();
+				});
+			};
+
+			$scope.onOrderView = function($event, order) {
+				if (!order) {
+					UtilityService.showError("No order is selected.");
+					return;
+				}
+				$scope.isProductDetails = true;
+				$scope.products = order.cart.products;
+				$scope.user = order.users;
+			};
+
+			$scope.isLoading = true;
+			ProductService.orders(function(response, status) {
+
+				$scope.isLoading = false;
+				if (status == 401) {
+					UtilityService.showError(response.message);
+					return;
+				}
+				if (status != 200) {
+					UtilityService.showError(response.message);
+					return;
+				}
+
+				vm.orders = response;
+			});
+
+		});

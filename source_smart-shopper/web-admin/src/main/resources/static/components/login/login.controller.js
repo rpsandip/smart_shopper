@@ -1,7 +1,6 @@
 'use strict';
 app.controller('LoginController', function($http, $scope, $rootScope, $state,
-		$location, $mdToast, $mdDialog, AuthenticationService, UtilityService,
-		DefaultConstant) {
+		$location, AuthenticationService, UtilityService, DefaultConstant) {
 
 	$scope.label = DefaultConstant.labels;
 	$scope.isLoading = false;
@@ -33,7 +32,7 @@ app.controller('LoginController', function($http, $scope, $rootScope, $state,
 			console.log(AuthenticationService.getUsername())
 			console.log(AuthenticationService.getName())
 
-			$state.go('dashboard.product');
+			$state.go('dashboard.order');
 		});
 	};
 

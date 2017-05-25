@@ -2,7 +2,7 @@
 <html ng-app="web-admin">
 <head>
 <meta charset="UTF-8">
-<title>Smart-Shopper Admin</title>
+<title>Smart Shoppers Admin</title>
 
 
 <link rel="icon" sizes="192x192" href="resource/img/css.ico">
@@ -17,28 +17,13 @@
 
 
 <!-- application -->
-<link type="text/css" rel="stylesheet"
-	href="common/app/app.css">
+<link type="text/css" rel="stylesheet" href="common/app/app.css">
 
 <!-- boot strap / multi select -->
 <script type="text/javascript"
-	src="resource/js/app/jquery-1.11.3.min.js"></script>
+	src="resource/assets/js/core/libraries/jquery.min.js"></script>
 <!-- data -table for order -->
 <script src="resource/js/datatable/jquery.dataTables.min.js"></script>
-
-<!-- material design css -->
-<!-- Material Design icon font -->
-<link type="text/css" rel="stylesheet"
-	href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link type="text/css" rel="stylesheet"
-	href="resource/css/material/angular-material.min.css">
-<link type="text/css" rel="stylesheet"
-	href="resource/css/fontawesome/font-awesome.min.css">
-
-<!-- bootstrap-->
-<script src="resource/js/bootstrap/bootstrap.min.js"></script>
-<link type="text/css" rel="stylesheet"
-	href="resource/css/bootstrap/bootstrap.min.css">
 
 <!-- angular - js -->
 <script src="resource/js/angular/angular.min.js"></script>
@@ -49,23 +34,25 @@
 <script src="resource/js/angular/angular-animate.min.js"></script>
 <script src="resource/js/angular/angular-aria.min.js"></script>
 <script src="resource/js/angular/angular-messages.min.js"></script>
-<script src="resource/js/angular/angular-material.min.js"></script>
 
 <!-- application -->
 <script type="text/javascript" src="common/app/app.js"></script>
 
 <!-- application model -->
-<script type="text/javascript" src="components/product/product/product.model.js"></script>
-<script type="text/javascript" src="components/product/category.model.js"></script>
+<script type="text/javascript"
+	src="components/product/product/product.model.js"></script>
+<script type="text/javascript"
+	src="components/product/category.model.js"></script>
 <script type="text/javascript" src="components/user/user.model.js"></script>
 
 <!-- application controller -->
-<script type="text/javascript" src="components/dashboard/dashboard.controller.js"></script>
-<script type="text/javascript" src="components/product/categories.controller.js"></script>
-<script type="text/javascript" src="components/product/product/product.controller.js"></script>
+<script type="text/javascript"
+	src="components/dashboard/dashboard.controller.js"></script>
+<script type="text/javascript"
+	src="components/product/categories.controller.js"></script>
+<script type="text/javascript"
+	src="components/product/product/product.controller.js"></script>
 <script type="text/javascript" src="components/user/users.controller.js"></script>
-
-<script type="text/javascript" src="controller/orderController.js"></script>
 
 <!-- application Services -->
 <script type="text/javascript" src="common/services/default.services.js"></script>
@@ -79,34 +66,27 @@
 
 <!-- data -table -->
 <script src="resource/js/datatable/angular-datatables.min.js"></script>
-<script src="resource/js/datatable/angular-datatables.scroller.min.js"></script>
-<script src="resource/js/datatable/angular-datatables.select.min.js"></script>
-<script src="resource/js/datatable/responsive.bootstrap.min.js"></script>
-<script src="resource/js/datatable/dataTables.responsive.js"></script>
+<!-- <script src="resource/js/datatable/angular-datatables.scroller.min.js"></script> -->
+<!-- <script src="resource/js/datatable/angular-datatables.select.min.js"></script> -->
+<!-- <script src="resource/js/datatable/responsive.bootstrap.min.js"></script> -->
+<!-- <script src="resource/js/datatable/dataTables.responsive.js"></script> -->
 
 
 <script src="resource/js/datatable/dataTables.buttons.min.js"></script>
 <script src="resource/js/datatable/buttons.bootstrap.min.js"></script>
 <script src="resource/js/datatable/angular-datatables.buttons.min.js"></script>
-<script src="resource/js/datatable/jszip.min.js"></script>
-<script src="resource/js/datatable/pdfmake.min.js"></script>
-<script src="resource/js/datatable/vfs_fonts.js"></script>
-<script src="resource/js/datatable/buttons.flash.min.js"></script>
-<script src="resource/js/datatable/buttons.html5.min.js"></script>
-<script src="resource/js/datatable/buttons.print.min.js"></script>
-
-
-<link rel="stylesheet" type="text/css"
-	href="resource/css/datatable/datatables.bootstrap.min.css">
-<link rel="stylesheet" type="text/css"
-	href="resource/css/datatable/dataTables.responsive.css">
+<!-- <script src="resource/js/datatable/jszip.min.js"></script> -->
+<!-- <script src="resource/js/datatable/pdfmake.min.js"></script> -->
+<!-- <script src="resource/js/datatable/vfs_fonts.js"></script> -->
+<!-- <script src="resource/js/datatable/buttons.flash.min.js"></script> -->
+<!-- <script src="resource/js/datatable/buttons.html5.min.js"></script> -->
+<!-- <script src="resource/js/datatable/buttons.print.min.js"></script> -->
 
 <script src="components/login/login.controller.js"></script>
 <script src="components/login/authentication.service.js"></script>
 
-
 </head>
-<body ng-cloak >
-	<div ui-view ></div>
+<body>
+	<div ui-view></div>
 </body>
 </html>

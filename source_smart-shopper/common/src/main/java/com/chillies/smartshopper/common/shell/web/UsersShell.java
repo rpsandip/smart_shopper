@@ -5,6 +5,7 @@ import java.util.Set;
 import com.chillies.smartshopper.common.shell.ActivateShell;
 import com.chillies.smartshopper.common.shell.ContactMetaShell;
 import com.chillies.smartshopper.common.shell.DateMetaShell;
+import com.chillies.smartshopper.common.util.AppUtils;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 
@@ -30,10 +31,12 @@ public class UsersShell {
 
 	private final ActivateShell activate;
 
+	private final double points;
+
 	public UsersShell(final String id, final String username, final String firstName, final String lastName,
 			final DateMetaShell dateMeta, final Optional<String> remark, final String referralCode,
 			final ContactMetaShell contactMeta, final Optional<Set<UsersShell>> optionalUsersShell,
-			final ActivateShell shell) {
+			final ActivateShell shell, final String points) {
 		Preconditions.checkNotNull(username, "username can not be null.");
 		Preconditions.checkNotNull(firstName, "firstName can not be null.");
 		Preconditions.checkNotNull(lastName, "lastName can not be null.");
@@ -43,6 +46,7 @@ public class UsersShell {
 		Preconditions.checkNotNull(remark, "remark can not be null.");
 		Preconditions.checkNotNull(optionalUsersShell, "optionalUsersShell can not be null.");
 		Preconditions.checkNotNull(shell, "shell can not be null.");
+		Preconditions.checkNotNull(points, "points can not be null.");
 
 		this.id = id;
 		this.username = username;
@@ -54,6 +58,7 @@ public class UsersShell {
 		this.contactMeta = contactMeta;
 		this.subUsers = optionalUsersShell.orNull();
 		this.activate = shell;
+		this.points = AppUtils.stringToDouble(points);
 	}
 
 	public String getId() {
@@ -96,6 +101,10 @@ public class UsersShell {
 		return activate;
 	}
 
+	public double getPoints() {
+		return points;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -119,8 +128,8 @@ public class UsersShell {
 		if (subUsers != null)
 			builder.append("subUsers=").append(subUsers).append(", ");
 		if (activate != null)
-			builder.append("activate=").append(activate);
-		builder.append("]");
+			builder.append("activate=").append(activate).append(", ");
+		builder.append("points=").append(points).append("]");
 		return builder.toString();
 	}
 

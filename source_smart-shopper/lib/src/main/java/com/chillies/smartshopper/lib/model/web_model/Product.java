@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.chillies.smartshopper.common.shell.web_admin.ProductShell;
 import com.chillies.smartshopper.common.util.AppUtils;
+import com.chillies.smartshopper.common.util.DateUtils;
 import com.chillies.smartshopper.lib.model.CreatedMeta;
 import com.chillies.smartshopper.lib.model.DateMeta;
 import com.google.common.base.Optional;
@@ -72,6 +73,23 @@ public class Product {
 		this.path = path.orNull();
 	}
 
+	public void update(String name, Optional<String> remark, double price, double points, ProductCategory category,
+			Sudoers sudoers) {
+		Preconditions.checkNotNull(name, "name can not be null.");
+		Preconditions.checkNotNull(remark, "remark can not be null.");
+		Preconditions.checkNotNull(price, "price can not be null.");
+		Preconditions.checkNotNull(points, "points can not be null.");
+		Preconditions.checkNotNull(category, "category can not be null.");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
+		this.name = name;
+		this.remark = remark.orNull();
+		this.price = AppUtils.doubleToString(price);
+		this.points = AppUtils.doubleToString(points);
+		this.category = category;
+		this.createdMeta.setUpdated(sudoers);
+		this.dateMeta.setUpdated(DateUtils.currentUTC());
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -96,8 +114,16 @@ public class Product {
 		return price;
 	}
 
+	public double price() {
+		return AppUtils.stringToDouble(price);
+	}
+
 	public String getPoints() {
 		return points;
+	}
+
+	public double points() {
+		return AppUtils.stringToDouble(points);
 	}
 
 	public ProductCategory getCategory() {
