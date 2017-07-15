@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.chillies.smartshopper.lib.exception.DbException;
+import com.chillies.smartshopper.lib.model.web_model.PreferenceContact;
+import com.chillies.smartshopper.lib.model.web_model.PreferenceTnc;
 import com.chillies.smartshopper.lib.model.web_model.Product;
 import com.chillies.smartshopper.lib.model.web_model.ProductCategory;
 import com.chillies.smartshopper.lib.model.web_model.Sudoers;
@@ -47,5 +49,21 @@ public interface IWebAdminDbService {
 
 	public Set<Product> products() throws DbException;
 
+	public Set<Product> products(final String searchString) throws DbException;
+
 	public Set<Product> products(final ProductCategory category) throws DbException;
+
+	public Set<Product> products(final ProductCategory category, final boolean deleted) throws DbException;
+
+	// preference contact
+	public PreferenceContact save(final PreferenceContact contact) throws DbException;
+
+	public Set<PreferenceContact> preferenceContacts() throws DbException;
+
+	public Optional<PreferenceContact> findPreferenceById(final String id) throws DbException;
+
+	// preference tnc
+	public PreferenceTnc save(final PreferenceTnc preferenceTnc) throws DbException;
+
+	public PreferenceTnc latestPreferenceTnc() throws DbException;
 }

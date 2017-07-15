@@ -28,12 +28,11 @@
 	</div>
 	<div ng-if="!isProductDetails">
 		<table class="table table-border" datatable="ng"
-			dt-options="octrl.dtOptions">
+			dt-options="octrl.dtOptions" dt-column-defs="octrl.dtColumnDefs">
 			<thead class="bg-info">
 				<tr>
-					<th>#</th>
+					<!-- 					<th>#</th> -->
 					<th>{{labels.ID}}</th>
-					<th>{{labels.USERS}}</th>
 					<th>{{labels.PLACED}} {{labels.DATE}}</th>
 					<th>{{labels.UPDATED}} {{labels.DATE}}</th>
 					<th>{{labels.TOTAL}}</th>
@@ -43,16 +42,20 @@
 			</thead>
 			<tbody>
 				<tr ng-repeat="order in octrl.orders">
-					<td>{{$index + 1}}</td>
-					<td>{{order.id}}</td>
-					<td><h4 class="td-h4">{{order.users.firstName}}
-							{{order.users.firstName}}</h4> <small><p>
-								<i class="icon-mailbox"></i> {{order.users.username}}
-							</p>
-							<p>
-								<i class=" icon-mobile2"></i>
-								{{order.users.contactMeta.phoneNo}}
-							</p></small></td>
+					<!-- 				<td>{{$index + 1}}</td> -->
+					<td><a target="_self" ng-click="onOrderView($event, order)">{{$index
+							+ 1}}. {{order.id}}</a>
+						<div>
+							<h6 class="td-h4">{{order.users.firstName}}
+								{{order.users.firstName}}</h6>
+							<small><p>
+									<i class="icon-mailbox"></i> {{order.users.username}}
+								</p>
+								<p>
+									<i class=" icon-mobile2"></i>
+									{{order.users.contactMeta.phoneNo}}
+								</p></small>
+						</div></td>
 					<td>{{order.date.created}}</td>
 					<td>{{order.date.updated}}</td>
 					<td>{{order.total | currency}}</td>

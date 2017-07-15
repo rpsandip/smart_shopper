@@ -20,7 +20,7 @@ var categoriesController = app.controller('CategoriesController', function(
 	var mainCategory = CategoryFactory.getCategory();
 
 	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
-			.withDOM('ftp');
+			.withDOM('ftp').withOption('order', [ 1, 'asc' ]);
 	vm.dtColumnDefs = [
 			DTColumnDefBuilder.newColumnDef(0).withTitle('#').withOption(
 					'autoWidth', false),
@@ -36,6 +36,18 @@ var categoriesController = app.controller('CategoriesController', function(
 		mainCategory.isEdit = false;
 
 		$scope.category = new Category();
+		ProductService.superCategories(function(response, status) {
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			$scope.superCategories = response;
+		});
 	};
 
 	// on add or close click
@@ -46,10 +58,45 @@ var categoriesController = app.controller('CategoriesController', function(
 		}
 		$scope.isCategory = true;
 
-		var mainCategory = CategoryFactory.getCategory();
-		mainCategory.isEdit = true;
-		mainCategory.editCategory(category);
-		$scope.category = mainCategory;
+		ProductService.superCategories(function(response, status) {
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			$scope.superCategories = response;
+
+			var mainCategory = CategoryFactory.getCategory();
+			mainCategory.isEdit = true;
+			mainCategory.editCategory(category);
+			$scope.category = mainCategory
+		});
+	};
+
+	$scope.onDeleteClick = function($event, category) {
+		if (category == undefined) {
+			UtilityService.showError("Category can not be null.");
+			return;
+		}
+
+		$scope.isLoading = true;
+		ProductService.deleteCategory(category.ID, function(response, status) {
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+
+			$window.location.reload();
+		});
 	};
 
 	$scope.onCloseClick = function($event) {

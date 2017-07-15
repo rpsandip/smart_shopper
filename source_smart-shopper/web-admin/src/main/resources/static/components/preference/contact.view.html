@@ -1,0 +1,62 @@
+<div class="content">
+	<!-- 2 columns form -->
+	<form class="form-horizontal" ng-model="contact" name="contactForm">
+		<div class="panel-flat">
+
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-12">
+						<fieldset>
+							<legend class="text-semibold">{{labels.DETAILS}} </legend>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.COMMON.NAME}}</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="contactName"
+										name="contactName" ng-model="contact.contactName"
+										placeholder="{{labels.COMMON.NAME}}" required>
+									<div ng-messages="contactForm.contactName.$error">
+										<div ng-message="required">{{labels.COMMON.NAME}}
+											{{labels.ERROR.REQUIRED}}</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.EMAIL}}</label>
+								<div class="col-lg-9">
+									<input type="email" class="form-control" id="contactEmail"
+										name="contactEmail" ng-model="contact.contactEmail"
+										placeholder="{{labels.EMAIL}}" required>
+									<div ng-messages="contactForm.contactEmail.$error">
+										<div ng-message="required">{{labels.EMAIL}}
+											{{labels.ERROR.REQUIRED}}</div>
+									</div>
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-lg-3 control-label">{{labels.CONTACT_NO}}</label>
+								<div class="col-lg-9">
+									<input type="text" class="form-control" id="contactNo"
+										name="contactNo" ng-model="contact.contactNo"
+										placeholder="{{labels.CONTACT_NO}}" required>
+									<div ng-messages="contactForm.contactNo.$error">
+										<div ng-message="required">{{labels.CONTACT_NO}}
+											{{labels.ERROR.REQUIRED}}</div>
+									</div>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+
+				<div class="text-right">
+					<button type="submit" class="btn btn-primary"
+						ng-click="onSave($event,contact)">{{labels.COMMON.SAVE}}
+					</button>
+				</div>
+			</div>
+		</div>
+	</form>
+	<!-- /2 columns form -->
+</div>

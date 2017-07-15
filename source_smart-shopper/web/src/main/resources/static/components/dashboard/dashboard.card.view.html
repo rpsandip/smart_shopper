@@ -2,8 +2,6 @@
 <style type="text/css">
 #slides_control {
 	position: absolute;
-	width: 1109px !important;
-	height: 315px !important;
 	top: 20px;
 }
 </style>
@@ -12,11 +10,11 @@
 	style="margin-top: 30% !important;">
 	<div class="row">
 		<div>
-			<div id="slides_control">
+			<div id="slides_control" style="width: 99% !important">
 				<div>
 					<carousel interval="myInterval"> <slide
 						ng-repeat="slide in slides" active="slide.active"> <img
-						ng-src="{{slide.image}}" style="width: 1109px; height: 315px;">
+						ng-src="{{slide.image}}" style="width: 100%;">
 					<div class="carousel-caption"></div>
 					</slide> </carousel>
 				</div>
@@ -28,33 +26,39 @@
 		<!-- Image grid-->
 
 		<div class="row">
-			<h6 class="content-group text-semibold col-md-10">{{category.NAME}}</h6>
-			<button ng-if="category.PRODUCTS.length == 4" type="button"
-				class="btn bg-indigo btn-sm pull-right col-md-1"
-				ng-click="onCategorySelection($event,category)">More</button>
+			<h3 class="no-margin-top text-semibold">
+				<a target="_self" class="text-muted"
+					ng-click="onCategorySelection($event,category)">{{category.NAME}}</a>
+				<button ng-if="category.PRODUCTS.length == 4"
+					class="btn bg-indigo btn-sm pull-right"
+					ng-click="onCategorySelection($event,category)">More</button>
+			</h3>
 		</div>
 		<div class="row">
-			<div ng-repeat="product in category.PRODUCTS">
+			<div ng-show="!product.deleted" ng-repeat="product in category.PRODUCTS">
 				<div class="col-lg-3 col-sm-6" style="overflow-x: auto !important;">
 					<div class="thumbnail">
-						<div class="thumb" ng-click="onCategorySelection($event,category)"
+						<div class="thumb thumb-slide"
+							ng-click="onCategorySelection($event,category)"
 							style="cursor: pointer;">
-							<img style="height: 256px !important;"
-								ng-src="{{product.productURL}}" alt="{{product.name}}"
+							<img class="img-responsive" ng-src="{{product.productURL}}"
+								alt="{{product.name}}"
 								onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
 
 						</div>
 
 						<div class="caption"
-							style="border-top: 1px solid rgba(128, 128, 128, 0.45) !important;">
-							<h6 class="no-margin-top text-semibold">
-								<a target="_self" class="text-default">{{product.name}}</a> <a
-									target="_self" class="text-muted"
+							style="border-top: 1px solid #3F51B5 !important;">
+							<h5 class="no-margin text-semibold">
+								<a target="_self"
+									ng-click="onCategorySelection($event,category)">{{product.name}}</a>
+								<a target="_self" class="text-muted"
 									ng-click="onAddToCart($event,product)"><i
 									class="icon-cart-add2 pull-right"
-									style="font-size: 20px !important;"></i></a>
-							</h6>
-							{{product.price | currency}}
+									style="font-size: 150% !important;"></i></a> <small
+									class="text-semibold display-block">{{product.price |
+									currency}}</small>
+							</h5>
 						</div>
 					</div>
 				</div>

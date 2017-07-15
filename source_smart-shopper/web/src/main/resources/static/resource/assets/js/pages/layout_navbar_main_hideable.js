@@ -21,7 +21,7 @@ $(function() {
             pinned: "headroom-top-pinned",
             unpinned: "headroom-top-unpinned"
         },
-        offset: $('.page-header').outerHeight(),
+        offset: $('.page-container').offset().top - $('.navbar-fixed-top').outerHeight(),
 
         // callback when unpinned, `this` is headroom object
         onUnpin: function() {

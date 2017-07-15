@@ -1,6 +1,7 @@
 package com.chillies.smartshopper.common.shell.web;
 
 import java.util.Set;
+import java.util.SortedSet;
 
 import com.chillies.smartshopper.common.shell.ActivateShell;
 import com.chillies.smartshopper.common.shell.ContactMetaShell;
@@ -27,7 +28,7 @@ public class UsersShell {
 
 	private final ContactMetaShell contactMeta;
 
-	private final Set<UsersShell> subUsers;
+	private final SortedSet<UsersShell> subUsers;
 
 	private final ActivateShell activate;
 
@@ -35,7 +36,7 @@ public class UsersShell {
 
 	public UsersShell(final String id, final String username, final String firstName, final String lastName,
 			final DateMetaShell dateMeta, final Optional<String> remark, final String referralCode,
-			final ContactMetaShell contactMeta, final Optional<Set<UsersShell>> optionalUsersShell,
+			final ContactMetaShell contactMeta, final Optional<SortedSet<UsersShell>> optionalUsersShell,
 			final ActivateShell shell, final String points) {
 		Preconditions.checkNotNull(username, "username can not be null.");
 		Preconditions.checkNotNull(firstName, "firstName can not be null.");

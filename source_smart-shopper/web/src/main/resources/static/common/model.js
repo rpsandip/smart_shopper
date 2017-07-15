@@ -3,6 +3,7 @@
  */
 var Registration = function() {
 
+	this.id;
 	this.username;
 	this.password;
 	this.firstname;
@@ -13,9 +14,11 @@ var Registration = function() {
 	this.state;
 	this.country;
 	this.pincode;
+	this.subUsers;
 
 	this.toJSON = function(referralCode) {
 		return {
+			"id" : this.id,
 			"username" : this.username,
 			"password" : this.password,
 			"firstName" : this.firstname,
@@ -32,5 +35,19 @@ var Registration = function() {
 				"phoneNo" : this.phoneno
 			}
 		};
+	};
+
+	this.fromJSON = function(data) {
+		this.id = data.id;
+		this.username = data.username;
+		this.firstname = data.firstName;
+		this.lastname = data.lastName;
+		this.phoneno = Number(data.contactMeta.phoneNo);
+		this.street = data.contactMeta.street;
+		this.city = data.contactMeta.city;
+		this.state = data.contactMeta.state;
+		this.country = data.contactMeta.country;
+		this.pincode = data.contactMeta.postalCode;
+		this.subUsers=data.subUsers;
 	};
 };

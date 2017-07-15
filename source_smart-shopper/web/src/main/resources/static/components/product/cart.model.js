@@ -6,7 +6,7 @@ var Cart = function() {
 	this.date;
 	this.status;
 	this.user;
-	this.product;
+	this.products = [];
 
 	this.carts = [];
 
@@ -38,6 +38,15 @@ var Cart = function() {
 	this.addRow = function(cart) {
 		if (this.carts.indexOf(cart) == -1) {
 			this.carts.push(cart);
+		}
+	};
+
+	this.clearProducts = function() {
+		if (this.products == undefined || this.products == null) {
+			return;
+		}
+		while (this.products.length > 0) {
+			this.products.pop();
 		}
 	};
 

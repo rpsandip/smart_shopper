@@ -29,28 +29,30 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr ng-show="!isProduct.DELETED"
+				<tr ng-show="!product.DELETED"
 					ng-repeat="product in productCtrl.products | filter:productCtrl.searchText">
 					<td>{{$index + 1}}</td>
 					<td><a href="{{product.IMAGE_URL}}" data-popup="lightbox">
-							<img class="img-square img-preview"
-							style="height: 70px !important;" ng-src="{{product.IMAGE_URL}}"
-							alt="{{product.NAME}}"
+							<img class="img-responsive media-preview"
+							ng-src="{{product.IMAGE_URL}}" alt="{{product.NAME}}"
 							onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';">
 					</a></td>
 					<td><h4 class="td-h4">{{product.NAME}}</h4>
-						<p>{{product.REMARK}}</p></td>
+						<p>{{product.REMARK}} - {{product.DELETED}}</p></td>
 					<td>{{product.CATEGORY.name}}</td>
 					<td>
 						<ul class="icons-list">
-							<li class="dropdown"><a target="_self" href="#"
+							<li class="dropdown"><a target="_self"
 								class="dropdown-toggle" data-toggle="dropdown"
 								aria-expanded="false"> <i class="icon-menu9"></i>
 							</a>
 								<ul class="dropdown-menu dropdown-menu-right">
 									<li><a target="_self"
 										ng-click="onEditClick($event,product)"><i
-											class="icon-pencil7"></i> Edit</a></li>
+											class="icon-pencil7"></i> {{labels.COMMON.EDIT}}</a></li>
+									<li><a target="_self"
+										ng-click="onDeleteClick($event,product)"><i
+											class=" icon-cross2"></i> {{labels.COMMON.DELETE}}</a></li>
 								</ul></li>
 						</ul>
 					</td>

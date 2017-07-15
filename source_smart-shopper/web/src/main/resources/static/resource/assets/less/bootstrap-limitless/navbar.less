@@ -19,7 +19,8 @@
     border-width: 0;
     padding-left: 0;
     padding-right: 0;
-
+    .box-shadow(@shadow-depth1);
+    
     // Desktop view
     @media (min-width: @grid-float-breakpoint) {
         padding-left: @navbar-padding-horizontal;
@@ -39,17 +40,33 @@
 
     // Set horizontal padding
     .navbar&,
-    > .navbar {        
+    > .navbar {
         @media (min-width: @grid-float-breakpoint) {
             padding-left: @navbar-padding-horizontal;
             padding-right: @navbar-padding-horizontal;
         }
+    }
+    
+    // Remove shadow from children navbars
+    > .navbar {
+        .box-shadow(none);
     }
 
     // Inside page header
     .page-header & {
         margin-left: @grid-gutter-width;
         margin-right: @grid-gutter-width;
+    }
+
+    // Default navbar inside panel    
+    .panel &.navbar-default {
+        border-width: 1px;
+        .box-shadow(none);
+    }
+    
+    // Inverse navbar inside panel 
+    .panel &.navbar-inverse {
+        .box-shadow(none);
     }
 
     // First child border radius
@@ -82,11 +99,6 @@
             position: static;
         }
     }
-
-    // Add shadow to affixed navbar
-    &.navbar {
-        .box-shadow(@shadow-depth1);
-    }
 }
 
 
@@ -94,6 +106,7 @@
 // -------------------------
 
 .navbar-header {
+    min-width: 200px;
 
     // Inside nav collapse
     .navbar-collapse > & {
@@ -161,64 +174,9 @@
 }
 
 
-// Static navbar setup
-// -------------------------
-
-// Add shadow to all static navbars
-.navbar-static-top {
-    .box-shadow(@shadow-depth1);
-}
-
-// Fix z-index for static navbars
-.page-header,
-.navbar-component {
-    .navbar-static-top {
-        &:nth-child(2) {
-            z-index: @zindex-navbar - 1;
-        }
-        &:nth-child(3) {
-            z-index: @zindex-navbar - 2;
-        }
-        &:nth-child(4) {
-            z-index: @zindex-navbar - 3;
-        }
-        &:nth-child(5) {
-            z-index: @zindex-navbar - 4;
-        }
-    }
-}
-
-// Reverse z-index in bottom navbars
-.navbar-fixed-bottom {
-    .navbar-static-top {
-        &:first-child {
-            z-index: @zindex-navbar - 4;
-        }
-        &:nth-child(2) {
-            z-index: @zindex-navbar - 3;
-        }
-        &:nth-child(3) {
-            z-index: @zindex-navbar - 2;
-        }
-        &:nth-child(4) {
-            z-index: @zindex-navbar - 1;
-        }
-        &:nth-child(5) {
-            z-index: @zindex-navbar;
-        }
-    }
-}
-
-
 
 // Fixed navbar setup
 // -------------------------
-
-// Add shadow to all fixed navbars
-.navbar-fixed-top.navbar,
-.navbar-fixed-top > .navbar {
-    .box-shadow(@shadow-depth1);
-}
 
 // Reverse shadow in bottom navbar
 .navbar-fixed-bottom,
@@ -700,6 +658,7 @@
 
 // Menu components
 .navbar-nav > li > .dropdown-menu {
+    border-top-width: 0;
 
     // Media list
     .media-list {
@@ -710,6 +669,8 @@
 
 // Menu position and menu caret support for dropups via extra dropup class
 .navbar-fixed-bottom .navbar-nav > li > .dropdown-menu {
+    border-top-width: 1px;
+    border-bottom-width: 0;
     .border-top-radius(@border-radius-base);
 }
 
@@ -843,13 +804,14 @@
         > .active > a:after {
             background-color: @color-indigo-300;
         }
-
+        
         // Dropdown menu
         > li > .dropdown-menu {
             border-top-width: 1px;
             border-top-color: @navbar-default-border;
         }
-        
+
+        // Mobile setup    
         @media (max-width: @grid-float-breakpoint-max) {
 
             // Dropdowns get custom display when collapsed
@@ -946,14 +908,8 @@
 .navbar-inverse {
     color: @navbar-inverse-color;
 
-    // Navbar collapse
-    .navbar-collapse {
-        border-color: fade(#000, 10%);
-    }
-
     // Navbar form
     .navbar-form {
-        border-color: fade(#fff, 10%);
 
         // Form components
         .form-control,
@@ -1199,18 +1155,6 @@
     }
 }
 
-
-// Transparent navbar
-.navbar-transparent {
-    background-color: transparent;
-
-    // Inside page header
-    .page-header & {
-        background-color: inherit;
-    }
-}
-
-
 // Raised navbar navigation
 .navbar-nav-material {
     > li > a {
@@ -1344,8 +1288,8 @@
     // Full width menu
     @media (min-width: @grid-float-breakpoint) {
         &.mega-menu-wide > .dropdown-menu {
-            left: @content-padding-horizontal;
-            right: @content-padding-horizontal;
+            left: @grid-gutter-width;
+            right: @grid-gutter-width;
 
             .navbar-component &,
             .layout-boxed & {

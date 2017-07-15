@@ -1,7 +1,7 @@
 <div class="row" ng-controller="OrderController as octrl"
 	ng-model="labels">
 	<div class="col-md-12">
-		<div class="panel panel-flat">
+		<div class=" panel-flat">
 			<div class="panel-heading border-indigo legitRipple">
 				<h5 class="panel-title">{{labels.ORDER}}</h5>
 				<div ng-if="isProductDetails" class="heading-elements">
@@ -13,58 +13,83 @@
 				</div>
 			</div>
 			<div ng-if="!isProductDetails">
-				<table id="productsTable" class="table table-border" datatable="ng"
-					dt-options="octrl.dtOptions">
-					<thead class="bg-indigo">
+				<table id="productsTable" class="table inventory_related"
+					datatable="ng" dt-options="octrl.dtOptions">
+					<thead>
 						<tr>
-							<th>#</th>
-							<th>{{labels.ID}}</th>
-							<th>{{labels.PLACED}} {{labels.DATE}}</th>
-							<th>{{labels.UPDATED}} {{labels.DATE}}</th>
-							<th>{{labels.TOTAL}}</th>
-							<th>{{labels.STATUS}}</th>
-							<th class="text-center">Action</th>
+							<th></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="order in octrl.orders">
-							<td>{{$index + 1}}</td>
-							<td>{{order.id}}</td>
-							<td>{{order.date.created}}</td>
-							<td>{{order.date.updated}}</td>
-							<td>{{order.total | currency}}</td>
-							<td><span ng-if="order.status==='PLACESED'"
-								class="label label-info">{{order.orderStatus}}</span><span
-								ng-if="order.status==='DELIVERED'" class="label bg-success">{{order.orderStatus}}</span><span
-								ng-if="order.status==='CANCEL'" class="label label-danger">{{order.orderStatus}}</span>
-								<span ng-if="order.status==='OUT_FOR_DELIVERY'"
-								class="label bg-orange">{{order.orderStatus}}</span></td>
-							<td>
-								<ul class="icons-list">
-									<li class="dropdown"><a target="_self" href="#"
-										class="dropdown-toggle" data-toggle="dropdown"
-										aria-expanded="false"> <i class="icon-menu9"></i>
-									</a>
-										<ul class="dropdown-menu dropdown-menu-right">
-											<li><a target="_self"
-												ng-click="onOrderView($event, order)"><i
-													class="icon-cart5"></i> {{labels.VIEW}}</a></li>
-											<li ng-if="order.status==='PLACESED'"><a target="_self"
-												ng-click="cancelOrder($event, order)"><i
-													class="icon-cross2"></i> {{labels.CANCEL}}</a></li>
-										</ul></li>
-								</ul>
-							</td>
+							<td><div
+									ng-class="{'panel border-left-lg border-left-info':order.status==='PLACESED','panel border-left-lg border-left-success':order.status==='DELIVERED','panel border-left-lg border-left-danger':order.status==='CANCEL','panel border-left-lg border-left-orange':order.status==='OUT_FOR_DELIVERY'}">
+									<div class="panel-body">
+										<div class="row">
+											<div class="col-md-8">
+												<h6 class="no-margin-top">
+													<a target="_self" ng-click="onOrderView($event, order)">#{{$index
+														+ 1}}. {{order.id}}</a>
+												</h6>
+												<a target="_self" href="#"
+													ng-repeat="product in order.cart.products"><img
+													ng-src="{{product.product.productURL}}"
+													class="img-circle img-xs"></a>
+											</div>
+
+											<div class="col-md-4">
+												<ul class="list list-unstyled text-right task-details">
+													<li>{{labels.TOTAL}}:
+														<h6 class="text-semibold text-right no-margin-top">{{order.total
+															| currency}}</h6>
+													</li>
+													<li>{{order.date.created}}</li>
+													<li class="dropdown"><span
+														ng-if="order.status==='PLACESED'" class="label label-info">{{order.orderStatus}}</span><span
+														ng-if="order.status==='DELIVERED'"
+														class="label bg-success">{{order.orderStatus}}</span><span
+														ng-if="order.status==='CANCEL'" class="label label-danger">{{order.orderStatus}}</span>
+														<span ng-if="order.status==='OUT_FOR_DELIVERY'"
+														class="label bg-orange">{{order.orderStatus}}</span></li>
+												</ul>
+											</div>
+										</div>
+									</div>
+
+									<div class="panel-footer panel-footer-condensed">
+										<a class="heading-elements-toggle"><i class="icon-more"></i></a>
+										<div class="heading-elements">
+											<span class="heading-text">{{labels.UPDATED}}: <span
+												class="text-semibold">{{order.date.updated}}</span></span>
+
+											<ul
+												class="list-inline list-inline-condensed heading-text pull-right">
+												<li class="dropdown"><a target="_self" href="#"
+													class="text-default dropdown-toggle" data-toggle="dropdown"
+													aria-expanded="false"> <i class="icon-menu9"></i>
+												</a>
+													<ul class="dropdown-menu dropdown-menu-right">
+														<li><a target="_self"
+															ng-click="onOrderView($event, order)"><i
+																class="icon-cart5"></i> {{labels.VIEW}}</a></li>
+														<li ng-if="order.status==='PLACESED'"><a
+															target="_self" ng-click="cancelOrder($event, order)"><i
+																class="icon-cross2"></i> {{labels.CANCEL}}</a></li>
+													</ul></li>
+											</ul>
+										</div>
+									</div>
+								</div></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 
-			<div ng-if="isProductDetails">
+			<div ng-if="isProductDetails" class="panel">
 				<table class="table table-border" datatable="ng"
 					dt-options="octrl.dtOptions">
 					<thead>
-						<tr class="bg-indigo">
+						<tr>
 							<th>#</th>
 							<th>{{labels.PREVIEW}}</th>
 							<th>{{labels.PRODUCTS}}</th>

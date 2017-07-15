@@ -1,0 +1,31 @@
+<!-- Page container -->
+<div class="page-container">
+	<!-- Page content -->
+	<div class="page-content">
+		<!-- Main content -->
+		<div class="content-wrapper">
+			<div class="panel-group content-group-lg">
+				<div class="panel panel-white">
+					<div class="panel-heading">
+						<h6>Contact</h6>
+					</div>
+					<div class="panel-collapse collapse in">
+						<div class="panel-body" ng-repeat="cnt in contacts">
+							<h3 class="panel-title">
+								<a target="_self">{{cnt.name}}</a> <small>
+									<p>Contact no : {{cnt.phoneNo}}</p>
+									<p>
+										Email: <a href="{{cnt.emailId}}"> {{cnt.emailId}}</a>
+									</p>
+								</small>
+							</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- /main content -->
+	</div>
+	<!-- /page content -->
+</div>
+<!-- /page container -->

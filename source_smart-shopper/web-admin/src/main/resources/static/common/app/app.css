@@ -8,6 +8,13 @@
 	border-top: 1px solid #ddd !important;
 }
 
+.dataTables_paginate .paginate_button.current, .dataTables_paginate .paginate_button.current:hover,
+	.dataTables_paginate .paginate_button.current:focus {
+	color: black !important;
+	background: none !important;
+	border: 1px solid #ddd !important;
+}
+
 .dataTables_paginate {
 	float: right !important;
 	text-align: right !important;

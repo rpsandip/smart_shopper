@@ -25,6 +25,7 @@
 				<tr class="bg-blue-600">
 					<th>#</th>
 					<th>{{labels.CATEGORY.CATEGORY1}}</th>
+					<th>{{labels.CATEGORY.SUPER_CATEGORY}}</th>
 					<th class="text-center">Actions</th>
 				</tr>
 			</thead>
@@ -34,6 +35,7 @@
 					<td>{{$index + 1}}</td>
 					<td><h4 class="td-h4">{{category.NAME}}</h4>
 						<p>{{category.REMARK}}</p></td>
+					<td>{{category.SUPER_CATEGORY}}</td>
 					<td>
 						<ul class="icons-list">
 							<li class="dropdown"><a target="_self"
@@ -44,7 +46,10 @@
 								<ul class="dropdown-menu dropdown-menu-right">
 									<li><a target="_self"
 										ng-click="onEditClick($event,category)"><i
-											class="icon-pencil7"></i> Edit</a></li>
+											class="icon-pencil7"></i> {{labels.COMMON.EDIT}} </a></li>
+									<li><a target="_self"
+										ng-click="onDeleteClick($event,category)"><i
+											class=" icon-cross2"></i> {{labels.COMMON.DELETE}}</a></li>
 								</ul></li>
 						</ul>
 					</td>

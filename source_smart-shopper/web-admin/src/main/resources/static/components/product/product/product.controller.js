@@ -18,7 +18,7 @@ var productController = app.controller('ProductController', function($http,
 	ProductFactory.setProduct(product);
 
 	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
-			.withDOM('ftp');
+			.withDOM('ftp').withOption('order', [ 1, 'desc' ]);
 
 	vm.dtColumnDefs = [
 			DTColumnDefBuilder.newColumnDef(0).withTitle('').withOption(
@@ -87,7 +87,28 @@ var productController = app.controller('ProductController', function($http,
 			mainProduct.editProduct(product);
 			$scope.product = mainProduct;
 		});
+	};
 
+	$scope.onDeleteClick = function($event, product) {
+		if (product == undefined) {
+			UtilityService.showError("Product can not be null.");
+			return;
+		}
+
+		$scope.isLoading = true;
+		ProductService.deleteProduct(product.ID, function(response, status) {
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+
+			$window.location.reload();
+		});
 	};
 
 	$scope.onCloseClick = function($event) {
@@ -152,7 +173,17 @@ var productController = app.controller('ProductController', function($http,
 		}
 
 		$scope.image = file;
+
+		var reader = new FileReader();
+		reader.onload = $scope.imageIsLoaded;
+		reader.readAsDataURL(file)
 	};
+
+	$scope.imageIsLoaded = function(e) {
+		$scope.$apply(function() {
+			$scope.product.imageSrc = e.target.result;
+		});
+	}
 
 	// list all the categories
 	$scope.$parent.$parent.isLoading = true;

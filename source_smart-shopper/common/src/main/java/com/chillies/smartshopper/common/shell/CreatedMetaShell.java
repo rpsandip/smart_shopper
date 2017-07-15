@@ -15,9 +15,9 @@ import com.google.common.base.Preconditions;
  */
 public class CreatedMetaShell {
 
-	private SudoersShell created;
+	private final SudoersShell created;
 
-	private SudoersShell updated;
+	private final SudoersShell updated;
 
 	public CreatedMetaShell(final SudoersShell created, final Optional<SudoersShell> updated) {
 		Preconditions.checkNotNull(created, "created can not be null.");

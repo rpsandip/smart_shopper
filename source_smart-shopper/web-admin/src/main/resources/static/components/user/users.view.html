@@ -1,54 +1,78 @@
 <!-- Basic datatable -->
-<div ng-controller="UsersController as userCtrl" class="panel">
+<div ng-controller="UsersController as userCtrl">
+
+	<!-- Nested node template -->
+	<script type="text/ng-template" id="nodes_renderer.html">
+<div ui-tree-handle class="tree-node tree-node-content">
+	<div class="panel panel-flat">
+		<div class="panel-body">
+			<div class="col-md-8">
+				<h6 class="no-margin-top">
+					<a ng-click="toggle(this)"><h6 class="panel-title">#{{$index
+							+ 1}}. {{node.username}}</h6></a> <span class="text-muted">{{node.firstName}}
+						{{node.lastName}}</span>
+				</h6>
+
+			<ul style="float: left !important; cursor: pointer;" class="list list-unstyled text-left task-details">
+					<li>Address: {{node.contactMeta.street}},</li>
+					<li>{{node.contactMeta.city}}, {{node.contactMeta.state}}</li>
+					<li>{{node.contactMeta.country}}-{{node.contactMeta.postalCode}}</li>
+			</ul>
+			</div>
+
+			<div class="col-md-4">
+				<ul class="list list-unstyled text-right task-details">
+					<li>Points: <span>{{node.points}}</span></li>
+					<li>Code: <span>{{node.referralCode}}</span></li>
+					<li><span ng-if="node.activate.activate"
+						class="label label-success"> {{labels.ACTIVATE}} </span> <span
+						ng-if="!node.activate.activate" class="label label-info">
+							{{labels.PENDING}} </span></li>
+				</ul>
+			</div>
+		</div>
+
+	<div class="panel-footer panel-footer-condensed">
+		<a class="heading-elements-toggle"><i class="icon-more"></i></a>
+		<div class="heading-elements">
+	<span class="heading-text">Contact: <span class="text-semibold">{{node.contactMeta.phoneNo}}</span></span>
+			<ul class="heading-thumbnails pull-right">
+				<li><a class="btn btn-info btn-xs dropdown-toggle legitRipple" ng-if="node.subUsers && node.subUsers.length > 0"
+					data-nodrag ng-click="toggle(this)"> <span class="icomoon"
+						ng-class="{'icon-collaboration': collapsed,'icon-accessibility': !collapsed}"></span>
+				</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<ol ui-tree-nodes="" ng-model="node.subUsers" ng-class="{hidden: collapsed}">
+    <li ng-repeat="node in node.subUsers" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+</ol>
+</script>
 	<div class="panel-heading  bg-teal">
 		<h3 class="panel-title">{{labels.USERS}}</h3>
 		<div class="heading-elements">
 			<ul class="icons-list">
-				<li><a data-action="reload"></a></li>
+				<li><a target="_self" ng-click="expandAll()"
+					data-popup="tooltip" title="" data-placement="bottom"
+					data-original-title="Expand All"><i
+						class="icon-accessibility position-left"></i></a></li>
+				<li><a target="_self" ng-click="collapseAll()"
+					data-popup="tooltip" title="" data-placement="bottom"
+					data-original-title="Collapse All"><i
+						class="icon-collaboration position-left"></i></a></li>
 			</ul>
 		</div>
 	</div>
 
+	<div>
 
-	<table class="table table-border" datatable="ng"
-		dt-options="userCtrl.dtOptions">
-		<thead>
-			<tr class="bg-teal">
-				<th>#</th>
-				<th>{{labels.USERNAME}}</th>
-				<th>{{labels.NAME}}</th>
-				<th>{{labels.CONTACT}}</th>
-				<th>{{labels.REFERRAL_CODE}}</th>
-				<th>{{labels.STATUS}}</th>
-				<th class="text-center">Actions</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-show="!user.DELETED"
-				ng-repeat="user in userCtrl.users | filter:userCtrl.searchText">
-				<td>{{$index + 1}}</td>
-				<td>{{user.USERNAME}}</td>
-				<td>{{user.FIRST_NAME}} {{user.LAST_NAME}}</td>
-				<td>{{user.CONTACT_META.phoneNo}}</td>
-				<td>{{user.REFERRAL_CODE}}</td>
-				<td><span ng-if="user.ACTIVATE_META.activate"
-					class="label label-success">{{labels.ACTIVATE}}</span> <span
-					ng-if="!user.ACTIVATE_META.activate" class="label label-info">{{labels.PENDING}}</span>
-				</td>
-				<td>
-					<ul ng-if="!user.ACTIVATE_META.activate" class="icons-list">
-						<li class="dropdown"><a target="_self" href="#"
-							class="dropdown-toggle" data-toggle="dropdown"
-							aria-expanded="false"> <i class="icon-menu9"></i>
-						</a>
-
-							<ul class="dropdown-menu dropdown-menu-right">
-								<li><a target="_self" ng-click="activate($event,user)"><i
-										class="icon-checkmark4"></i> {{labels.ACTIVATE}}</a></li>
-							</ul></li>
-					</ul>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+		<div ui-tree data-nodrop-enabled="true" data-drag-enabled="false">
+			<ol ui-tree-nodes ng-model="nodes">
+				<li ng-repeat="node in nodes" ui-tree-node
+					ng-include="'nodes_renderer.html'"></li>
+			</ol>
+		</div>
+	</div>
 </div>

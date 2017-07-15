@@ -15,10 +15,11 @@ import org.hibernate.validator.constraints.NotBlank;
  */
 public class RegisterBody {
 
+	private String id;
+
 	@NotBlank(message = "username can not be null.")
 	private String username;
 
-	@NotBlank(message = "password can not be null.")
 	private String password;
 
 	@NotBlank(message = "firstName can not be null.")
@@ -33,6 +34,10 @@ public class RegisterBody {
 	private ContactBody contactBody;
 
 	private String parentId;
+
+	public String getId() {
+		return id;
+	}
 
 	public String getUsername() {
 		return username;

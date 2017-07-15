@@ -421,6 +421,7 @@ $(function() {
     // Hide all sidebars
     $(document).on('click', '.sidebar-all-hide', function (e) {
         e.preventDefault();
+
         $('body').toggleClass('sidebar-all-hidden');
     });
 
