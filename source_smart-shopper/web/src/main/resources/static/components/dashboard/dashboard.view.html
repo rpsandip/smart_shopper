@@ -7,34 +7,38 @@
 }
 </style>
 </head>
-<body class="navbar-bottom navbar-top">
+<body class="navbar-top">
 	<div ng-controller="DashboardController as dctrl" ng-model="labels">
 		<!-- Page header -->
 		<div class="page-header bg-indigo-800">
 
 			<!-- Main navbar -->
-			<div class="navbar  navbar-transparent navbar-fixed-top">
-				<div class="navbar-header" style="cursor: pointer !important;">
+			<div class="navbar navbar-inverse bg-indigo navbar-fixed-top">
+				<div class="navbar-header"
+					style="cursor: pointer !important; margin-left: 0.5% !important;">
 
-					<h1 ng-click="onTopHomeMenu($event)">
-						<img style="height: 40px !important;"
-							ng-src="/resource/img/ss_logo.png"
+					<h1 class="td-h4" ng-click="onTopHomeMenu($event)">
+						<img class="img-circle img-lg" ng-src="/resource/img/ss_logo.png"
 							onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">{{labels.APP}}
+						<ul class="nav navbar-nav pull-right visible-xs-block">
+							<li><a data-toggle="collapse"
+								data-target="#navbar-form-icons"><i class="icon-tree5"></i></a></li>
+						</ul>
 					</h1>
 				</div>
 
 				<div class="navbar-collapse collapse" id="navbar-form-icons">
-					<form ng-if="false" class="navbar-form navbar-left">
-						<div class="form-group has-feedback">
-							<input type="search" class="form-control" ng-model="searchTerm"
-								placeholder="Search field" style="color: white !important;"
-								>
-							<div class="form-control-feedback">
-								<i class="icon-search4 text-size-base"
-									style="color: white !important;"></i>
-							</div>
+
+					<form class="navbar-form navbar-left">
+						<div class="form-group">
+							<input type="text" class="form-control" ng-model="searchText"
+								ng-keydown="$event.keyCode === 13 && onSearchClick($event,searchText)">
 						</div>
+						<button type="button"
+							class="btn border-white text-white btn-flat btn-icon btn-xs"
+							ng-click="onSearchClick($event,searchText)">{{labels.SEARCH1}}</button>
 					</form>
+
 					<div class="navbar-right" ng-model="user">
 						<ul class="nav navbar-nav">
 							<li class="dropdown dropdown-user"><a ng-if="!isLoggedIn"
@@ -50,6 +54,8 @@
 									<li><a target="_self">Code: {{user.referralCode}} </a></li>
 									<li><a target="_self">Points: {{user.points}} </a></li>
 									<li class="divider"></li>
+									<li><a target="_self" href="#profile"><i
+											class="icon-user"></i>{{labels.PROFILE}}</a></li>
 									<li><a target="_self" ng-click="onLogout($event)"><i
 											class="icon-switch2"></i>{{labels.LOG_OUT}}</a></li>
 								</ul></li>
@@ -58,56 +64,122 @@
 				</div>
 			</div>
 
-			<div class="navbar-collapse collapse" id="navbar-mobile"></div>
+			<!-- dump code -->
+			<div class="navbar-collapse collapse" id="navbar-mobile">
+				<div class="navbar-right" ng-model="user">
+					<ul class="nav navbar-nav">
+						<li class="dropdown dropdown-user"><a ng-if="!isLoggedIn"
+							target="#_self" data-toggle="modal" data-target="#modal_default"
+							class="legitRipple" aria-expanded="false" style="color: white;">
+								<i class=" icon-user"></i> <span>{{labels.LOGIN}}</span>
+						</a> <a ng-if="isLoggedIn" class="dropdown-toggle legitRipple"
+							data-toggle="dropdown" aria-expanded="false"
+							style="color: white;"> <i class=" icon-user"></i> <span>{{USER}}</span>
+								<i class="caret"></i>
+						</a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a target="_self">Code: {{user.referralCode}} </a></li>
+								<li><a target="_self">Points: {{user.points}} </a></li>
+								<li class="divider"></li>
+								<li><a target="_self" href="#profile"><i
+										class="icon-user"></i>{{labels.PROFILE}}</a></li>
+								<li><a target="_self" ng-click="onLogout($event)"><i
+										class="icon-switch2"></i>{{labels.LOG_OUT}}</a></li>
+							</ul></li>
+					</ul>
+				</div>
+			</div>
+			<!-- /dump code -->
 			<!-- /main navbar -->
 
 
-			<!-- Page header content -->
-			<div class="page-header-content">
-				<div class="page-title"></div>
-
-			</div>
-			<!-- /page header content -->
-
-
 			<!-- Second navbar -->
-			<div class="navbar navbar-inverse navbar-transparent"
-				id="navbar-second">
-				<ul class="nav navbar-nav visible-xs-block">
+			<div class="navbar navbar-default" id="navbar-second">
+				<ul class="nav navbar-nav no-border visible-xs-block">
 					<li><a class="text-center collapsed" data-toggle="collapse"
-						data-target="#navbar-second-toggle"><i
-							class="icon-paragraph-justify3"></i></a></li>
+						data-target="#navbar-second-toggle"><i class="icon-menu7"></i></a></li>
 				</ul>
-
 				<div class="navbar-collapse collapse" id="navbar-second-toggle">
 					<ul class="nav navbar-nav navbar-nav-material">
-						<li class="dropdown mega-menu mega-menu-wide"><a href="#"
-							target="_self" ng-click="onTopCategoryMenu($event)"
-							class="dropdown-toggle" data-toggle="dropdown">{{labels.GROCERY}}
-								<span class="caret"></span>
-						</a>
+						<li class="dropdown mega-menu mega-menu-wide"
+							ng-click="onTopCategoryMenu($event)"><a href="#"
+							target="_self" class="dropdown-toggle" data-toggle="dropdown"><i
+								class="icon-cube2 position-left"></i>{{labels.GROCERY}} <span
+								class="caret"></span> </a>
 
 							<div class="dropdown-menu dropdown-content"
 								style="max-width: 30% !important;">
 								<div class="dropdown-content-body">
 									<div class="row">
 										<div class="col-md-12">
-											<span class="menu-heading underlined">{{labels.DETAILS
-												}}</span>
 											<ul class="menu-list">
-												<li ng-repeat="category in categories | filter:searchTerm"><a
-													ng-click="onSelectionMenu($event,category)">{{
-														category.NAME }}</a></li>
+												<li ng-repeat="category in categories"><a
+													ng-if="category.SUPER_CATEGORY ==='GROCERY'"
+													ng-click="onSelectionMenu($event,category)">{{category.NAME
+														}}</a></li>
 											</ul>
 										</div>
 									</div>
 								</div>
 							</div></li>
+						<li class="dropdown mega-menu mega-menu-wide"
+							ng-click="onTopCategoryMenu($event)"><a href="#"
+							target="_self" class="dropdown-toggle" data-toggle="dropdown"><i
+								class="icon-color-sampler position-left"></i>{{labels.COSMETIC}}
+								<span class="caret"></span> </a>
 
-						<li ng-if="isLoggedIn" ng-click="onTopOrderMenu($event)"><a>{{labels.ORDERS}}</a></li>
+							<div class="dropdown-menu dropdown-content"
+								style="max-width: 30% !important;">
+								<div class="dropdown-content-body">
+									<div class="row">
+										<div class="col-md-12">
+											<ul class="menu-list">
+												<li ng-repeat="category in categories"><a
+													ng-if="category.SUPER_CATEGORY ==='COSMETIC'"
+													ng-click="onSelectionMenu($event,category)">{{category.NAME
+														}}</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div></li>
+						<li class="dropdown mega-menu mega-menu-wide"
+							ng-click="onTopCategoryMenu($event)"><a href="#"
+							target="_self" class="dropdown-toggle" data-toggle="dropdown"><i
+								class="icon-puzzle4 position-left"></i>{{labels.NATURAL_SUPPLEMENT}}
+								<span class="caret"></span> </a>
 
-
+							<div class="dropdown-menu dropdown-content"
+								style="max-width: 30% !important;">
+								<div class="dropdown-content-body">
+									<div class="row">
+										<div class="col-md-12">
+											<ul class="menu-list">
+												<li ng-repeat="category in categories"><a
+													ng-if="category.SUPER_CATEGORY ==='NATURAL'"
+													ng-click="onSelectionMenu($event,category)">{{category.NAME
+														}}</a></li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div></li>
+						<li ng-if="false"><a target="_self" href="#patners"><i
+								class="icon-users4 position-left"></i>{{labels.OUR_BUSINESS_PARTNER}}</a></li>
+						<li><a target="_self" href="#termsAndconditions"><i
+								class="icon-file-check position-left"></i>{{labels.TERMS_N_CONDATION}}</a></li>
+						<li><a target="_self" href="#contact"><i
+								class="icon-phone position-left"></i>{{labels.CONTACT}}</a></li>
 					</ul>
+
+					<ul class="nav navbar-nav navbar-nav-material navbar-right">
+						<li ng-if="isLoggedIn"><a target="_self" href="#orders"><i
+								class=" icon-truck position-left"></i>{{labels.ORDERS}}</a></li>
+						<li ng-if="isLoggedIn"><a target="_self" href="#cart"><i
+								class="  icon-cart5 position-left"></i>{{labels.CART}} <span
+								class="label label-inline position-right bg-success-400">{{totalCartItem}}</span></a></li>
+					</ul>
+
 				</div>
 			</div>
 			<!-- /second navbar -->
@@ -139,7 +211,7 @@
 		<!-- /page container -->
 
 		<!-- Footer -->
-		<div class="navbar navbar-default navbar-fixed-bottom footer">
+		<div class="navbar  navbar-default navbar-fixed-bottom footer">
 			<ul class="nav navbar-nav visible-xs-block">
 				<li><a class="text-center collapsed" data-toggle="collapse"
 					data-target="#footer"><i class="icon-circle-up2"></i></a></li>
@@ -150,13 +222,13 @@
 					&copy; 2017. <a target="_self" href="#" class="navbar-link">{{labels.APP}}</a>
 				</div>
 
-				<!-- 			<div class="navbar-right"> -->
-				<!-- 				<ul class="nav navbar-nav"> -->
-				<!-- 					<li><a href="#">About</a></li> -->
-				<!-- 					<li><a href="#">Terms</a></li> -->
-				<!-- 					<li><a href="#">Contact</a></li> -->
-				<!-- 				</ul> -->
-				<!-- 			</div> -->
+				<div class="navbar-right">
+					<ul class="nav navbar-nav">
+						<!-- 					<li><a href="#">About</a></li> -->
+						<li><a target="_self" href="#termsAndconditions">{{labels.TERMS_N_CONDATION}}</a></li>
+						<li><a href="#contact">{{labels.CONTACT}}</a></li>
+					</ul>
+				</div>
 			</div>
 		</div>
 		<!-- /footer -->

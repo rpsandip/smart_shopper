@@ -37,9 +37,11 @@ public class ProductShell {
 
 	private final ProductCategoryShell category;
 
+	private final boolean deleted;
+
 	public ProductShell(final String id, final String name, final Optional<String> remark, final DateMetaShell dateMeta,
 			final CreatedMetaShell createdMeta, final String price, final String points, final Optional<String> path,
-			final Optional<String> productURL, final ProductCategoryShell categoryShell) {
+			final Optional<String> productURL, final ProductCategoryShell categoryShell, final boolean deleted) {
 		Preconditions.checkNotNull(id, "id can not be null.");
 		Preconditions.checkNotNull(name, "name can not be null.");
 		Preconditions.checkNotNull(remark, "remark can not be null.");
@@ -60,6 +62,7 @@ public class ProductShell {
 		this.path = path.orNull();
 		this.productURL = productURL.orNull();
 		this.category = categoryShell;
+		this.deleted = deleted;
 	}
 
 	public String getId() {
@@ -100,6 +103,10 @@ public class ProductShell {
 
 	public ProductCategoryShell getCategory() {
 		return category;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
 	}
 
 	@Override

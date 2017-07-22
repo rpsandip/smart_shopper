@@ -38,7 +38,6 @@
             "fixed_secondary": "Fixed secondary navbar",
             "hideable_main": "Hideable main navbar",
             "hideable_secondary": "Hideable secondary navbar",
-            "fixed_header": "Fixed header",
             "fixed_footer": "Fixed footer",
             "sticky_custom": "Sticky sidebar (custom scroll)",
             "sticky_native": "Sticky sidebar (native scroll)"
@@ -118,7 +117,7 @@
         "form": {
             "main": "Form components",
             "basic": "Basic inputs",
-            "checkers": "Checkboxes & radios",
+            "checkers": "Checkboxes &amp; radios",
             "groups": "Input groups",
             "extended": "Extended controls",
             "labels": "Floating labels",
@@ -167,7 +166,7 @@
 
         "picker": {
             "main": "Pickers",
-            "datetime": "Date & time pickers",
+            "datetime": "Date &amp; time pickers",
             "color": "Color pickers",
             "location": "Location pickers"
         },
@@ -396,7 +395,7 @@
             "line": "Line charts",
             "bar": "Bar charts",
             "pie": "Pie charts",
-            "bubble": "Bubble & scatter charts",
+            "bubble": "Bubble &amp; scatter charts",
             "other": "Other charts"
         },
 
@@ -551,7 +550,7 @@
         },
 
         "login": {
-            "main": "Login & registration",
+            "main": "Login &amp; registration",
             "header_1": "Basic",
             "header_2": "Service",
             "header_3": "Other",

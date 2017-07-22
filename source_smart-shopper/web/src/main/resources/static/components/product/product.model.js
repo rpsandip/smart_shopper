@@ -15,6 +15,7 @@ var Product = function() {
 	this.categories = [];
 	this.selectedCategory;
 
+	this.deleted = false;
 	this.products = [];
 
 	this.toJSON = function() {
@@ -35,6 +36,7 @@ var Product = function() {
 		this.dateMeta = data.dateMeta;
 		this.price = data.price;
 		this.points = data.points;
+		this.deleted = data.deleted;
 		this.imageSrc = data.productURL;
 		this.category = data.category;
 
@@ -48,6 +50,7 @@ var Product = function() {
 			REMARK : product.remark,
 			CREATED_META : product.items,
 			DATE_META : product.dateMeta,
+			DELETED : product.deleted,
 			PRICE : product.price,
 			POINTS : product.points,
 			IMAGE_URL : product.imageSrc,

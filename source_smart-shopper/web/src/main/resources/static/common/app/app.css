@@ -8,10 +8,19 @@
 	border-top: 1px solid #ddd !important;
 }
 
+.dataTables_paginate .paginate_button.current, .dataTables_paginate .paginate_button.current:hover,
+	.dataTables_paginate .paginate_button.current:focus {
+	color: black !important;
+	background: none !important;
+	border: 1px solid #ddd !important;
+}
+
 .dataTables_paginate {
-	float: right !important;
-	text-align: right !important;
+	display: inline-block !important;
+	float: left ! important;
+	text-align: center !important;
 	margin: 5px !important;
+	margin-left: 45% !important;
 }
 
 .dt-buttons {
@@ -57,4 +66,8 @@
 	width: 100% !important;
 	height: 100% !important;
 	background-color: rgba(0, 0, 0, 0.3) !important;
+}
+/*  hide table title */
+.inventory_related thead {
+	display: none;
 }

@@ -186,19 +186,6 @@
         z-index: (@zindex-navbar - 6);
     }
 
-    // Inside page header
-    .page-header & {
-        @media (min-width: @grid-float-breakpoint) {
-            padding-left: (@content-padding-horizontal / 2);
-            padding-right: (@content-padding-horizontal / 2);
-        }
-
-        @media (min-width: @screen-laptop-min) {
-            padding-left: @content-padding-horizontal;
-            padding-right: @content-padding-horizontal;
-        }
-    }
-
     // In page header
     &:not([class*=bg-]) {
         background-color: @page-header-default-bg;
@@ -269,18 +256,8 @@
     
     // Inside page header
     .page-header & {
-        padding-left: 0;
-        padding-right: 0;
-
-        @media (min-width: @grid-float-breakpoint) {
-            margin-left: (@content-padding-horizontal / 2);
-            margin-right: (@content-padding-horizontal / 2);
-        }
-
-        @media (min-width: @screen-laptop-min) {
-            margin-left: @content-padding-horizontal;
-            margin-right: @content-padding-horizontal;
-        }
+        margin-left: @grid-gutter-width;
+        margin-right: @grid-gutter-width;
     }
 }
 

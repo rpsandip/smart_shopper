@@ -3,10 +3,10 @@
  * 
  * @global
  */
-var dashboardController = app.controller('DashboardController', function($http,
-		$scope, $rootScope, $state, $location, $window, DTDefaultOptions,
-		DTOptionsBuilder, DTColumnDefBuilder, AuthenticationService,
-		DefaultConstant, UtilityService, ProductServices, CategoryFactory,
+app.controller('DashboardController', function($http, $scope, $rootScope,
+		$state, $location, $window, DTDefaultOptions, DTOptionsBuilder,
+		DTColumnDefBuilder, AuthenticationService, DefaultConstant,
+		UsersService, UtilityService, ProductServices, CategoryFactory,
 		ProductFactory) {
 
 	$scope.toolbarTitle = document.title = DefaultConstant.labels.APP;
@@ -17,8 +17,29 @@ var dashboardController = app.controller('DashboardController', function($http,
 
 	// for data table
 	var vm = this;
-	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
-			.withDOM('ftp');
+	vm.dtOptions = DTOptionsBuilder.newOptions().withPaginationType(
+			'simple_numbers').withDisplayLength(100).withOption('order',
+			[ 1, 'desc' ]).withDOM('ftp').withLanguage({
+		"sEmptyTable" : labels.EMPTY_TABLE,
+		"sSearch" : labels.SEARCH,
+		"oPaginate" : {
+			"sFirst" : labels.T_FIRST,
+			"sLast" : labels.T_LAST,
+			"sNext" : labels.T_NEXT,
+			"sPrevious" : labels.T_PREVIOUS
+		}
+	});
+	vm.dataOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
+			.withDOM('t').withLanguage({
+				"sEmptyTable" : labels.EMPTY_TABLE,
+				"sSearch" : labels.SEARCH,
+				"oPaginate" : {
+					"sFirst" : labels.T_FIRST,
+					"sLast" : labels.T_LAST,
+					"sNext" : labels.T_NEXT,
+					"sPrevious" : labels.T_PREVIOUS
+				}
+			});
 
 	var mainProduct = new Product();
 	ProductFactory.set(mainProduct);
@@ -26,6 +47,7 @@ var dashboardController = app.controller('DashboardController', function($http,
 	vm.products = mainProduct.products;
 
 	var cart = $scope.cart = new Cart();
+	$scope.totalCartItem = cart.products.length;
 
 	AuthenticationService.isLoggedIn(function(response, data) {
 		if (!response) {
@@ -50,16 +72,39 @@ var dashboardController = app.controller('DashboardController', function($http,
 
 						if (response == null || response == undefined
 								|| response == "") {
-							$scope.isCart = false;
-						} else {
-							$scope.isCart = true;
+							return;
 						}
-
+						cart.clearProducts();
 						cart.fromJSON(response);
+						$scope.totalCartItem = cart.products.length;
 					});
 
 		}
 	});
+
+	$scope.onSearchClick = function($event, searchText) {
+		if (searchText == undefined || searchText == null) {
+			UtilityService.showError("Search can not be Empty.");
+			return;
+		}
+		ProductServices.search(searchText, function(response, status) {
+
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			mainProduct.clear();
+			for (i in response) {
+				mainProduct.fromJSON(response[i]);
+			}
+			$state.go('dashboard.categories');
+		});
+	};
 
 	$scope.onLogout = function($event) {
 		AuthenticationService.doLogout();
@@ -69,10 +114,6 @@ var dashboardController = app.controller('DashboardController', function($http,
 
 	$scope.onTopCategoryMenu = function($event) {
 		$state.go('dashboard.categories');
-	};
-
-	$scope.onTopOrderMenu = function($event) {
-		$state.go('dashboard.orders');
 	};
 
 	$scope.onTopHomeMenu = function($event) {
@@ -110,7 +151,71 @@ var dashboardController = app.controller('DashboardController', function($http,
 			for (i in response) {
 				mainProduct.fromJSON(response[i]);
 			}
-			$scope.CATEGORY_TITLE = category.NAME;
+		});
+	};
+
+	$scope.onPlusToCart = function($event, product) {
+		if (!$scope.isLoggedIn) {
+			UtilityService.showError("User is not logged-in.");
+			return;
+		}
+
+		if (product == undefined || product == null) {
+			UtilityService.showError("No product is selected.");
+			return;
+		}
+
+		$scope.isCart = true;
+		$scope.isLoading = true;
+		ProductServices.addToCart(cart.toJSON(product.id, 1), function(
+				response, status) {
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			cart.clearProducts();
+			cart.fromJSON(response);
+			$scope.totalCartItem = cart.products.length;
+		});
+	};
+
+	$scope.onSubtractToCart = function($event, product, cartOne) {
+		if (!$scope.isLoggedIn) {
+			UtilityService.showError("User is not logged-in.");
+			return;
+		}
+
+		if (product == undefined || product == null) {
+			UtilityService.showError("No product is selected.");
+			return;
+		}
+
+		if (cartOne.quantity - 1 == 0) {
+			UtilityService.showError("Please remove product.");
+			return;
+		}
+
+		$scope.isCart = true;
+		$scope.isLoading = true;
+		ProductServices.addToCart(cart.toJSON(product.id, -1), function(
+				response, status) {
+			$scope.isLoading = false;
+			if (status == 401) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			if (status != 200) {
+				UtilityService.showError(response.message);
+				return;
+			}
+			cart.clearProducts();
+			cart.fromJSON(response);
+			$scope.totalCartItem = cart.products.length;
 		});
 	};
 
@@ -139,7 +244,9 @@ var dashboardController = app.controller('DashboardController', function($http,
 				UtilityService.showError(response.message);
 				return;
 			}
+			cart.clearProducts();
 			cart.fromJSON(response);
+			$scope.totalCartItem = cart.products.length;
 		});
 	};
 
@@ -164,7 +271,9 @@ var dashboardController = app.controller('DashboardController', function($http,
 				UtilityService.showError(response.message);
 				return;
 			}
+			cart.clearProducts();
 			cart.fromJSON(response);
+			$scope.totalCartItem = cart.products.length;
 			var message = product.product.name + " is removed from cart.";
 			new PNotify({
 				title : 'Info',
@@ -173,48 +282,6 @@ var dashboardController = app.controller('DashboardController', function($http,
 			});
 		});
 	};
-
-	$scope.$on('categoryUpdated', function(event, category) {
-		$scope.CATEGORY_TITLE = category.NAME;
-	});
-
-	$scope.$on('addToCartFromCard', function(event, product) {
-		if ($scope.$$listenerCount["addToCartFromCard"] > 1) {
-			$scope.$$listenerCount["addToCartFromCard"] = 0;
-		}
-		if (!$scope.isLoggedIn) {
-			UtilityService.showError("User is not logged-in.");
-			return;
-		}
-
-		if (product == undefined || product == null) {
-			UtilityService.showError("No product is selected.");
-			return;
-		}
-
-		$scope.isCart = true;
-		$scope.isLoading = true;
-		ProductServices.addToCart(cart.toJSON(product.id, 1), function(
-				response, status) {
-			$scope.isLoading = false;
-			if (status == 401) {
-				UtilityService.showError(response.message);
-				return;
-			}
-			if (status != 200) {
-				UtilityService.showError(response.message);
-				return;
-			}
-			cart.fromJSON(response);
-			var message = product.name + " is add to cart.";
-			new PNotify({
-				title : 'Info',
-				addclass : 'bg-info',
-				text : message
-			});
-			$window.location.reload();
-		});
-	});
 
 	$scope.onCheckOut = function($event) {
 		if (!$scope.isLoggedIn) {
@@ -235,6 +302,7 @@ var dashboardController = app.controller('DashboardController', function($http,
 			}
 			cart.fromJSON(response);
 			cart = new Cart();
+			$scope.totalCartItem = cart.products.length;
 			var message = "Your order of $" + response.total
 					+ " is placed Successfully."
 					+ "<p><small>Pay at the time of delivery.</small></p>";
@@ -265,31 +333,9 @@ var dashboardController = app.controller('DashboardController', function($http,
 			category.fromJSON(response[i]);
 		}
 	});
-});
-
-var dashboardController = app.controller('DashboardCardController', function(
-		$http, $scope, $rootScope, $window, $state, $location, DefaultConstant,
-		ProductServices, CategoryFactory, ProductFactory) {
-
-	var labels = $scope.labels = DefaultConstant.labels;
-	var category = new Category();
-
-	$scope.myInterval = 3000;
-	$scope.slides = [ {
-		image : 'resource/img/ss_title_1.jpg'
-	}, {
-		image : 'resource/img/ss_title_2.jpg'
-	}, {
-		image : 'resource/img/ss_title_3.jpg'
-	}, {
-		image : 'resource/img/ss_title_4.jpg'
-	} ];
-
-	$scope.categories = category.categories;
-	$scope.isLoggedIn = false;
 
 	$scope.isLoading = true;
-	ProductServices.categorizedProducts(function(response, status) {
+	UsersService.preferenceContacts(function(response, status) {
 
 		$scope.isLoading = false;
 		if (status == 401) {
@@ -300,69 +346,162 @@ var dashboardController = app.controller('DashboardCardController', function(
 			UtilityService.showError(response.message);
 			return;
 		}
-
-		for (i in response) {
-			category.fromJSON(response[i]);
-		}
+		$scope.contacts = response;
 	});
 
-	$scope.onAddToCart = function($event, product) {
-		if (product == undefined || product == null) {
-			UtilityService.showError("No product is selected.");
+	$scope.isLoading = true;
+	UsersService.preferenceTnc(function(response, status) {
+		$scope.isLoading = false;
+		if (status == 401) {
+			UtilityService.showError(response.message);
 			return;
 		}
-
-		$rootScope.$broadcast('addToCartFromCard', product);
-	};
-
-	$scope.onProductClick = function($event) {
-		$state.go('dashboard.categories');
-	};
-
-	$scope.onCategorySelection = function($event, category) {
-
-		if (category == undefined || category == null) {
-			UtilityService.showError("No category is selected.");
+		if (status != 200) {
+			UtilityService.showError(response.message);
 			return;
 		}
-
-		var product = ProductFactory.get();
-		product.clear();
-
-		$scope.isLoading = true;
-		ProductServices.categorizedProduct(category.ID, function(response,
-				status) {
-
-			$scope.isLoading = false;
-			if (status == 401) {
-				UtilityService.showError(response.message);
-				return;
-			}
-			if (status != 200) {
-				UtilityService.showError(response.message);
-				return;
-			}
-
-			product.clear();
-			for (i in response) {
-				product.fromJSON(response[i]);
-			}
-			$rootScope.$broadcast('categoryUpdated', category);
-			$state.go('dashboard.categories');
-		});
-	};
+		$scope.tnc = response.tnc;
+	});
 });
 
-var orderController = app.controller('OrderController', function($http, $scope,
-		$rootScope, $state, $location, $window, DefaultConstant,
-		ProductServices, DTDefaultOptions, DTOptionsBuilder,
-		DTColumnDefBuilder, CategoryFactory) {
+app
+		.controller(
+				'DashboardCardController',
+				function($http, $scope, $rootScope, $window, $state, $location,
+						DefaultConstant, ProductServices, CategoryFactory,
+						UtilityService, ProductFactory) {
+
+					var labels = $scope.labels = DefaultConstant.labels;
+					var category = new Category();
+
+					$scope.myInterval = 3000;
+					$scope.slides = [ {
+						image : 'resource/img/ss_title_1.jpg'
+					}, {
+						image : 'resource/img/ss_title_2.jpg'
+					}, {
+						image : 'resource/img/ss_title_3.jpg'
+					}, {
+						image : 'resource/img/ss_title_4.jpg'
+					} ];
+
+					$scope.categories = category.categories;
+					$scope.isLoggedIn = false;
+
+					$scope.isLoading = true;
+					ProductServices.categorizedProducts(function(response,
+							status) {
+
+						$scope.isLoading = false;
+						if (status == 401) {
+							UtilityService.showError(response.message);
+							return;
+						}
+						if (status != 200) {
+							UtilityService.showError(response.message);
+							return;
+						}
+
+						for (i in response) {
+							category.fromJSON(response[i]);
+						}
+					});
+
+					$scope.onAddToCart = function($event, product) {
+						if (product == undefined || product == null) {
+							UtilityService.showError("No product is selected.");
+							return;
+						}
+
+						$scope.isLoading = true;
+						ProductServices
+								.addToCart(
+										$scope.$parent.cart.toJSON(product.id,
+												1),
+										function(response, status) {
+											$scope.isLoading = false;
+											if (status == 401) {
+												UtilityService
+														.showError(response.message);
+												return;
+											}
+											if (status != 200) {
+												UtilityService
+														.showError(response.message);
+												return;
+											}
+											$scope.$parent.cart.clearProducts();
+											$scope.$parent.cart
+													.fromJSON(response);
+											$scope.$parent.$parent.totalCartItem = $scope.$parent.cart.products.length;
+											var message = product.name
+													+ " is add to cart.";
+											new PNotify({
+												title : 'Info',
+												addclass : 'bg-info',
+												text : message
+											});
+										});
+					};
+
+					$scope.onProductClick = function($event) {
+						$state.go('dashboard.categories');
+					};
+
+					$scope.onCategorySelection = function($event, category) {
+
+						if (category == undefined || category == null) {
+							UtilityService
+									.showError("No category is selected.");
+							return;
+						}
+
+						var product = ProductFactory.get();
+						product.clear();
+
+						$scope.isLoading = true;
+						ProductServices.categorizedProduct(category.ID,
+								function(response, status) {
+
+									$scope.isLoading = false;
+									if (status == 401) {
+										UtilityService
+												.showError(response.message);
+										return;
+									}
+									if (status != 200) {
+										UtilityService
+												.showError(response.message);
+										return;
+									}
+
+									product.clear();
+									for (i in response) {
+										product.fromJSON(response[i]);
+									}
+									$state.go('dashboard.categories');
+								});
+					};
+				});
+
+app.controller('OrderController', function($http, $scope, $rootScope, $state,
+		$location, $window, DefaultConstant, ProductServices, DTDefaultOptions,
+		DTOptionsBuilder, DTColumnDefBuilder, CategoryFactory) {
 	$scope.toolbarTitle = document.title = DefaultConstant.labels.APP;
 	var labels = $scope.labels = DefaultConstant.labels;
 
 	var vm = this;
 	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
-			.withDOM('ftp');
+			.withOption('order', [ 1, 'desc' ]).withDOM('ftp').withLanguage({
+				"sEmptyTable" : labels.EMPTY_TABLE,
+				"sSearch" : labels.SEARCH,
+				"oPaginate" : {
+					"sFirst" : labels.T_FIRST,
+					"sLast" : labels.T_LAST,
+					"sNext" : labels.T_NEXT,
+					"sPrevious" : labels.T_PREVIOUS
+				}
+			});
 
 	$scope.onOrderView = function($event, order) {
 		if (!order) {

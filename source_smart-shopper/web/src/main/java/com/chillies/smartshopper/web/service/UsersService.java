@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.chillies.smartshopper.common.shell.web.UsersAuthShell;
 import com.chillies.smartshopper.common.shell.web.UsersShell;
+import com.chillies.smartshopper.lib.model.web.Users;
 import com.chillies.smartshopper.service.dto.UsersDTO;
 import com.chillies.smartshopper.service.model.LoginBody;
 import com.chillies.smartshopper.service.model.RegisterBody;
@@ -39,8 +40,15 @@ public class UsersService {
 		return usersDTO.register(registerBody, httpRequest);
 	}
 
+	@RequestMapping(value = "${service.users.forgot}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UsersShell> forgot(@RequestParam(value = "username", required = true) String username,
+			HttpServletRequest httpRequest) {
+		return usersDTO.forgot(username, httpRequest);
+	}
+
 	@RequestMapping(value = "${service.users.referral}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<UsersShell> referralCode(@RequestParam(value = "referralCode", required = true) String referralCode) {
+	public ResponseEntity<UsersShell> referralCode(
+			@RequestParam(value = "referralCode", required = true) String referralCode) {
 		return usersDTO.referralCode(referralCode);
 	}
 
@@ -59,8 +67,33 @@ public class UsersService {
 	@RequestMapping(value = "${service.users.logout}", method = RequestMethod.POST)
 	public ResponseEntity<Object> logout(@RequestParam(value = "session", required = true) String session) {
 		usersDTO.logout(session);
-
 		return new ResponseEntity<>(HttpStatus.OK);
+	}
+
+	// profile
+	@RequestMapping(value = "${service.users.getProfile}", method = RequestMethod.POST)
+	public ResponseEntity<UsersShell> getProfile(@RequestParam(value = "session", required = true) String session) {
+		return usersDTO.getProfile(session);
+	}
+
+	@RequestMapping(value = "${service.users.updateProfile}", method = RequestMethod.POST)
+	public ResponseEntity<UsersShell> updateProfile(@RequestParam(value = "session", required = true) String session,
+			@Valid @RequestBody RegisterBody registerBody) {
+		usersDTO.isValid(session);
+		return usersDTO.updateProfile(session, registerBody);
+	}
+
+	@RequestMapping(value = "${service.users.subUser}", method = RequestMethod.POST)
+	public ResponseEntity<UsersShell> subUser(@RequestParam(value = "session", required = true) String session) {
+		final Users users = usersDTO.isValid(session);
+		return usersDTO.subUser(users);
+	}
+
+	@RequestMapping(value = "${service.users.add.referral}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<UsersShell> addReferralCode(@RequestParam(value = "session", required = true) String session,
+			@RequestParam(value = "referralCode", required = true) String referralCode) {
+		final Users users = usersDTO.isValid(session);
+		return usersDTO.addReferralCode(users,referralCode);
 	}
 
 }

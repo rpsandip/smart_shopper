@@ -1,0 +1,92 @@
+<!-- Basic datatable -->
+<div ng-controller="PreferenceController as preCtrl" ng-modal="labels">
+	<!-- Page content -->
+
+	<!-- Main content -->
+	<div class="content-wrapper col-md-12">
+
+		<!-- Toolbar -->
+		<div class="navbar navbar-default navbar-component navbar-xs">
+			<ul class="nav navbar-nav visible-xs-block">
+				<li class="full-width text-center"><a data-toggle="collapse"
+					data-target="#navbar-filter"><i class="icon-menu7"></i></a></li>
+			</ul>
+
+			<div class="navbar-collapse collapse" id="navbar-filter">
+				<ul class="nav navbar-nav">
+					<li class="active"><a target="_self" href="#friends"
+						data-toggle="tab"><i class="icon-collaboration position-left"></i>
+							{{labels.CONTACT}}</a></li>
+					<li><a target="_self" href="#settings" data-toggle="tab"><i
+							class=" icon-file-check position-left"></i>
+							{{labels.TERMS_N_CONDATION}}</a></li>
+
+				</ul>
+			</div>
+		</div>
+		<!-- /toolbar -->
+
+
+		<!-- User profile -->
+		<div class="row">
+			<div class="col-md-12">
+				<div class="tabbable">
+					<div class="tab-content">
+						<div class="tab-pane fade in active" id="friends">
+
+							<!-- Profile info -->
+							<div class="panel panel-flat">
+								<div class="panel-heading border-indigo">
+									<h6 class="panel-title">{{labels.CONTACT}}</h6>
+									<div class="heading-elements">
+										<ul class="icons-list">
+											<li><a target="_self" ng-if="isContactList"
+												ng-click="onAddContactClick($event)"><i
+													class="icon-plus3"></i></a></li>
+											<li><a target="_self" ng-if="!isContactList"
+												ng-click="onCancelContactClick($event)"><i
+													class="icon-cross2"></i></a></li>
+										</ul>
+									</div>
+								</div>
+								<div class="panel-body">
+									<div ng-if="isContactList"
+										ng-include="'components/preference/contactlist.view.html'"></div>
+									<div ng-if="!isContactList"
+										ng-include="'components/preference/contact.view.html'"></div>
+								</div>
+							</div>
+						</div>
+
+						<div class="tab-pane fade" id="settings">
+
+							<!-- Profile info -->
+							<div class="panel panel-flat">
+								<div class="panel-heading border-indigo">
+									<h6 class="panel-title">{{labels.COMMON.DETAILS}}</h6>
+								</div>
+
+								<div class="panel-body">
+									<textarea cols="18" rows="18"
+										class="wysihtml5 wysihtml5-min form-control"
+										placeholder="Enter text ..." ng-model="tnc"></textarea>
+
+									<button type="submit" class="btn btn-primary"
+										ng-click="onTncSave($event,tnc)">{{labels.COMMON.SAVE}}
+									</button>
+								</div>
+								<!-- /profile info -->
+							</div>
+						</div>
+						<!-- /user profile -->
+
+					</div>
+					<!-- /main content -->
+
+				</div>
+				<!-- /page content -->
+
+			</div>
+			<!-- /page container -->
+		</div>
+	</div>

@@ -2,7 +2,9 @@ package com.chillies.smartshopper.service.dto;
 
 import java.io.InputStream;
 import java.net.URLDecoder;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -27,6 +29,7 @@ import com.chillies.smartshopper.common.util.AppUtils;
 import com.chillies.smartshopper.common.util.DateUtils;
 import com.chillies.smartshopper.common.util.MessageUtils;
 import com.chillies.smartshopper.common.util.OrderStatus;
+import com.chillies.smartshopper.common.util.SuperCategory;
 import com.chillies.smartshopper.lib.exception.DbException;
 import com.chillies.smartshopper.lib.exception.NotAccatable;
 import com.chillies.smartshopper.lib.exception.ServicesNotAcceptable;
@@ -39,11 +42,11 @@ import com.chillies.smartshopper.lib.model.web.Users;
 import com.chillies.smartshopper.lib.model.web_model.Product;
 import com.chillies.smartshopper.lib.model.web_model.ProductCategory;
 import com.chillies.smartshopper.lib.model.web_model.Sudoers;
-import com.chillies.smartshopper.lib.transaction.ProductTransaction;
 import com.chillies.smartshopper.lib.util.ServiceUtils;
 import com.chillies.smartshopper.service.model.ProductBody;
 import com.chillies.smartshopper.service.model.ProductCategoryBody;
 import com.chillies.smartshopper.service.model.ProductMetaBody;
+import com.chillies.smartshopper.service.transaction.ProductTransaction;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.gson.Gson;
@@ -87,9 +90,9 @@ public class ProductDTO {
 			final String categoryName = productCategoryBody.getName();
 			productTransaction.isProductCategoryName(categoryName);
 
-			final ProductCategory productCategory = productTransaction.save(categoryName,
-					Optional.fromNullable(productCategoryBody.getRemark()), new DateMeta(Optional.absent()),
-					new CreatedMeta(sudoers, Optional.absent()));
+			final ProductCategory productCategory = productTransaction.save(productCategoryBody.getSuperCategory(),
+					categoryName, Optional.fromNullable(productCategoryBody.getRemark()),
+					new DateMeta(Optional.absent()), new CreatedMeta(sudoers, Optional.absent()));
 
 			final ResponseEntity<ProductCategoryShell> responseEntity = new ResponseEntity<ProductCategoryShell>(
 					productCategory.toShell(), HttpStatus.OK);
@@ -134,8 +137,8 @@ public class ProductDTO {
 				productTransaction.isProductCategoryName(categoryName);
 			}
 
-			final ProductCategory category = productTransaction.update(oldCategory, categoryName,
-					Optional.fromNullable(productCategoryBody.getRemark()), sudoers);
+			final ProductCategory category = productTransaction.update(productCategoryBody.getSuperCategory(),
+					oldCategory, categoryName, Optional.fromNullable(productCategoryBody.getRemark()), sudoers);
 
 			final ResponseEntity<ProductCategoryShell> responseEntity = new ResponseEntity<ProductCategoryShell>(
 					category.toShell(), HttpStatus.OK);
@@ -455,7 +458,9 @@ public class ProductDTO {
 				final SortedSet<ProductShell> shells = productTransaction
 						.sortedCategorizedProduct(ServiceUtils.siteBaseUrl(request), category, true);
 
-				categoryShells.add(new CategoryProductShell(category.toShell(), shells));
+				if (!category.isDeleted()) {
+					categoryShells.add(new CategoryProductShell(category.toShell(), shells));
+				}
 			});
 
 			final ResponseEntity<Set<CategoryProductShell>> responseEntity = new ResponseEntity<Set<CategoryProductShell>>(
@@ -659,12 +664,12 @@ public class ProductDTO {
 			final SortedSet<OrderShell> orderShells = productTransaction
 					.sortedOrders(ServiceUtils.siteBaseUrl(request));
 
-			final ResponseEntity<SortedSet<OrderShell>> responseEntity = new ResponseEntity<SortedSet<OrderShell>>(
-					orderShells, HttpStatus.OK);
+			final ResponseEntity<SortedSet<OrderShell>> responseEntity = new ResponseEntity<>(orderShells,
+					HttpStatus.OK);
 
 			return responseEntity;
 		} catch (DbException e) {
-			final String error = String.format("orders() Failed with message : %s", e.getMessage());
+			final String error = String.format("orders() Failed with message : %s", e);
 			LOG.error(error);
 			throw new ServicesNotAcceptable(error);
 		} catch (ServicesNotAcceptable | ServicesNotFound | NotAccatable e) {
@@ -672,7 +677,7 @@ public class ProductDTO {
 			LOG.info(error);
 			throw new ServicesNotAcceptable(error);
 		} catch (Exception e) {
-			final String error = String.format("orders() Failed with message : %s", e.getMessage());
+			final String error = String.format("orders() Failed with message : %s", e);
 			LOG.error(error);
 			throw new ServicesNotFound(error);
 		}
@@ -735,6 +740,116 @@ public class ProductDTO {
 			throw new ServicesNotAcceptable(error);
 		} catch (Exception e) {
 			final String error = String.format("status() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotFound(error);
+		}
+	}
+
+	public ResponseEntity<Set<SuperCategory>> superCategories() {
+		try {
+
+			final SuperCategory[] categories = SuperCategory.values();
+			final ResponseEntity<Set<SuperCategory>> responseEntity = new ResponseEntity<>(
+					new HashSet<>(Arrays.asList(categories)), HttpStatus.OK);
+
+			return responseEntity;
+		} catch (DbException e) {
+			final String error = String.format("status() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (ServicesNotAcceptable | ServicesNotFound | NotAccatable e) {
+			final String error = String.format(e.getMessage());
+			LOG.info(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (Exception e) {
+			final String error = String.format("status() Failed with message : %s", e.getMessage());
+			LOG.error(error);
+			throw new ServicesNotFound(error);
+		}
+	}
+
+	public ResponseEntity<SortedSet<ProductShell>> search(final String searchString, final HttpServletRequest request) {
+		Preconditions.checkNotNull(searchString, "searchString can not be null.");
+		Preconditions.checkNotNull(request, "request can not be null.");
+
+		LOG.info("search() request {}", searchString);
+
+		try {
+			final SortedSet<ProductShell> productShells = productTransaction.search(searchString,
+					ServiceUtils.siteBaseUrl(request));
+			final ResponseEntity<SortedSet<ProductShell>> responseEntity = new ResponseEntity<>(productShells,
+					HttpStatus.OK);
+
+			return responseEntity;
+		} catch (DbException e) {
+			final String error = String.format("search() Failed with message : %s", e);
+			LOG.error(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (ServicesNotAcceptable | ServicesNotFound | NotAccatable e) {
+			final String error = String.format(e.getMessage());
+			LOG.info(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (Exception e) {
+			final String error = String.format("search() Failed with message : %s", e);
+			LOG.error(error);
+			throw new ServicesNotFound(error);
+		}
+	}
+
+	public ResponseEntity<ProductShell> deleteProduct(final String productId, final Sudoers sudoers,
+			final HttpServletRequest request) {
+		Preconditions.checkNotNull(productId, "productId can not be null.");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
+		Preconditions.checkNotNull(request, "request can not be null.");
+
+		LOG.info("deleteProduct() request {}", productId);
+
+		try {
+			final Product product = productTransaction.getProductById(productId);
+			final ProductShell productShell = productTransaction.delete(product, sudoers)
+					.toShell(ServiceUtils.siteBaseUrl(request));
+			final ResponseEntity<ProductShell> responseEntity = new ResponseEntity<>(productShell, HttpStatus.OK);
+
+			return responseEntity;
+		} catch (DbException e) {
+			final String error = String.format("deleteProduct() Failed with message : %s", e);
+			LOG.error(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (ServicesNotAcceptable | ServicesNotFound | NotAccatable e) {
+			final String error = String.format(e.getMessage());
+			LOG.info(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (Exception e) {
+			final String error = String.format("deleteProduct() Failed with message : %s", e);
+			LOG.error(error);
+			throw new ServicesNotFound(error);
+		}
+	}
+
+	public ResponseEntity<ProductCategoryShell> deleteCategory(final String categoryId, final Sudoers sudoers) {
+		Preconditions.checkNotNull(categoryId, "categoryId can not be null.");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
+
+		LOG.info("deleteCategory() request {}", categoryId);
+
+		try {
+			final ProductCategory category = productTransaction.getProductCategoryId(categoryId);
+			final ProductCategoryShell productCategoryShell = productTransaction.delete(category, sudoers).toShell();
+
+			final ResponseEntity<ProductCategoryShell> responseEntity = new ResponseEntity<>(productCategoryShell,
+					HttpStatus.OK);
+
+			return responseEntity;
+		} catch (DbException e) {
+			final String error = String.format("deleteCategory() Failed with message : %s", e);
+			LOG.error(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (ServicesNotAcceptable | ServicesNotFound | NotAccatable e) {
+			final String error = String.format(e.getMessage());
+			LOG.info(error);
+			throw new ServicesNotAcceptable(error);
+		} catch (Exception e) {
+			final String error = String.format("deleteCategory() Failed with message : %s", e);
 			LOG.error(error);
 			throw new ServicesNotFound(error);
 		}

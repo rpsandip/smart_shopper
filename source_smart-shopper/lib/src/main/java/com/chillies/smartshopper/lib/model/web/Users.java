@@ -1,7 +1,10 @@
 package com.chillies.smartshopper.lib.model.web;
 
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -116,6 +119,25 @@ public class Users {
 		this.point = AppUtils.doubleToString(tempPoint);
 	}
 
+	public void update(String username, String firstName, String lastName, Optional<ContactMeta> contactMeta,
+			Optional<String> remark) {
+		Preconditions.checkNotNull(username, "username can not be null.");
+		Preconditions.checkNotNull(firstName, "firstName can not be null.");
+		Preconditions.checkNotNull(lastName, "lastName can not be null.");
+		Preconditions.checkNotNull(contactMeta, "contactMeta can not be null.");
+		Preconditions.checkNotNull(remark, "remark can not be null.");
+
+		this.username = username;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		dateMeta.setUpdated(DateUtils.currentUTC());
+		;
+		this.contactMeta = contactMeta.orNull();
+		this.remark = remark.orNull();
+		this.point = "0.0";
+		this.activateMeta = new ActivateMeta(true, Optional.absent());
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -188,7 +210,7 @@ public class Users {
 	}
 
 	public UsersShell toShell() {
-		final Set<UsersShell> usersShells = new HashSet<>();
+		final SortedSet<UsersShell> usersShells = new TreeSet<>(Comparator.comparing(UsersShell::getUsername));
 		if (this.subUsers != null) {
 			this.subUsers.forEach(sub -> usersShells.add(sub.toShell()));
 		}

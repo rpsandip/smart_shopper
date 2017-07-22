@@ -21,7 +21,7 @@ $(function() {
             pinned: "headroom-top-pinned",
             unpinned: "headroom-top-unpinned"
         },
-        offset: $('#navbar-second').offset().top,
+        offset: $('.page-container').offset().top - $('#navbar-second').offset().top,
 
         // callback when unpinned, `this` is headroom object
         onUnpin: function() {
@@ -35,18 +35,18 @@ $(function() {
 
     // When affixed
     $('#navbar-second').on('affixed.bs.affix', function() {
-        $(this).parent().children('.page-header-content').css('margin-bottom', $(this).outerHeight());
+        $(this).next().css('margin-top', $(this).outerHeight());
         $('body').addClass('navbar-affixed-top');
     });
 
     // When on top
     $('#navbar-second').on('affixed-top.bs.affix', function() {
-        $(this).parent().children('.page-header-content').css('margin-bottom', '');
+        $(this).next().css('margin-top', '');
         $('body').removeClass('navbar-affixed-top');
     });
 
     // Init
-    $('#navbar-second, .page-header > .fab-menu').affix({
+    $('#navbar-second').affix({
         offset: {
             top: $('#navbar-second').offset().top
         }

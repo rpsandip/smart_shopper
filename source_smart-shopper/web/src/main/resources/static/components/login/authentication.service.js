@@ -50,11 +50,11 @@ app.factory('AuthenticationService', function($http, $cookies, $rootScope,
 		$http.post(url).success(function(Response, Status, Headers, Config) {
 			$rootScope.globals = {};
 			$cookies.remove(cookieKey);
-			$state.go('dashboard.categories')
+//			$state.go('dashboard.categories')
 		}).error(function(Response, Status, Headers, Config) {
 			$rootScope.globals = {};
 			$cookies.remove(cookieKey);
-			$state.go('dashboard.categories')
+//			$state.go('dashboard.categories')
 		});
 	};
 

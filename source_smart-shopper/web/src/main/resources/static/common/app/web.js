@@ -6,7 +6,7 @@
  */
 var app = angular.module('web', [ 'ui.router', 'datatables',
 		'datatables.buttons', 'ngResource', 'ngSanitize', 'ngCookies',
-		'ui.bootstrap', 'ngMessages', 'mgo-angular-wizard' ]);
+		'ui.bootstrap', 'ngMessages', 'mgo-angular-wizard', 'ui.tree' ]);
 
 /**
  * Application Route provider.
@@ -19,7 +19,7 @@ var routeProvider = app
 				'$urlRouterProvider',
 				function($stateProvider, $urlRouterProvider) {
 
-					$urlRouterProvider.otherwise('/home');
+					$urlRouterProvider.otherwise('/');
 
 					$stateProvider
 							.state(
@@ -34,11 +34,46 @@ var routeProvider = app
 							.state(
 									'dashboard.categories',
 									{
-										url : '/categories',
+										url : '/products',
 										views : {
 											'dashboardContentView@dashboard' : {
-												templateUrl : 'components/dashboard/dashboard.table.view.html'
+												templateUrl : 'components/product/product.view.html'
 											}
+										},
+										authenticate : false
+									})
+							.state(
+									'dashboard.patner',
+									{
+										url : '/patners',
+										views : {
+											'dashboardContentView@dashboard' : {
+												templateUrl : 'common/view/patner.view.html'
+											}
+										},
+										authenticate : false
+									})
+							.state(
+									'dashboard.contact',
+									{
+										url : '/contact',
+										views : {
+											'dashboardContentView@dashboard' : {
+												templateUrl : 'common/view/contact.view.html'
+											}
+
+										},
+										authenticate : false
+									})
+							.state(
+									'dashboard.tnc',
+									{
+										url : '/termsAndconditions',
+										views : {
+											'dashboardContentView@dashboard' : {
+												templateUrl : 'common/view/tnc.view.html'
+											}
+
 										},
 										authenticate : false
 									})
@@ -55,9 +90,33 @@ var routeProvider = app
 										authenticate : true
 									})
 							.state(
+									'dashboard.cart',
+									{
+										url : '/cart',
+										views : {
+											'dashboardContentView@dashboard' : {
+												templateUrl : 'components/product/cart.view.html'
+											}
+
+										},
+										authenticate : true
+									})
+							.state(
+									'dashboard.profile',
+									{
+										url : '/profile',
+										views : {
+											'dashboardContentView@dashboard' : {
+												templateUrl : 'components/login/profile.view.html'
+											}
+
+										},
+										authenticate : true
+									})
+							.state(
 									'dashboard.home',
 									{
-										url : '/home',
+										url : '/',
 										views : {
 											'dashboardContentView@dashboard' : {
 												templateUrl : 'components/dashboard/dashboard.card.view.html'

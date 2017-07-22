@@ -7,6 +7,7 @@ var Category = function() {
 	this.remark;
 	this.createdMeta;
 	this.dateMeta;
+	this.superCategory;
 
 	this.categories = [];
 	this.products = [];
@@ -25,6 +26,7 @@ var Category = function() {
 		this.createdmeta = data.createdMeta;
 		this.dateMeta = data.dateMeta;
 		this.products = data.products;
+		this.superCategory = data.superCategory;
 		this.addCategory(this.toRows(this));
 	};
 
@@ -35,7 +37,8 @@ var Category = function() {
 			REMARK : category.remark,
 			CREATED_META : category.items,
 			DATE_META : category.dateMeta,
-			PRODUCTS : category.products
+			PRODUCTS : category.products,
+			SUPER_CATEGORY : category.superCategory
 		}
 	};
 

@@ -36,6 +36,10 @@ public final class MessageUtils {
 
 	public static final String ORDER_NOT_PRESENT = "Order is not present.";
 
+	public static final String PREFERENCE_IS_NOT_PRESENT = "Preference is not present.";
+
+	public static final String CATEGORT_CONTAINS = "Can not delete Category. Category associated with products.";
+
 	// admin user
 	public static String userNotRegistered(final String username) {
 		Preconditions.checkNotNull(username, "Please enter username.");

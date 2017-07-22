@@ -275,7 +275,6 @@ svg {
 .page-header {
     margin: 0;
     padding: 0;
-    position: relative;
     border-bottom-width: 0;
 
     // Setup desktop view
@@ -284,22 +283,6 @@ svg {
             display: block;
             visibility: visible;
         }
-    }
-}
-
-// Fixed page header
-.page-header-fixed {
-    @media (min-width: @grid-float-breakpoint) {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: @zindex-navbar-fixed;
-    }
-}
-.has-fixed-header {
-    @media (max-width: @grid-float-breakpoint-max) {
-        padding-top: 0!important;
     }
 }
 

@@ -16,6 +16,7 @@ var Product = function() {
 	this.selectedCategory;
 	this.isEdit = false;
 
+	this.deleted = false;
 	this.products = [];
 
 	this.toJSON = function() {
@@ -37,6 +38,7 @@ var Product = function() {
 		this.dateMeta = data.dateMeta;
 		this.price = data.price;
 		this.points = data.points;
+		this.deleted = data.deleted;
 		this.imageSrc = data.productURL;
 		this.category = data.category;
 
@@ -48,6 +50,7 @@ var Product = function() {
 			ID : product.id,
 			NAME : product.name,
 			REMARK : product.remark,
+			DELETED : product.deleted,
 			CREATED_META : product.items,
 			DATE_META : product.dateMeta,
 			PRICE : product.price,
@@ -57,12 +60,13 @@ var Product = function() {
 			OBJECT : product
 		}
 	};
-	
-	
+
 	this.editProduct = function(row) {
 		if (!row) {
 			return;
 		}
+
+		var category = new Category();
 		this.id = row.ID;
 		this.name = row.NAME;
 		this.remark = row.REMARK;
@@ -71,7 +75,8 @@ var Product = function() {
 		this.price = row.PRICE;
 		this.points = row.POINTS;
 		this.imageSrc = row.IMAGE_URL;
-		this.selectedCategory = row.CATEGORY;
+		category.fromJSON(row.CATEGORY);
+		this.selectedCategory = category.toRows(category);
 		this.isEdit = true;
 	};
 

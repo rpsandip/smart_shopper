@@ -1,4 +1,4 @@
-package com.chillies.smartshopper.lib.transaction;
+package com.chillies.smartshopper.service.transaction;
 
 import java.util.Comparator;
 import java.util.Set;
@@ -17,6 +17,7 @@ import com.chillies.smartshopper.lib.exception.NotAccatable;
 import com.chillies.smartshopper.lib.model.ContactMeta;
 import com.chillies.smartshopper.lib.model.DateMeta;
 import com.chillies.smartshopper.lib.model.web.Users;
+import com.chillies.smartshopper.lib.model.web_model.Sudoers;
 import com.chillies.smartshopper.lib.service.IWebDbService;
 import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
@@ -77,7 +78,6 @@ public final class UsersTransactions {
 	private Users apply3Percent(final double total, final Users users) {
 		Preconditions.checkNotNull(users, "users can not be null.");
 		final Users firstParent = this.addPoints(users, this.getPercentageAmount(total, 3));
-		
 
 		final Optional<Users> optional = this.bySubUser(firstParent);
 		if (!optional.isPresent()) {
@@ -156,12 +156,6 @@ public final class UsersTransactions {
 		return optionalUsers.get();
 	}
 
-	public Users update(final Users users) {
-		Preconditions.checkNotNull(users, "users can not be null.");
-
-		return dbService.save(users);
-	}
-
 	public Users save(final String username, final String password, final String firstName, final String lastName,
 			final Optional<String> remark, final Optional<String> street, final Optional<String> city,
 			final Optional<String> state, final Optional<String> country, final Optional<String> postalCode,
@@ -187,7 +181,7 @@ public final class UsersTransactions {
 
 		final Users users = new Users(username, password, firstName, lastName, new DateMeta(Optional.absent()),
 				referralCode, Optional.fromNullable(contactMeta), remark, Optional.absent());
-		return dbService.save(users);
+		return this.save(users);
 	}
 
 	public Users addSubUsers(final Users parent, final Users child) {
@@ -223,7 +217,7 @@ public final class UsersTransactions {
 
 	public SortedSet<UsersShell> getSortedUsers() {
 
-		final SortedSet<UsersShell> usersShells = new TreeSet<>(Comparator.comparing(UsersShell::getId))
+		final SortedSet<UsersShell> usersShells = new TreeSet<>(Comparator.comparing(UsersShell::getUsername))
 				.descendingSet();
 		final Set<Users> users = this.users();
 		if (users != null) {
@@ -240,7 +234,39 @@ public final class UsersTransactions {
 
 	public Optional<Users> addPointsToParent(final Users users, final double totalAmount) {
 		Preconditions.checkNotNull(users, "users can not be null.");
-		
+
 		return Optional.fromNullable(this.apply3Percent(totalAmount, users));
+	}
+
+	public Users activateUser(final Users user, final Sudoers sudoers) {
+		Preconditions.checkNotNull(user, "user can not be null.");
+		user.activateUser(sudoers);
+		return this.save(user);
+	}
+
+	public Users update(final Users users, final String username, final String firstName, final String lastName,
+			final Optional<String> remark, final Optional<String> street, final Optional<String> city,
+			final Optional<String> state, final Optional<String> country, final Optional<String> postalCode,
+			final String phoneNo) {
+		Preconditions.checkNotNull(users, "users can not be null.");
+		Preconditions.checkNotNull(username, "username can not be null.");
+		Preconditions.checkNotNull(firstName, "firstName can not be null.");
+		Preconditions.checkNotNull(lastName, "lastName can not be null.");
+		Preconditions.checkNotNull(remark, "remark can not be null.");
+		Preconditions.checkNotNull(street, "street can not be null.");
+		Preconditions.checkNotNull(city, "city can not be null.");
+		Preconditions.checkNotNull(state, "state can not be null.");
+		Preconditions.checkNotNull(country, "country can not be null.");
+		Preconditions.checkNotNull(postalCode, "postalCode can not be null.");
+		Preconditions.checkNotNull(phoneNo, "phoneNo can not be null.");
+
+		final ContactMeta contactMeta = new ContactMeta(street, city, state, country, postalCode, phoneNo);
+		users.update(username, firstName, lastName, Optional.fromNullable(contactMeta), remark);
+		return this.save(users);
+	}
+
+	public Users getUserBySubUser(final Users subuser) {
+		Preconditions.checkNotNull(subuser, "subuser can not be null.");
+		return dbService.bySubUsers(subuser);
 	}
 }

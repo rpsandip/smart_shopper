@@ -19,4 +19,9 @@ public interface IProduct extends MongoRepository<Product, String> {
 	public Product findByName(final String name);
 
 	public List<Product> findByCategory(final ProductCategory category);
+
+	public List<Product> findByCategoryAndDeleted(final ProductCategory category, final boolean deleted);
+
+	public List<Product> findByNameIgnoreCaseLikeOrNameIgnoreCaseStartingWithOrNameIgnoreCaseEndingWith(
+			final String searchString, final String startsWith, final String endsWith);
 }

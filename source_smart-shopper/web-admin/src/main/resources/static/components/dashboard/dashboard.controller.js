@@ -46,31 +46,31 @@ var dashboardController = app.controller('DashboardController', function($http,
 	};
 });
 
-var orderController = app.controller('OrderController',
-		function($http, $scope, $rootScope, $state, $location, $window,
-				DefaultConstant, DTDefaultOptions, DTOptionsBuilder,
-				DTColumnDefBuilder, ProductService) {
+var orderController = app.controller('OrderController', function($http, $scope,
+		$rootScope, $state, $location, $window, DefaultConstant,
+		DTDefaultOptions, DTOptionsBuilder, UtilityService, DTColumnDefBuilder,
+		ProductService) {
 
-			var labels = DefaultConstant.labels;
-			$scope.isProductDetails = false;
+	var labels = DefaultConstant.labels;
+	$scope.isProductDetails = false;
 
-			var vm = this;
-			vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
-					.withDOM('ftp');
+	var vm = this;
+	vm.dtOptions = DTOptionsBuilder.newOptions().withDisplayLength(100)
+			.withOption('order', [ 1, 'desc' ]).withDOM('ftp');
 
-			$scope.onProductDetailsClose = function($event) {
-				$scope.isProductDetails = false;
-			};
-			$scope.onOrderStatusChange = function($event, status, order) {
-				if (!order) {
-					UtilityService.showError("No order is selected.");
-					return;
-				}
+	$scope.onProductDetailsClose = function($event) {
+		$scope.isProductDetails = false;
+	};
+	$scope.onOrderStatusChange = function($event, status, order) {
+		if (!order) {
+			UtilityService.showError("No order is selected.");
+			return;
+		}
 
-				$scope.isLoading = true;
-				ProductService.orderStatus(order.id, status, function(response,
-						status) {
-					
+		$scope.isLoading = true;
+		ProductService.orderStatus(order.id, status,
+				function(response, status) {
+
 					$scope.isLoading = false;
 					if (status == 401) {
 						UtilityService.showError(response.message);
@@ -82,32 +82,32 @@ var orderController = app.controller('OrderController',
 					}
 					$window.location.reload();
 				});
-			};
+	};
 
-			$scope.onOrderView = function($event, order) {
-				if (!order) {
-					UtilityService.showError("No order is selected.");
-					return;
-				}
-				$scope.isProductDetails = true;
-				$scope.products = order.cart.products;
-				$scope.user = order.users;
-			};
+	$scope.onOrderView = function($event, order) {
+		if (!order) {
+			UtilityService.showError("No order is selected.");
+			return;
+		}
+		$scope.isProductDetails = true;
+		$scope.products = order.cart.products;
+		$scope.user = order.users;
+	};
 
-			$scope.isLoading = true;
-			ProductService.orders(function(response, status) {
+	$scope.isLoading = true;
+	ProductService.orders(function(response, status) {
 
-				$scope.isLoading = false;
-				if (status == 401) {
-					UtilityService.showError(response.message);
-					return;
-				}
-				if (status != 200) {
-					UtilityService.showError(response.message);
-					return;
-				}
+		$scope.isLoading = false;
+		if (status == 401) {
+			UtilityService.showError(response.message);
+			return;
+		}
+		if (status != 200) {
+			UtilityService.showError(response.message);
+			return;
+		}
 
-				vm.orders = response;
-			});
+		vm.orders = response;
+	});
 
-		});
+});

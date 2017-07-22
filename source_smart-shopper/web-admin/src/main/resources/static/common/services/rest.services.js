@@ -33,6 +33,31 @@ app.factory('ProductService', function($http, DefaultConstant,
 		});
 	}
 
+	service.deleteCategory = function(categoryId, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.CATEGORY
+				+ DefaultConstant.url.DELETE + "?session="
+				+ AuthenticationService.getSession() + "&categoryId="
+				+ categoryId;
+		$http.post(url).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
+	service.superCategories = function(callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.SUPER
+				+ DefaultConstant.url.CATEGORIES + "?session="
+				+ AuthenticationService.getSession();
+		$http.post(url).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
 	service.categories = function(callback) {
 		var url = DefaultConstant.url.SERVER_ADDRESS
 				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.CATEGORY
@@ -77,6 +102,18 @@ app.factory('ProductService', function($http, DefaultConstant,
 				'Content-Type' : undefined
 			}
 		}).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	}
+
+	service.deleteProduct = function(productId, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.PRODUCT + DefaultConstant.url.DELETE
+				+ "?session=" + AuthenticationService.getSession()
+				+ "&productId=" + productId;
+		$http.post(url).success(function(Response, Status, Headers, Config) {
 			callback(Response, Status);
 		}).error(function(Response, Status, Headers, Config) {
 			callback(Response, Status);
@@ -148,5 +185,55 @@ app.factory('UserService', function($http, DefaultConstant,
 			callback(Response, Status);
 		});
 	}
+
+	service.addPreferenceContact = function(payload, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.SUDOERS + DefaultConstant.url.PREFERENCE
+				+ DefaultConstant.url.ADD + DefaultConstant.url.CONTACT
+				+ "?session=" + AuthenticationService.getSession();
+		$http.post(url, payload).success(
+				function(Response, Status, Headers, Config) {
+					callback(Response, Status);
+				}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	};
+
+	service.preferenceContacts = function(callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.SUDOERS + DefaultConstant.url.PREFERENCE
+				+ DefaultConstant.url.CONTACTS + "?session="
+				+ AuthenticationService.getSession();
+		$http.get(url).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	};
+
+	service.preferenceTnc = function(callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.SUDOERS + DefaultConstant.url.PREFERENCE
+				+ DefaultConstant.url.TNC + "?session="
+				+ AuthenticationService.getSession();
+		$http.get(url).success(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	};
+
+	service.updatePreferenceTnc = function(payload, callback) {
+		var url = DefaultConstant.url.SERVER_ADDRESS
+				+ DefaultConstant.url.SUDOERS + DefaultConstant.url.PREFERENCE
+				+ DefaultConstant.url.UPDATE + DefaultConstant.url.TNC
+				+ "?session=" + AuthenticationService.getSession();
+		$http.post(url, payload).success(
+				function(Response, Status, Headers, Config) {
+					callback(Response, Status);
+				}).error(function(Response, Status, Headers, Config) {
+			callback(Response, Status);
+		});
+	};
 	return service;
 });

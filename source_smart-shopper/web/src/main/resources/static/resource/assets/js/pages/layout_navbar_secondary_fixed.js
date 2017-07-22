@@ -17,18 +17,18 @@ $(function() {
 
     // When affixed
     $('#navbar-second').on('affixed.bs.affix', function() {
-        $(this).parent().children('.page-header-content').css('padding-bottom', $(this).outerHeight());
+        $(this).next().css('margin-top', $(this).outerHeight());
         $('body').addClass('navbar-affixed-top');
     });
 
     // When on top
     $('#navbar-second').on('affixed-top.bs.affix', function() {
-        $(this).parent().children('.page-header-content').css('padding-bottom', '');
+        $(this).next().css('margin-top', '');
         $('body').removeClass('navbar-affixed-top');
     });
 
-    // init
-    $('#navbar-second, .page-header > .fab-menu').affix({
+    // Init
+    $('#navbar-second').affix({
         offset: {
             top: $('#navbar-second').offset().top
         }
