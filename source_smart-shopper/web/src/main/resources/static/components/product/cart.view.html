@@ -1,0 +1,57 @@
+<div class="panel category-content no-padding " ng-model="cart">
+	<div class="panel-heading border-indigo">
+		<div>
+			<h5 class="panel-title">
+				<a target="_self" class="text-muted">{{labels.CART}}</a>
+
+				<button ng-click="onCheckOut($event)"
+					class="btn  bg-indigo legitRipple pull-right">
+					<i class="icon-cart5"></i> {{labels.CHECK_OUT}}
+				</button>
+			</h5>
+		</div>
+	</div>
+	<table id="cartTable" class="table  table-border" datatable="ng"
+		dt-options="dctrl.dataOptions">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>{{labels.PREVIEW}}</th>
+				<th>{{labels.QUANTITY}}</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="product in cart.products">
+				<td><div>
+						<h6 class="td-h4">
+							<a target="_self">#{{$index + 1}}.{{product.product.name}}</a>
+						</h6>
+
+						<ul class="list-inline list-inline-separate mb-10">
+							<li><a target="_self" class="text-muted">{{product.price
+									| currency}}</a></li>
+						</ul>
+					</div></td>
+				<td><img class="img-circle img-xs"
+					ng-src="{{product.product.productURL}}" alt="{{product.NAME}}"
+					onerror="this.onerror=null;this.src='/resource/img/ss_shopping.png';"></td>
+
+				<td>
+					<div>
+						<i class=" icon-cart-remove position-left"
+							style="cursor: pointer !important;"
+							ng-click="onSubtractToCart($event,product.product,product)"></i>
+						<span class="label label-info heading-text">{{product.quantity}}</span>
+						<i class=" icon-cart-add2 position"
+							style="cursor: pointer !important;"
+							ng-click="onPlusToCart($event,product.product)"></i>
+					</div>
+				</td>
+				<td><a target="_self"
+					ng-click="removeFromCart($event, product)"><i
+						class="icon-cross2"></i></a></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

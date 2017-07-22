@@ -1,27 +1,23 @@
 
-<div class="modal-dialog" ng-controller="LoginController"
+<div class="modal-dialog modal-default" ng-controller="LoginController"
 	ng-model="label">
-	<div class="modal-content row">
-		<div class="col-md-4 bg-indigo-800"
-			style="min-height: 70vh !important;">
-			<div class="panel-body">
-				<img style="height: 100px !important; margin-left: 17% !important;"
-					ng-src="/resource/img/ss_logo.png"
-					onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">
-				<h1
-					style="font-family: Georgia, Times, serif !important; text-align: center;">{{label.APP}}</h1>
-				<p style="font-family: cursive !important; text-align: center;">Shopping
-					ki nayi paribhasha</p>
-			</div>
-		</div>
-		<div class="col-md-8">
-			<div class="modal-header">
-				<a class="close" data-dismiss="modal"> <i class="icon-cross2"></i>
-				</a>
-			</div>
-			<div class="modal-body row">
+	<div class="modal-content">
 
-
+		<div class="row">
+			<div class="col-md-4 bg-indigo-800 hidden-xs hidden-sm"
+				style="height: 70vh !important;">
+				<div class="panel-body">
+					<img class="thumb thumb-rounded thumb-slide"
+						style="max-height: 100px !important; max-width: 100px !important;"
+						ng-src="/resource/img/ss_logo.png" align="middle"
+						onerror="this.onerror=null;this.src='/resource/img/ss_logo.png';">
+					<h1
+						style="font-family: Georgia, Times, serif !important; text-align: center;">{{label.APP}}</h1>
+					<p style="font-family: cursive !important; text-align: center;">Shopping
+						ki nayi paribhasha</p>
+				</div>
+			</div>
+			<div class="modal-body col-md-8">
 				<div class="tabbable">
 					<ul class="nav nav-tabs nav-tabs-bottom bottom-divided">
 						<li class="active"><a target="_self" href="#basic-tab1"
@@ -61,14 +57,21 @@
 									</div>
 								</div>
 
-								<div class="form-group">
-									<button type="submit" class="btn  btn-block bg-indigo-800" type="submit"
+								<div class="form-group modal-footer">
+									<a target="_self"
+										style="text-decoration: underline !important;"
+										ng-click="onForgotPasswordClick($event,username)">
+										{{label.FORGOT_PASSWORD}}</a>
+									<button type="button" class="btn btn-link legitRipple"
+										data-dismiss="modal">{{label.CANCEL}}</button>
+									<button type="submit" class="btn  legitRipple bg-indigo-800 "
+										type="submit"
 										ng-disabled="login-form.$invalid || vm.dataLoading">
 										{{label.LOGIN}}</button>
 								</div>
 							</form>
 						</div>
-
+						<!-- Register Code -->
 						<div class="tab-pane" id="basic-tab2">
 							<form class="form-horizontal" ng-model="registration" name="form"
 								role="form">
@@ -133,6 +136,8 @@
 
 								</div>
 								<div style="float: right !important;">
+									<button type="button" class="btn btn-link legitRipple"
+										data-dismiss="modal">{{label.CANCEL}}</button>
 									<button wz-next
 										ng-disabled="form.firstname.$invalid ||form.lastname.$invalid || form.phoneno.$invalid || vm.dataLoading"
 										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.NEXT}}</button>
@@ -158,9 +163,10 @@
 										ng-show="form.password.$dirty && form.password.$error.required"
 										class="help-block">{{label.PASSWORD}}
 										{{label.ERROR.is_required}}</span>
-									</md-input-container>
 								</div>
 								<div style="float: right !important;">
+									<button type="button" class="btn btn-link legitRipple"
+										data-dismiss="modal">{{label.CANCEL}}</button>
 									<button wz-previous
 										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.BACK}}</button>
 									<button wz-next
@@ -224,6 +230,8 @@
 									</div>
 								</div>
 								<div style="float: right !important;">
+									<button type="button" class="btn btn-link legitRipple"
+										data-dismiss="modal">{{label.CANCEL}}</button>
 									<button wz-previous
 										class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.BACK}}</button>
 									<button wz-next="setMode(mode)"

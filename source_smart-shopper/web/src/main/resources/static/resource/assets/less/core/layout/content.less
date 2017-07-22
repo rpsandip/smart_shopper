@@ -4,8 +4,8 @@
 *
 *  Styles for main structure of content area
 *
-*  Version: 1.1
-*  Latest update: Mar 10, 2016
+*  Version: 1.0
+*  Latest update: May 25, 2015
 *
 * ---------------------------------------------------------------------------- */
 
@@ -24,6 +24,11 @@
         padding-bottom: @line-height-computed;
     }
 
+    // Add top spacing to content area
+    .page-header + & {
+        padding-top: 0;
+    }
+
     // Desktop view
     @media (min-width: @grid-float-breakpoint) {
         width: 100%;
@@ -37,21 +42,6 @@
     }
 }
 
-// Add horizontal spacing to main containers
-.page-container,
-.page-header-content,
-.navbar {
-    @media (min-width: @grid-float-breakpoint) {
-        padding-left: (@content-padding-horizontal / 2);
-        padding-right: (@content-padding-horizontal / 2);
-    }
-
-    @media (min-width: @screen-laptop-min) {
-        padding-left: @content-padding-horizontal;
-        padding-right: @content-padding-horizontal;
-    }
-}
-
 // Main container
 .page-content {
     @media (min-width: @grid-float-breakpoint) {
@@ -62,7 +52,7 @@
 // Content wrapper
 .content-wrapper {
     width: 100%;
-    
+
     @media (min-width: @grid-float-breakpoint) {
         display: table-cell;
         vertical-align: top;

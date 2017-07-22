@@ -18,7 +18,7 @@ public class ProductMetaBody {
 	@NotBlank(message = "productId can not be null.")
 	private String productId;
 
-	@Min(1)
+	@Min(-2)
 	private int quantity;
 
 	public String getProductId() {

@@ -1,5 +1,7 @@
 package com.chillies.smartshopper.common.shell.web;
 
+import org.joda.time.DateTime;
+
 import com.chillies.smartshopper.common.shell.CreatedMetaShell;
 import com.chillies.smartshopper.common.shell.DateMetaShell;
 import com.chillies.smartshopper.common.util.AppUtils;
@@ -28,6 +30,8 @@ public class OrderShell {
 
 	private final CartShell cart;
 
+	private final DateTime createdOn;
+
 	public OrderShell(String id, DateMetaShell date, UsersShell users, OrderStatus status, String total,
 			String discountAmount, String discount, CreatedMetaShell createdMeta, CartShell cart) {
 		Preconditions.checkNotNull(id, "id can not be null");
@@ -49,6 +53,7 @@ public class OrderShell {
 		this.discount = AppUtils.stringToDouble(discount);
 		this.createdMeta = createdMeta;
 		this.cart = cart;
+		this.createdOn = date.getCreatedDate();
 	}
 
 	public String getId() {
@@ -91,6 +96,10 @@ public class OrderShell {
 		return cart;
 	}
 
+	public DateTime getCreatedOn() {
+		return createdOn;
+	}
+
 	@Override
 	public int hashCode() {
 		final int hash = id.hashCode();
@@ -103,11 +112,10 @@ public class OrderShell {
 			return false;
 		}
 
-		if (this == obj) {
+		if (this.getClass() == obj.getClass()) {
 			return true;
 		}
 		final OrderShell order = (OrderShell) obj;
 		return order.id == this.id;
 	}
-
 }

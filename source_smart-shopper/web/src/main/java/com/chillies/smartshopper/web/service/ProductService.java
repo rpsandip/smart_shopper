@@ -57,6 +57,12 @@ public class ProductService {
 		return productDTO.categorizedProduct(categoryId, request);
 	}
 
+	@RequestMapping(value = "${service.product.search}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<SortedSet<ProductShell>> search(
+			@RequestParam(value = "search", required = true) String searchString, final HttpServletRequest request) {
+		return productDTO.search(searchString, request);
+	}
+
 	@RequestMapping(value = "/productURL/{productCode}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
 	public void getProductImage(@PathVariable String productCode, HttpServletResponse response) throws IOException {
 		IOUtils.copy(productDTO.getProductImage(productCode), response.getOutputStream());
@@ -108,11 +114,9 @@ public class ProductService {
 	}
 
 	@RequestMapping(value = "${service.users.order.cancel}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<OrderShell> orderCancel(
-			@RequestParam(value = "session", required = true) String session,
+	public ResponseEntity<OrderShell> orderCancel(@RequestParam(value = "session", required = true) String session,
 			@RequestParam(value = "orderId", required = true) String orderId, final HttpServletRequest request) {
 		final Users users = usersDTO.isValid(session);
 		return productDTO.orderCancel(users, orderId, request);
 	}
-
 }

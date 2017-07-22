@@ -6,7 +6,7 @@
  */
 var app = angular.module('web-admin', [ 'ui.router', 'datatables',
 		'datatables.buttons', 'ngResource', 'ngSanitize', 'ngCookies',
-		'ngMessages' ]);
+		'ngMessages', 'ui.tree' ]);
 
 /**
  * Application Route provider.
@@ -71,6 +71,17 @@ var routeProvider = app
 										views : {
 											'dashboardContentView@dashboard' : {
 												templateUrl : 'components/product/order.view.html'
+											}
+										},
+										authenticate : true
+									})
+							.state(
+									'dashboard.preference',
+									{
+										url : '/preference',
+										views : {
+											'dashboardContentView@dashboard' : {
+												templateUrl : 'components/preference/preference.view.html'
 											}
 										},
 										authenticate : true

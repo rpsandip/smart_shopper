@@ -10,15 +10,21 @@ app.constant("DefaultConstant", {
 		ACTIVATE : "/activate",
 		IS_ACTIVE : "/isActive",
 		AUTH : "/auth",
+		PREFERENCE : "/preference",
 		PRODUCT : "/product",
 		CATEGORY : "/category",
+		SUPER : "/super",
 		CATEGORIES : '/categories',
 		ORDERS : '/orders',
 		ORDER : '/order',
 		STATUS : '/status',
 		PRODUCTS : '/products',
 		ADD : "/add",
+		CONTACT : "/contact",
+		TNC : "/tnc",
+		CONTACTS : "/contacts",
 		UPDATE : "/update",
+		DELETE : '/delete',
 		LOG_OUT : '/logout'
 	},
 
@@ -26,7 +32,10 @@ app.constant("DefaultConstant", {
 		APP : 'Smart Shoppers Admin',
 		LOGIN : 'Login',
 		USERS : 'Users',
+		EMAIL : 'Email',
 		CONTACT : 'Contact',
+		CONTACT_NO : 'Contact No',
+		PREFERENCE : "Preference",
 		USERNAME : 'Username',
 		PASSWORD : 'Password',
 		NAME : 'Name',
@@ -46,11 +55,13 @@ app.constant("DefaultConstant", {
 		PLACED : 'Placed',
 		DATE : 'Date',
 		UPDATED : 'Updated',
+		TERMS_N_CONDATION : 'Terms & conditions',
+		VIEW_CHILD : 'View Child',
 		CATEGORY : {
-
+			SUPER_CATEGORY : 'Super Category',
 			CATEGORY1 : 'Category',
-			CATEGORY : 'Product Category',
-			CATEGORIES : 'Product Categories'
+			CATEGORY : 'Category',
+			CATEGORIES : 'Categories'
 		},
 		COMMON : {
 			DETAILS : 'Details',
@@ -79,6 +90,7 @@ app.constant("DefaultConstant", {
 		ERROR : {
 			is_required : 'is required.',
 			REQUIRED : 'is Required.',
+			INVALID_EMAIL : 'is Invalid.',
 			DESC_MIN_LENGTH : 'at least 30 charters.',
 			CODE_MIN_LENGTH : 'at least 5 charters.'
 		}
@@ -134,7 +146,7 @@ var menu = [ {
 	CAN_VIEW : true
 }, {
 	ID : 1,
-	TITLE : "Product Category",
+	TITLE : "Category",
 	FACE : "icon-stack2",
 	CAN_VIEW : false
 }, {

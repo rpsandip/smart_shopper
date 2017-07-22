@@ -1,4 +1,4 @@
-package com.chillies.smartshopper.lib.transaction;
+package com.chillies.smartshopper.service.transaction;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +30,9 @@ import com.chillies.smartshopper.common.util.CartStatus;
 import com.chillies.smartshopper.common.util.DirectoryFiles;
 import com.chillies.smartshopper.common.util.MessageUtils;
 import com.chillies.smartshopper.common.util.OrderStatus;
+import com.chillies.smartshopper.common.util.SuperCategory;
 import com.chillies.smartshopper.lib.exception.NotAccatable;
+import com.chillies.smartshopper.lib.exception.ServicesNotAcceptable;
 import com.chillies.smartshopper.lib.model.CreatedMeta;
 import com.chillies.smartshopper.lib.model.DateMeta;
 import com.chillies.smartshopper.lib.model.ProductMeta;
@@ -65,6 +69,32 @@ public final class ProductTransaction {
 
 	@Autowired
 	private UsersTransactions usersTransactions;
+
+	@PostConstruct
+	private void init() {
+		final Set<ProductCategory> categories = iWebAdminDbService.productCategories();
+
+		if (categories != null) {
+			categories.forEach(category -> {
+				if (category.getSuperCategory() == null) {
+					category.update(SuperCategory.GROCERY, category.getName(),
+							Optional.fromNullable(category.getRemark()), category.getCreatedMeta().getCreated());
+					iWebAdminDbService.save(category);
+				}
+			});
+		}
+
+		final Set<Product> products = iWebAdminDbService.products();
+		if (products != null) {
+			products.forEach(product -> {
+				if (!product.isDeleted()) {
+					product.migrate();
+					iWebAdminDbService.save(product);
+				}
+			});
+		}
+
+	}
 
 	private ProductCategory save(final ProductCategory productCategory) {
 		Preconditions.checkNotNull(productCategory, "productCategory can not be null.");
@@ -143,6 +173,11 @@ public final class ProductTransaction {
 		return iWebAdminDbService.products();
 	}
 
+	public Set<Product> products(final String searchString) {
+		Preconditions.checkNotNull(searchString, "searchString can not be null");
+		return iWebAdminDbService.products(searchString);
+	}
+
 	public Set<Product> products(final ProductCategory category) {
 		return iWebAdminDbService.products(category);
 	}
@@ -183,26 +218,27 @@ public final class ProductTransaction {
 		return optionalProductCategory.get();
 	}
 
-	public ProductCategory save(final String name, final Optional<String> remark, final DateMeta dateMeta,
-			final CreatedMeta createdMeta) {
+	public ProductCategory save(final SuperCategory superCategory, final String name, final Optional<String> remark,
+			final DateMeta dateMeta, final CreatedMeta createdMeta) {
+		Preconditions.checkNotNull(superCategory, "superCategory can not be null.");
 		Preconditions.checkNotNull(name, "name can not be null.");
 		Preconditions.checkNotNull(remark, "remark can not be null.");
 		Preconditions.checkNotNull(dateMeta, "dateMeta can not be null.");
 		Preconditions.checkNotNull(createdMeta, "createdMeta can not be null.");
 
-		final ProductCategory productCategory = new ProductCategory(name, remark, dateMeta, createdMeta);
+		final ProductCategory productCategory = new ProductCategory(superCategory, name, remark, dateMeta, createdMeta);
 
 		return this.save(productCategory);
 	}
 
-	public ProductCategory update(final ProductCategory category, final String name, final Optional<String> remark,
-			final Sudoers sudoers) {
-		Preconditions.checkNotNull(category, "category can not be null.");
+	public ProductCategory update(final SuperCategory superCategory, final ProductCategory category, final String name,
+			final Optional<String> remark, final Sudoers sudoers) {
+		Preconditions.checkNotNull(superCategory, "superCategory can not be null.");
 		Preconditions.checkNotNull(name, "name can not be null.");
 		Preconditions.checkNotNull(remark, "remark can not be null.");
 		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
 
-		category.update(name, remark, sudoers);
+		category.update(superCategory, name, remark, sudoers);
 		return this.save(category);
 	}
 
@@ -210,7 +246,11 @@ public final class ProductTransaction {
 		final SortedSet<ProductCategoryShell> shells = new TreeSet<>(
 				Comparator.comparing(ProductCategoryShell::getName));
 		final Set<ProductCategory> categories = this.categories();
-		categories.forEach(category -> shells.add(category.toShell()));
+		categories.forEach(category -> {
+			if (!category.isDeleted()) {
+				shells.add(category.toShell());
+			}
+		});
 		return shells;
 	}
 
@@ -227,7 +267,11 @@ public final class ProductTransaction {
 		Preconditions.checkNotNull(category, "category can not be empty.");
 		final SortedSet<ProductShell> shells = new TreeSet<>(Comparator.comparing(ProductShell::getName));
 		final Set<Product> products = this.products(category);
-		products.forEach(product -> shells.add(product.toShell(baseURL)));
+		products.forEach(product -> {
+			if (!product.isDeleted()) {
+				shells.add(product.toShell(baseURL));
+			}
+		});
 		return shells;
 	}
 
@@ -241,9 +285,11 @@ public final class ProductTransaction {
 		for (final Product product : products) {
 			i++;
 
-			shells.add(product.toShell(baseURL));
-			if (i == 4) {
-				break;
+			if (!product.isDeleted()) {
+				shells.add(product.toShell(baseURL));
+				if (i == 4) {
+					break;
+				}
 			}
 		}
 		return shells;
@@ -393,7 +439,8 @@ public final class ProductTransaction {
 
 	public SortedSet<OrderShell> sortedOrders(final Users users, final String baseURL) {
 		Preconditions.checkNotNull(users, "users can not be null.");
-		final SortedSet<OrderShell> shells = new TreeSet<>(Comparator.comparing(OrderShell::getId)).descendingSet();
+		final SortedSet<OrderShell> shells = new TreeSet<>(Comparator.comparing(OrderShell::getCreatedOn))
+				.descendingSet();
 		final Set<Order> orders = iWebDbService.orders(users);
 		orders.forEach(order -> shells.add(order.toShell(baseURL)));
 		return shells;
@@ -401,7 +448,8 @@ public final class ProductTransaction {
 
 	public SortedSet<OrderShell> sortedOrders(final String siteBaseUrl) {
 		Preconditions.checkNotNull(siteBaseUrl, "siteBaseUrl can not be null.");
-		final SortedSet<OrderShell> shells = new TreeSet<>(Comparator.comparing(OrderShell::getId)).descendingSet();
+		final SortedSet<OrderShell> shells = new TreeSet<>(Comparator.comparing(OrderShell::getCreatedOn))
+				.descendingSet();
 		final Set<Order> orders = iWebDbService.orders();
 		orders.forEach(order -> shells.add(order.toShell(siteBaseUrl)));
 		return shells;
@@ -429,6 +477,41 @@ public final class ProductTransaction {
 			}
 		}
 		return this.save(order);
+	}
+
+	public SortedSet<ProductShell> search(final String searchString, final String baseURL) {
+		Preconditions.checkNotNull(searchString, "searchString can not be null");
+		Preconditions.checkNotNull(baseURL, "baseURL can not be null");
+
+		final SortedSet<ProductShell> productShells = new TreeSet<>(Comparator.comparing(ProductShell::getName));
+		this.products(searchString).forEach(product -> {
+			if (!product.isDeleted()) {
+				productShells.add(product.toShell(baseURL));
+			}
+		});
+
+		return productShells;
+	}
+
+	public Product delete(final Product product, final Sudoers sudoers) {
+		Preconditions.checkNotNull(product, "product can not be null");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null");
+		product.delete(sudoers);
+		return this.save(product);
+	}
+
+	public ProductCategory delete(final ProductCategory category, final Sudoers sudoers) {
+		Preconditions.checkNotNull(category, "category can not be null");
+		Preconditions.checkNotNull(sudoers, "sudoers can not be null");
+
+		final Set<Product> products = iWebAdminDbService.products(category, false);
+		if (!products.isEmpty()) {
+			throw new ServicesNotAcceptable(MessageUtils.CATEGORT_CONTAINS);
+		}
+
+		category.delete(sudoers);
+		return this.save(category);
+
 	}
 
 }

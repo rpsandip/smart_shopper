@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.chillies.smartshopper.common.shell.web_admin.ProductCategoryShell;
 import com.chillies.smartshopper.common.util.DateUtils;
+import com.chillies.smartshopper.common.util.SuperCategory;
 import com.chillies.smartshopper.lib.model.CreatedMeta;
 import com.chillies.smartshopper.lib.model.DateMeta;
 import com.google.common.base.Optional;
@@ -24,6 +25,8 @@ public class ProductCategory {
 	@Id
 	private String id;
 
+	private SuperCategory superCategory;
+
 	@Indexed(unique = true)
 	@TextIndexed
 	private String name;
@@ -34,6 +37,8 @@ public class ProductCategory {
 
 	private CreatedMeta createdMeta;
 
+	private boolean deleted;
+
 	/**
 	 * Db use only.
 	 * 
@@ -42,30 +47,50 @@ public class ProductCategory {
 	public ProductCategory() {
 	}
 
-	public ProductCategory(String name, Optional<String> remark, DateMeta dateMeta, CreatedMeta createdMeta) {
+	public ProductCategory(SuperCategory superCategory, String name, Optional<String> remark, DateMeta dateMeta,
+			CreatedMeta createdMeta) {
+		Preconditions.checkNotNull(superCategory, "superCategory can not be null.");
 		Preconditions.checkNotNull(name, "name can not be null.");
 		Preconditions.checkNotNull(remark, "remark can not be null.");
 		Preconditions.checkNotNull(dateMeta, "dateMeta can not be null.");
 		Preconditions.checkNotNull(createdMeta, "createdMeta can not be null.");
+		this.superCategory = superCategory;
 		this.name = name;
 		this.remark = remark.orNull();
 		this.dateMeta = dateMeta;
 		this.createdMeta = createdMeta;
+		this.deleted = false;
 	}
-	
-	public void update(String name, Optional<String> remark, Sudoers sudoers) {
+
+	public void update(SuperCategory superCategory, String name, Optional<String> remark, Sudoers sudoers) {
+		Preconditions.checkNotNull(superCategory, "superCategory can not be null.");
 		Preconditions.checkNotNull(name, "name can not be null.");
 		Preconditions.checkNotNull(remark, "remark can not be null.");
 		Preconditions.checkNotNull(sudoers, "sudoers can not be null.");
-		
+
+		this.superCategory = superCategory;
 		this.name = name;
 		this.remark = remark.orNull();
 		this.createdMeta.setUpdated(sudoers);
 		this.dateMeta.setUpdated(DateUtils.currentUTC());
 	}
 
+	public void delete(Sudoers sudoers) {
+		this.deleted = true;
+		this.createdMeta.setUpdated(sudoers);
+		this.dateMeta.setUpdated(DateUtils.currentUTC());
+	}
+
 	public String getId() {
 		return id;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
+	}
+
+	public SuperCategory getSuperCategory() {
+		return superCategory;
 	}
 
 	public String getName() {
@@ -96,7 +121,7 @@ public class ProductCategory {
 			return false;
 		}
 
-		if (this == obj) {
+		if (this.getClass() == obj.getClass()) {
 			return true;
 		}
 		final ProductCategory categoryProduct = (ProductCategory) obj;
@@ -104,8 +129,8 @@ public class ProductCategory {
 	}
 
 	public ProductCategoryShell toShell() {
-		return new ProductCategoryShell(this.id, this.name, Optional.fromNullable(this.remark), dateMeta.toShell(),
-				createdMeta.toShell());
+		return new ProductCategoryShell(this.superCategory, this.id, this.name, Optional.fromNullable(this.remark),
+				dateMeta.toShell(), createdMeta.toShell(), this.deleted);
 	}
 
 }

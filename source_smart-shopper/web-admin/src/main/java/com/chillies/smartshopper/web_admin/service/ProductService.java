@@ -1,6 +1,7 @@
 package com.chillies.smartshopper.web_admin.service;
 
 import java.io.IOException;
+import java.util.Set;
 import java.util.SortedSet;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -23,6 +25,7 @@ import com.chillies.smartshopper.common.shell.web.OrderShell;
 import com.chillies.smartshopper.common.shell.web_admin.ProductCategoryShell;
 import com.chillies.smartshopper.common.shell.web_admin.ProductShell;
 import com.chillies.smartshopper.common.util.OrderStatus;
+import com.chillies.smartshopper.common.util.SuperCategory;
 import com.chillies.smartshopper.lib.model.web_model.Sudoers;
 import com.chillies.smartshopper.service.dto.ProductDTO;
 import com.chillies.smartshopper.service.dto.SudoersDTO;
@@ -52,9 +55,10 @@ public class ProductService {
 		final Sudoers sudoers = sudoersDTO.isValid(session);
 		return productDTO.addCategory(productCategoryBody, sudoers);
 	}
-	
+
 	@RequestMapping(value = "${service.sudoers.product.category.update}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<ProductCategoryShell> updateCategory(@Valid @RequestBody ProductCategoryBody productCategoryBody,
+	public ResponseEntity<ProductCategoryShell> updateCategory(
+			@Valid @RequestBody ProductCategoryBody productCategoryBody,
 			@RequestParam(value = "session", required = true) String session) {
 		final Sudoers sudoers = sudoersDTO.isValid(session);
 		return productDTO.updateCategory(productCategoryBody, sudoers);
@@ -65,6 +69,13 @@ public class ProductService {
 			@RequestParam(value = "session", required = true) String session) {
 		sudoersDTO.isValid(session);
 		return productDTO.categories();
+	}
+
+	@RequestMapping(value = "${service.sudoers.product.category.super.categories}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<Set<SuperCategory>> superCategories(
+			@RequestParam(value = "session", required = true) String session) {
+		sudoersDTO.isValid(session);
+		return productDTO.superCategories();
 	}
 
 	@RequestMapping(value = "${service.sudoers.product.category.get}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -86,8 +97,7 @@ public class ProductService {
 		return productDTO.addProduct(productBody, Optional.fromNullable(productImage), sudoers, request);
 
 	}
-	
-	
+
 	@RequestMapping(value = "${service.sudoers.product.update}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<ProductShell> updateProduct(
 			@RequestParam(value = "productBody", required = true) String productBody,
@@ -97,6 +107,25 @@ public class ProductService {
 
 		final Sudoers sudoers = sudoersDTO.isValid(session);
 		return productDTO.updateProduct(productBody, Optional.fromNullable(productImage), sudoers, request);
+	}
+
+	@PostMapping(value = "${service.sudoers.product.delete}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ProductShell> deleteProduct(
+			@RequestParam(value = "productId", required = true) String productId,
+			@RequestParam(value = "session", required = true) String session, HttpServletRequest request) {
+
+		final Sudoers sudoers = sudoersDTO.isValid(session);
+		return productDTO.deleteProduct(productId, sudoers, request);
+
+	}
+
+	@PostMapping(value = "${service.sudoers.product.category.delete}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ProductCategoryShell> deleteCategory(
+			@RequestParam(value = "categoryId", required = true) String categoryId,
+			@RequestParam(value = "session", required = true) String session) {
+
+		final Sudoers sudoers = sudoersDTO.isValid(session);
+		return productDTO.deleteCategory(categoryId, sudoers);
 
 	}
 
@@ -128,8 +157,7 @@ public class ProductService {
 	}
 
 	@RequestMapping(value = "${service.sudoers.order.status}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<OrderShell> status(
-			@RequestParam(value = "session", required = true) String session,
+	public ResponseEntity<OrderShell> status(@RequestParam(value = "session", required = true) String session,
 			@RequestParam(value = "status", required = true) OrderStatus status,
 			@RequestParam(value = "orderId", required = true) String orderId, final HttpServletRequest request) {
 		final Sudoers sudoers = sudoersDTO.isValid(session);

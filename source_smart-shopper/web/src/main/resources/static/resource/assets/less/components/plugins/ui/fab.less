@@ -21,61 +21,7 @@
     padding: 0;
     margin: 0;
     list-style: none;
-    z-index: @zindex-navbar;
-    .scale(0.85);
-
-    // Inside page header
-    .page-header > & {
-        position: absolute;
-        top: 100%;
-        margin-top: -(@fab-main-btn-size / 2);
-        z-index: (@zindex-navbar + 1);
-
-        // Sticky menu
-        &.affix {
-            position: fixed;
-            top: @line-height-computed;
-            margin-top: 0;
-            z-index: (@zindex-navbar-fixed + 1);
-        }
-
-        // Affixed navbar sizes
-        .navbar-affixed-top-lg &:not(.affix) {
-            margin-top: (@navbar-height-large - (@fab-main-btn-size / 2));
-        }
-        .navbar-affixed-top &:not(.affix) {
-            margin-top: (@navbar-height - (@fab-main-btn-size / 2));
-        }
-        .navbar-affixed-top-sm &:not(.affix) {
-            margin-top: (@navbar-height-small - (@fab-main-btn-size / 2));
-        }
-        .navbar-affixed-top-xs &:not(.affix) {
-            margin-top: (@navbar-height-mini - (@fab-main-btn-size / 2));
-        }
-    }
-
-    // Top spacing in navbar sizes
-    .navbar-top .page-header > &.affix,
-    .navbar-affixed-top .page-header > &.affix {
-        top: (@navbar-height - (@fab-main-btn-size / 2));
-    }
-    .navbar-top-lg .page-header > &.affix,
-    .navbar-affixed-top-lg .page-header > &.affix {
-        top: (@navbar-height-large - (@fab-main-btn-size / 2));
-    }
-    .navbar-top-sm .page-header > &.affix,
-    .navbar-affixed-top-sm .page-header > &.affix {
-        top: (@navbar-height-small - (@fab-main-btn-size / 2));
-    }
-    .navbar-top-xs .page-header > &.affix,
-    .navbar-affixed-top-xs .page-header > &.affix {
-        top: (@navbar-height-mini - (@fab-main-btn-size / 2));
-    }
-
-    // Desktop view
-    @media (min-width: @screen-laptop-min) {
-        .scale(1);
-    }
+    z-index: (@zindex-navbar - 1);
 }
 
 
@@ -110,7 +56,7 @@
     top: @line-height-computed;
 
     .content-wrapper > & {
-        top: (@line-height-computed * 2);
+        top: -(@fab-main-btn-size / 2);
     }
     .content-wrapper > &.affix {
         top: @line-height-computed;
@@ -118,20 +64,20 @@
 
     .navbar-top &.affix,
     .navbar-affixed-top &.affix {
-        top: (@navbar-height + (@line-height-computed * 2));
+        top: (@navbar-height + @line-height-computed);
     }
 
     .navbar-top-lg &.affix,
     .navbar-affixed-top-lg &.affix {
-        top: (@navbar-height-large + (@line-height-computed * 2));
+        top: (@navbar-height-large + @line-height-computed);
     }
     .navbar-top-sm &.affix,
     .navbar-affixed-top-sm &.affix {
-        top: (@navbar-height-small + (@line-height-computed * 2));
+        top: (@navbar-height-small + @line-height-computed);
     }
     .navbar-top-xs &.affix,
     .navbar-affixed-top-xs &.affix {
-        top: (@navbar-height-mini + (@line-height-computed * 2));
+        top: (@navbar-height-mini + @line-height-computed);
     }
 }
 
@@ -163,28 +109,12 @@
 .fab-menu-top-left,
 .fab-menu-bottom-left {
     left: @grid-gutter-width;
-
-    @media (min-width: @screen-sm-min) {
-        left: (((@content-padding-horizontal / 2) - @fab-main-btn-size) / 2);
-    }
-
-    @media (min-width: @screen-laptop-min) {
-        left: ((@content-padding-horizontal - @fab-main-btn-size) / 2);
-    }
 }
 
 // Top right position
 .fab-menu-top-right,
 .fab-menu-bottom-right {
     right: @grid-gutter-width;
-
-    @media (min-width: @screen-sm-min) {
-        right: (((@content-padding-horizontal / 2) - @fab-main-btn-size) / 2);
-    }
-
-    @media (min-width: @screen-laptop-min) {
-        right: ((@content-padding-horizontal - @fab-main-btn-size) / 2);
-    }
 }
 
 
@@ -207,6 +137,11 @@
         text-align: center;
         padding-top: @fab-inner-btn-spacing;
         margin-top: -(@fab-inner-btn-spacing);
+
+        // Remove border from buttons
+        .btn {
+            border-width: 0;
+        }
 
         // Make buttons smaller than main one
         .btn-float {
@@ -313,6 +248,7 @@
 // Base
 .fab-menu-btn {
     z-index: (@zindex-navbar + 1);
+    border-width: 0;
     .box-shadow(@shadow-depth1);
 
     // Float button overrides

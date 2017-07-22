@@ -45,6 +45,8 @@ public class Product {
 	@DBRef
 	private ProductCategory category;
 
+	private boolean deleted;
+
 	/**
 	 * Db use only.
 	 * 
@@ -71,6 +73,7 @@ public class Product {
 		this.points = AppUtils.doubleToString(points);
 		this.category = category;
 		this.path = path.orNull();
+		this.deleted = false;
 	}
 
 	public void update(String name, Optional<String> remark, double price, double points, ProductCategory category,
@@ -90,8 +93,23 @@ public class Product {
 		this.dateMeta.setUpdated(DateUtils.currentUTC());
 	}
 
+	public void delete(final Sudoers sudoers) {
+		this.deleted = true;
+		this.createdMeta.setUpdated(sudoers);
+		this.dateMeta.setUpdated(DateUtils.currentUTC());
+	}
+
+	public void migrate() {
+		this.deleted = false;
+
+	}
+
 	public String getId() {
 		return id;
+	}
+
+	public boolean isDeleted() {
+		return deleted;
 	}
 
 	public String getName() {
@@ -157,10 +175,10 @@ public class Product {
 		Preconditions.checkNotNull(baseURL, "baseURL can not be null.");
 
 		final Optional<String> url = this.path != null
-				? Optional.fromNullable(baseURL + AppUtils.URL_SEPRATOR + this.path) : Optional.absent();
+				? Optional.fromNullable(baseURL + AppUtils.URL_SEPRATOR + this.path)
+				: Optional.absent();
 		return new ProductShell(this.id, this.name, Optional.fromNullable(this.remark), this.dateMeta.toShell(),
 				this.createdMeta.toShell(), this.price, this.points, Optional.fromNullable(this.path), url,
-				this.category.toShell());
+				this.category.toShell(), this.isDeleted());
 	}
-
 }

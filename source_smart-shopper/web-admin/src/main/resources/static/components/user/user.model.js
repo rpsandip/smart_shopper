@@ -9,6 +9,7 @@ var User = function() {
 	this.dateMeta;
 	this.remark;
 	this.referralCode;
+	this.points;
 	this.contactMeta;
 	this.subUsers;
 	this.activateMeta;
@@ -23,6 +24,7 @@ var User = function() {
 		this.dateMeta = data.dateMeta;
 		this.remark = data.remark;
 		this.referralCode = data.referralCode;
+		this.points = data.points;
 		this.contactMeta = data.contactMeta;
 		this.subUsers = data.subUsers;
 		this.activateMeta = data.activate;
@@ -38,6 +40,7 @@ var User = function() {
 			DATE_META : user.dateMeta,
 			REMARK : user.remark,
 			REFERRAL_CODE : user.referralCode,
+			POINTS : user.points,
 			CONTACT_META : user.contactMeta,
 			SUB_USERS : user.subUsers,
 			ACTIVATE_META : user.activateMeta

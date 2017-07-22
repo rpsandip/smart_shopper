@@ -17,7 +17,7 @@ $(function() {
     // -------------------------
     
     $(window).scroll(function() {
-        if($(window).scrollTop() + $(window).height() > $(document).height() - 70) {
+        if($(window).scrollTop() + $(window).height() > $(document).height() - 40) {
             $('.fab-menu-bottom-left, .fab-menu-bottom-right').addClass('reached-bottom');
         }
         else {

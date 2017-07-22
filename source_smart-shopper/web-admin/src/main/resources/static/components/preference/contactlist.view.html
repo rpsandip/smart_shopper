@@ -1,0 +1,33 @@
+<div>
+	<table class="table table-border" datatable="ng"
+		dt-options="preCtrl.dtOptions">
+		<thead>
+			<tr class="bg-info">
+				<th>#</th>
+				<th>{{labels.NAME}}</th>
+				<th>{{labels.CONTACT}}</th>
+				<th>{{labels.EMAIL}}</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-show="!cnt.DELETED" ng-repeat="cnt in preCtrl.contacts">
+				<td>{{$index + 1}}</td>
+				<td>{{cnt.CONTACT_NAME}}</td>
+				<td>{{cnt.CONTACT_NO}}</td>
+				<td>{{cnt.CONTACT_EMAIL}}</td>
+				<td><ul class="icons-list">
+						<li class="dropdown"><a target="_self" href="#"
+							class="dropdown-toggle" data-toggle="dropdown"
+							aria-expanded="false"> <i class="icon-menu9"></i>
+						</a>
+							<ul class="dropdown-menu dropdown-menu-right">
+								<li><a target="_self"
+									ng-click="onEditClick($event, cnt)"><i
+										class="icon-pencil7"></i> {{labels.COMMON.EDIT}}</a></li>
+							</ul></li>
+					</ul></td>
+			</tr>
+		</tbody>
+	</table>
+</div>

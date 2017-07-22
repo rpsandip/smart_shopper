@@ -8,14 +8,19 @@ var Category = function() {
 	this.createdMeta;
 	this.dateMeta;
 	this.isEdit = false;
+	this.superCategory;
 
+	this.selectedCategory;
+
+	this.deleted = false;
 	this.categories = [];
 
 	this.toJSON = function() {
 		return {
 			"id" : this.id,
 			"name" : this.name,
-			"remark" : this.remark
+			"remark" : this.remark,
+			"superCategory" : this.selectedCategory
 		};
 	};
 
@@ -25,6 +30,8 @@ var Category = function() {
 		this.remark = data.remark;
 		this.createdmeta = data.createdMeta;
 		this.dateMeta = data.dateMeta;
+		this.deleted = data.deleted;
+		this.superCategory = data.superCategory;
 
 		this.addCategory(this.toRows(this));
 	};
@@ -35,7 +42,9 @@ var Category = function() {
 			NAME : category.name,
 			REMARK : category.remark,
 			CREATED_META : category.items,
-			DATE_META : category.dateMeta
+			DATE_META : category.dateMeta,
+			DELETED : category.deleted,
+			SUPER_CATEGORY : category.superCategory
 		}
 	};
 
@@ -54,6 +63,7 @@ var Category = function() {
 		this.remark = row.REMARK;
 		this.createdMeta = row.CREATED_META;
 		this.dateMeta = row.DATE_META;
+		this.selectedCategory = row.SUPER_CATEGORY
 		this.isEdit = true;
 	};
 

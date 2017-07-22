@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 import com.chillies.smartshopper.common.util.AppUtils;
 
@@ -18,6 +19,7 @@ import com.chillies.smartshopper.common.util.AppUtils;
 @SpringBootApplication
 @EnableAutoConfiguration
 @ComponentScan("com.chillies.smartshopper.*")
+@EnableAsync
 public class WebApp {
 
 	private static final Logger LOG = LoggerFactory.getLogger(WebApp.class);

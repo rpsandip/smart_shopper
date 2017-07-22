@@ -1,0 +1,305 @@
+
+<!-- Page container -->
+<div class="page-container" ng-controller="ProfileController as pctrl"
+	ng-model="label">
+	<!-- Nested node template -->
+	<script type="text/ng-template" id="nodes_renderer.html">
+<div ui-tree-handle class="tree-node tree-node-content">
+	<div class="panel panel-flat">
+		<div class="panel-body">
+			<div class="col-md-8">
+				<h6 class="no-margin-top">
+					<a target="_self" ng-click="toggle(this)"><h6 class="panel-title">#{{$index
+							+ 1}}. {{node.username}}</h6></a> <span class="text-muted">{{node.firstName}}
+						{{node.lastName}}</span>
+				</h6>
+			<ul style="float: left !important; cursor: pointer;" class="list list-unstyled text-left task-details">
+					<li>Address: {{node.contactMeta.street}},</li>
+					<li>{{node.contactMeta.city}}, {{node.contactMeta.state}}</li>
+					<li>{{node.contactMeta.country}}-{{node.contactMeta.postalCode}}</li>
+			</ul>
+			</div>
+
+			<div class="col-md-4">
+				<ul class="list list-unstyled text-right task-details">
+					<li>Points: <span>{{node.points}}</span></li>
+					<li>Code: <span>{{node.referralCode}}</span></li>	
+					<li><span ng-if="node.activate.activate"
+						class="label label-success"> {{labels.ACTIVATE}} </span> <span
+						ng-if="!node.activate.activate" class="label label-info">
+							{{labels.PENDING}} </span></li>
+				</ul>
+			</div>
+		</div>
+
+	<div class="panel-footer panel-footer-condensed">
+		<a class="heading-elements-toggle"><i class="icon-more"></i></a>
+		<div class="heading-elements">
+	<span class="heading-text">Contact: <span class="text-semibold">{{node.contactMeta.phoneNo}}</span></span>
+			<ul class="heading-thumbnails pull-right">
+				<li><a class="btn btn-info btn-xs dropdown-toggle legitRipple" ng-if="node.subUsers && node.subUsers.length > 0"
+					data-nodrag ng-click="toggle(this)"> <span class="icomoon"
+						ng-class="{'icon-collaboration': collapsed,'icon-accessibility': !collapsed}"></span>
+				</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+
+<ol ui-tree-nodes="" ng-model="node.subUsers" ng-class="{hidden: collapsed}">
+    <li ng-repeat="node in node.subUsers" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+</ol>
+</script>
+
+	<!-- Page content -->
+	<div class="page-content">
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			<!-- Toolbar -->
+			<div class="navbar navbar-default navbar-component navbar-xs">
+				<ul class="nav navbar-nav visible-xs-block">
+					<li class="full-width text-center"><a data-toggle="collapse"
+						data-target="#navbar-filter"><i class="icon-menu7"></i></a></li>
+				</ul>
+
+				<div class="navbar-collapse collapse" id="navbar-filter">
+					<ul class="nav navbar-nav">
+						<li class="active"><a target="_self" href="#friends"
+							data-toggle="tab"><i class="icon-collaboration position-left"></i>
+								{{label.FRIENDS}}</a></li>
+						<li><a target="_self" href="#settings" data-toggle="tab"><i
+								class="icon-cog3 position-left"></i> {{label.SETTINGS}}</a></li>
+						<li><a target="_self" href="#referralCode" data-toggle="tab"><i
+								class="icon-cog3 position-left"></i> {{label.REFERRAL_CODE}}</a></li>
+
+					</ul>
+				</div>
+			</div>
+			<!-- /toolbar -->
+
+
+			<!-- User profile -->
+			<div class="row" ng-model="registration">
+				<div class="col-lg-12">
+					<div class="tabbable">
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="friends">
+
+								<!-- Profile info -->
+								<div class="panel-flat">
+									<div class="panel-heading border-indigo">
+										<h6 class="panel-title">{{label.FRIENDS}}</h6>
+										<div class="heading-elements">
+											<ul class="icons-list">
+												<li><a target="_self" ng-click="expandAll()"
+													data-popup="tooltip" title="" data-placement="bottom"
+													data-original-title="Expand All"><i
+														class="icon-accessibility position-left"></i></a></li>
+												<li><a target="_self" ng-click="collapseAll()"
+													data-popup="tooltip" title="" data-placement="bottom"
+													data-original-title="Collapse All"><i
+														class="icon-collaboration position-left"></i></a></li>
+											</ul>
+										</div>
+									</div>
+									<div>
+										<div ui-tree data-nodrop-enabled="true"
+											data-drag-enabled="false">
+											<ol ui-tree-nodes="" ng-model="nodes">
+												<li ng-repeat="node in nodes" ui-tree-node
+													ng-include="'nodes_renderer.html'"></li>
+											</ol>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="settings">
+
+								<!-- Profile info -->
+								<div class="panel panel-flat">
+									<div class="panel-heading border-indigo">
+										<h6 class="panel-title">{{label.PROFILE}}
+											{{label.DETAILS}}</h6>
+									</div>
+
+									<div class="panel-body">
+										<form class="form-horizontal" name="form" role="form">
+
+											<div class="column">
+												<div class="row" class="form-group">
+													<div class="form-group col-md-6"
+														ng-class="{ 'has-error': form.firstname.$dirty && form.firstname.$error.required }">
+														<input type="text" name="firstname" id="firstname"
+															class="form-control" ng-model="registration.firstname"
+															placeholder="{{label.FIRSTNAME}}" required /> <span
+															ng-show="form.firstname.$dirty && form.firstname.$error.required"
+															class="help-block">{{label.FIRSTNAME}}
+															{{label.ERROR.is_required}}</span>
+													</div>
+													<div class="form-group col-md-6"
+														ng-class="{ 'has-error': form.surname.$dirty && form.surname.$error.required }"
+														style="margin-left: 3px !important;">
+														<input type="text" name="lastname" id="lastname"
+															class="form-control" ng-model="registration.lastname"
+															placeholder="{{label.SURNAME}}" required required /> <span
+															ng-show="form.lastname.$dirty && form.lastname.$error.required"
+															class="help-block">{{label.SURNAME}}
+															{{label.ERROR.is_required}}</span>
+													</div>
+												</div>
+												<div class="row" class="form-group">
+
+													<div class="form-group col-md-6"
+														ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+														<input type="number" name="phoneno" id="phoneno"
+															class="form-control" ng-model="registration.phoneno"
+															placeholder="{{label.PHONE_NO}}" required /> <span
+															ng-show="form.phoneno.$dirty && form.phoneno.$error.required"
+															class="help-block">{{label.PHONE_NO}}
+															{{label.ERROR.is_required}}</span> <span
+															ng-show="form.phoneno.$dirty && form.phoneno.$error.number"
+															class="help-block">{{label.PHONE_NO}}</span>
+													</div>
+													<div class="form-group col-md-6"
+														ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }"
+														style="margin-left: 3px !important;">
+														<input type="email" name="username" id="username"
+															class="form-control" ng-model="registration.username"
+															placeholder="{{label.USERNAME}}" required /> <span
+															ng-show="form.username.$dirty && form.username.$error.required"
+															class="help-block">{{label.USERNAME}}
+															{{label.ERROR.is_required}}</span><span
+															ng-show="form.username.$dirty && form.username.$error.email"
+															class="help-block">{{label.USERNAME}}
+															{{label.ERROR.EMAIL}}</span>
+													</div>
+												</div>
+											</div>
+
+											<div class="panel-heading"
+												style="margin-left: -20px !important;">
+												<h6 class="panel-title">{{label.CONTACT_DETAILS}}</h6>
+											</div>
+											<div layout="column">
+												<div class="form-group"
+													ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+													<input type="text" name="street" id="street"
+														class="form-control" ng-model="registration.street"
+														placeholder="{{label.STREET}}" required /> <span
+														ng-show="form.street.$dirty && form.street.$error.required"
+														class="help-block">{{label.STREET}}
+														{{label.ERROR.is_required}}</span>
+												</div>
+												<div layout="row">
+													<div class="form-group"
+														ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+														<input type="text" name="city" id="city"
+															class="form-control" ng-model="registration.city"
+															placeholder="{{label.CITY}}" required /> <span
+															ng-show="form.city.$dirty && form.city.$error.required"
+															class="help-block">{{label.CITY}}
+															{{label.ERROR.is_required}}</span>
+														</md-input-container>
+													</div>
+													<div class="form-group"
+														ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+														<input type="text" name="city" id="city"
+															class="form-control" ng-model="registration.state"
+															placeholder="{{label.STATE}}" required /> <span
+															ng-show="form.city.$dirty && form.city.$error.required"
+															class="help-block">{{label.STATE}}
+															{{label.ERROR.is_required}}</span>
+														</md-input-container>
+													</div>
+												</div>
+												<div layout="row">
+													<div class="form-group"
+														ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+														<input type="text" name="country" id="country"
+															class="form-control" ng-model="registration.country"
+															placeholder="{{label.COUNTRY}}" required /> <span
+															ng-show="form.country.$dirty && form.country.$error.required"
+															class="help-block">{{label.COUNTRY}}
+															{{label.ERROR.is_required}}</span>
+														</md-input-container>
+													</div>
+													<div class="form-group"
+														ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+														<input type="text" name="pincode" id="pincode"
+															class="form-control" ng-model="registration.pincode"
+															placeholder="{{label.PINCODE}}" required /> <span
+															ng-show="form.pincode.$dirty && form.pincode.$error.required"
+															class="help-block">{{label.PINCODE}}
+															{{label.ERROR.is_required}}</span>
+														</md-input-container>
+													</div>
+												</div>
+											</div>
+											<div style="float: right !important;">
+												<button ng-disabled="form.$invalid || vm.dataLoading"
+													type="submit" ng-click="onUpdate(registration)"
+													class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.UPDATE}}</button>
+											</div>
+										</form>
+									</div>
+								</div>
+								<!-- /profile info -->
+							</div>
+							<div class="tab-pane fade" id="referralCode">
+								<div class="panel panel-flat">
+									<div class="panel-heading border-indigo">
+										<h6 class="panel-title">{{label.DETAILS}}</h6>
+									</div>
+
+									<div class="panel-body" ng-model="refferUser">
+										<div ng-if="!!refferUser">
+											<h3 class="panel-title">
+												<a target="_self">{{refferUser.firstName}}
+													{{refferUser.lastName}}</a> <small>
+													<p>Code : {{refferUser.referralCode}}</p>
+													<p>Contact no : {{refferUser.contactMeta.phoneNo}}</p>
+													<p>
+														Email: <a href="{{refferUser.username}}">
+															{{refferUser.username}}</a>
+													</p>
+												</small>
+											</h3>
+										</div>
+										<div ng-if="!refferUser">
+											<div class="col-md-10"
+												ng-class="{ 'has-error': form.contact.$dirty && form.contact.$error.required }">
+												<input type="text" name="referralCode" id="referralCode"
+													class="form-control" ng-model="referralCode"
+													placeholder="{{label.REFERRAL_CODE}}" /> <span
+													ng-show="form.phoneno.$dirty && form.phoneno.$error.required"
+													class="help-block">{{label.REFERRAL_CODE}}
+													{{label.ERROR.is_required}}</span> <span
+													ng-show="form.referralCode.$dirty && form.referralCode.$error.number"
+													class="help-block">{{label.REFERRAL_CODE}}</span>
+											</div>
+											<div class="col-md-2">
+												<button ng-disabled="form.referralCode.$invalid"
+													ng-click="onReferral($event,referralCode)"
+													class="btn border-slate bg-indigo-800 btn-sm legitRipple">{{label.APPLY}}</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- /user profile -->
+
+					</div>
+					<!-- /main content -->
+
+				</div>
+				<!-- /page content -->
+
+			</div>
+			<!-- /page container -->
+		</div>
+	</div>
+</div>

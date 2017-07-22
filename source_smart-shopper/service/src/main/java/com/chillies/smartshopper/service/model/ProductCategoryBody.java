@@ -2,6 +2,9 @@ package com.chillies.smartshopper.service.model;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.chillies.smartshopper.common.util.SuperCategory;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 /**
  * ProductCategoryBody : is request body object that Application will consume.
  * 
@@ -15,6 +18,9 @@ public class ProductCategoryBody {
 
 	private String id;
 
+	@JsonFormat(shape = JsonFormat.Shape.OBJECT)
+	private SuperCategory superCategory;
+
 	@NotBlank(message = "name can not be null.")
 	private String name;
 
@@ -22,6 +28,10 @@ public class ProductCategoryBody {
 
 	public String getId() {
 		return id;
+	}
+
+	public SuperCategory getSuperCategory() {
+		return superCategory;
 	}
 
 	public String getName() {
@@ -38,6 +48,8 @@ public class ProductCategoryBody {
 		builder.append("ProductCategoryBody [");
 		if (id != null)
 			builder.append("id=").append(id).append(", ");
+		if (superCategory != null)
+			builder.append("superCategory=").append(superCategory).append(", ");
 		if (name != null)
 			builder.append("name=").append(name).append(", ");
 		if (remark != null)

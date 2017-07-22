@@ -72,30 +72,30 @@ $(function() {
                     if($(window).width() <= 768) {
 
                         // Remove affix
-                        $('#navbar-second').removeClass('navbar-affix-md');
+                        $('#navbar-second').removeClass('navbar-affix-xs');
                         $(window).off('.affix');
-                        $('#navbar-second').removeData('bs.affix').removeClass('affix affix-top affix-bottom');
+                        $('#navbar-second').removeData('bs.affix').removeClass('affix affix-top affix-bottom')
                     }
                     else {
 
                         // Add affix
-                        $('#navbar-second').addClass('navbar-affix-md');
-                        $('.navbar-affix-md').affix({
+                        $('#navbar-second').addClass('navbar-affix-xs');
+                        $('.navbar-affix-xs').affix({
                             offset: {
                                 top: function() {
-                                    return (this.top = $('.page-header').children('.navbar').outerHeight(true))
+                                    return (this.top = $('body').children('.navbar').outerHeight(true))
                                 }
                             }
                         });
 
                         // When affixed
-                        $('.navbar-affix-md').on('affixed.bs.affix', function() {
-                            $(this).next().css('margin-top', $(this).outerHeight());
+                        $('.navbar-affix-xs').on('affixed.bs.affix', function() {
+                            $(this).next('.page-header').css('margin-top', $(this).outerHeight())
                         });
 
                         // When on top
-                        $('.navbar-affix-md').on('affixed-top.bs.affix', function() {
-                            $(this).next().css('margin-top', '');
+                        $('.navbar-affix-xs').on('affixed-top.bs.affix', function() {
+                            $(this).next('.page-header').css('margin-top', '')
                         });
                     }
                 }, 100);
